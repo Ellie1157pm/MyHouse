@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+/* 배경 */
+div#back-container {
+	width: 100%;
+    height: auto;
+    padding: 150px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: lightgray;
+    padding-top: 140px;
+}
+
+/* button */
+div#button-container button {
+	font-size: 16px;	
+}
+
+/* 정보창 */
+div#info-container {
+    width: auto;
+    height: 600px;
+    margin: auto;
+    background-color: white;
+}
