@@ -16,4 +16,19 @@ public class AdminDAOImpl implements AdminDAO {
 	public List<Map<String, String>> selectMemberList() {
 		return sqlSession.selectList("admin.selectMemberList");
 	}
+
+	@Override
+	public List<Map<String, String>> selectRealtorList() {
+		return sqlSession.selectList("admin.selectRealtorList");
+	}
+
+	@Override
+	public List<Map<String, String>> selectReportList() {
+		return sqlSession.selectList("admin.selectReportList");
+	}
+
+	@Override
+	public String selectMemberEmail(String recipient) {
+		return sqlSession.selectOne("admin.selectMemberEmail", recipient);
+	}
 }

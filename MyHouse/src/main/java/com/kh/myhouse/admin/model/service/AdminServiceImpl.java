@@ -17,4 +17,19 @@ public class AdminServiceImpl implements AdminService {
 	public List<Map<String, String>> selectMemberList() {
 		return adminDAO.selectMemberList();
 	}
+
+	@Override
+	public List<Map<String, String>> selectRealtorList() {
+		return adminDAO.selectRealtorList();
+	}
+
+	@Override
+	public List<Map<String, String>> selectReportList() {
+		return adminDAO.selectReportList();
+	}
+
+	@Override
+	public String selectMemberEmail(String recipient) {
+		return adminDAO.selectMemberEmail(recipient);
+	}
 }

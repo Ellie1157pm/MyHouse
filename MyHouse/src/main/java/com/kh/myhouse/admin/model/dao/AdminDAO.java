@@ -7,4 +7,10 @@ public interface AdminDAO {
 
 	List<Map<String, String>> selectMemberList();
 
+	List<Map<String, String>> selectRealtorList();
+
+	List<Map<String, String>> selectReportList();
+
+	String selectMemberEmail(String recipient);
+
 }
