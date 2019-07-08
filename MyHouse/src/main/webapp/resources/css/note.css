@@ -1,0 +1,75 @@
+@charset "UTF-8";
+div.noteMain .btn-group{
+	left: 30%;
+	top: 12%;
+}
+div.notebox{
+	width: 700px;
+	min-height:600px;
+	background-color:white;
+	margin-left: 30%;
+	/* visibility: hidden; */
+	visibility: visible;
+}
+span.note1{
+	padding: 3% 2%;
+}
+/*쪽지함*/
+div.notebox span.noteBOX{
+	font-size:25px;
+	margin: 1%;
+}
+
+/*delete button*/
+div.notebox button.btn-primary{
+	margin-left: 20%;
+    margin-top: 2%;
+    padding: 4px;
+    font-size: 16px;
+}
+
+div.notebox hr{
+	border: solid 1px #c4c4c4;
+}
+
+/*table  */
+div.table-note-div table#tbl-note{
+	width: 600px;
+	min-height: 100px;
+	border: 1px;
+}
+table#tbl-note tr th{
+	padding-left:1%;
+}
+table#tbl-note td{
+	padding-left: 2%;
+	padding-bottom: 6%;
+}
+
+td#no{
+	display: none;
+}
+/*table bootstrap*/
+table#tbl-note tr td.td-primary{
+	color: black;
+	background-color: white;
+	border: white;
+}
+
+/*tr hover*/
+tr.note-select:hover{
+	background-color: #28a7457a !important;
+}
+
+/*쪽지모달*/
+div.modal-content{
+	weight: 300px;
+	min-height: 300px;
+}
+
+div #contentC{
+	width: 80px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}

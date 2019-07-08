@@ -133,35 +133,3 @@ div#search-input input[type=search]{    width: 750px;
     font-size: 24px;
         text-align: center;}
 div#search-input input[type=button]{width:160px; height: 40px;background: none;border: none;color:white;font-weight: bold;font-size: 23px;position: relative;bottom: 2px;right:2px;}
-
-
-/*로그인 폼*/
-div.login-modal{
-	margin-left: 85px;
-}
-
-/*중개회원가입*/
-div.modal-header{
-	background: lightgray;
-}
-div.modal-body input{
-	margin-bottom: 15px;
-}
-div.agent-enroll-modal{
-	text-align: right !important;
-	margin-right: 150px;
-}
-span#s-email{
-	position: absolute;
-	text-align: left;
-    width: 142px;
-    right: -135px;
-    top: 23px;
-    font-size: 11px;
-}
-
-
-
-
-
-
