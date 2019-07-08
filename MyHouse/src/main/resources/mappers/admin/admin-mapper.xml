@@ -21,4 +21,19 @@
 	from member
 	where member_no=#{recipient}
 	</select>
+	<select id="newsInsert" resultType="map">
+	insert into news
+	values (
+		seq_news_no.nextval,
+		#{newsTitle},
+		#{newsContent},
+		#{newsDate}
+	)
+	</select>
+	
+	<select id="selectAllNews" resultType="map">
+	select *
+	from news
+	order by news_date desc
+	</select>
 </mapper>

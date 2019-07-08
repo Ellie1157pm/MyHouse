@@ -168,6 +168,12 @@
 			<artifactId>spring-jdbc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.8</version>
+			<optional>true</optional>
+		</dependency>
 		<!-- Database Connection Pool -->
 		<dependency>
 			<groupId>commons-dbcp</groupId>

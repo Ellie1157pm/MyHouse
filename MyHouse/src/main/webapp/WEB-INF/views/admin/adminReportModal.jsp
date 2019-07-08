@@ -21,7 +21,7 @@
           </div>
           <div class="form-group">
             <label for="message-text" class="col-form-label">내용:</label>
-            <textarea class="form-control" id="message-text" name="warningReason"></textarea>
+            <textarea class="form-control" id="message-text" name="memoContent"></textarea>
           </div>
         </form>
       </div>
@@ -38,12 +38,12 @@ $("#WarningBtn").click(function() {
 		return;
 	}
 	var memberNo = $("#memberNo").val();
-	var warningReason = $("textarea[name=warningReason]").val();
+	var warningReason = $("textarea[name=memoContent]").val();
 	$.ajax({
 		url: "${pageContext.request.contextPath}/admin/warn",
 		data: {
 				memberNo: memberNo,
-				warningReason: warningReason
+				memoContent: memoContent
 		      },
 		success: function(data) {
 			alert(data.msg);

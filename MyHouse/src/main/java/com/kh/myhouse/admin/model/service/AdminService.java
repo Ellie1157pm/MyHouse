@@ -13,4 +13,10 @@ public interface AdminService {
 
 	String selectMemberEmail(String recipient);
 
+	int insertWarn(String memberNo, String memoContent);
+
+	void newsAllData(String title);
+
+	List<Map<String, String>> newsAllData(int cPage);
+
 }
