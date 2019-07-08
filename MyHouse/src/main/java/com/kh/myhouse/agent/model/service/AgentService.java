@@ -19,4 +19,6 @@ public interface AgentService {
 
 	List<Map<String, String>> estateListEnd(int memberNo);
 
+	Agent selectOneAgent(String memberEmail);
+
 }

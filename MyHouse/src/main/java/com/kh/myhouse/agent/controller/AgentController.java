@@ -13,13 +13,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.myhouse.agent.model.service.AgentService;
 import com.kh.myhouse.agent.model.vo.Agent;
+import com.kh.myhouse.member.model.exception.MemberException;
 
 
 @Controller
 @RequestMapping("/agent")
+@SessionAttributes(value= {"memberLoggedIn"})
 public class AgentController {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -60,6 +64,14 @@ public class AgentController {
 		return str;
 	}
 	
+	@RequestMapping("/loginCheck")
+	@ResponseBody
+	public Agent loginCheck(@RequestParam(value="memberEmail") String memberEmail){
+		Agent a = agentService.selectOneAgent(memberEmail);
+		
+		return a;
+	}
+	
 	@RequestMapping("/agentEnroll")
 	public void AgentEnroll() {}
 	
@@ -90,12 +102,56 @@ public class AgentController {
 		return "common/msg";
 	}
 	
+	@RequestMapping("/agentLogin")
+	public ModelAndView memberLogin(@RequestParam String memberEmail,
+							  @RequestParam String memberPwd,
+							  ModelAndView mav) {
+		if(logger.isDebugEnabled())
+			logger.debug("로그인 요청!");
+		
+		String encodedPassword = bcryptPasswordEncoder.encode(memberPwd);
+		System.out.println("암호화후: "+encodedPassword);
+		
+		try {
+
+			Agent a = agentService.selectOneAgent(memberEmail);
+			
+			String msg = "";
+			String loc = "/";
+			
+			if(a == null) {
+				msg = "존재하지 않는 회원입니다.";
+			}
+			else {
+				boolean bool = bcryptPasswordEncoder.matches(memberPwd, a.getMemberPwd());
+				if(bool) {
+					msg = "로그인 성공! ["+a.getMemberName()+"]님, 반갑습니다." ;
+					mav.addObject("memberLoggedIn", a);
+				}
+				else {
+					msg = "비밀번호가 틀렸습니다.";
+				}
+			}
+
+			mav.addObject("msg", msg);
+			mav.addObject("loc", loc);
+			mav.setViewName("/common/msg");
+			
+		} catch(Exception e) {
+			
+			logger.error("로그인 요청 에러: ", e);
+			throw new MemberException("로그인 요청에러: "+e.getMessage());
+		}
+		
+		return mav;
+	}
+	
 	@RequestMapping("/advertisedQuestion")
 	public void advertisedQuestion() {}
 	
 	@RequestMapping("/agentMypage")
-	public void agentMypage() {
-		
+	public void agentMypage(int memberNo) {
+		System.out.println("memberNo@controller="+memberNo);
 	}
 	
 	@RequestMapping("/estateList")

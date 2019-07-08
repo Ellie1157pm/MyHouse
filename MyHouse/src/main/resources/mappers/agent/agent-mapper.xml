@@ -14,6 +14,11 @@
 				#{status},
 				#{companyRegNo})
 	</insert>
+	
+	<select id="selectOneAgent" resultType="agent">
+		SELECT * FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail}
+	</select>
+	
 	<select id="checkMemberEmail" resultType="int">
 		select count(*) from member where member_email = #{memberEmail}
 	</select>

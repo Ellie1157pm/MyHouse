@@ -45,4 +45,9 @@ public class AgentDAOImpl implements AgentDAO {
 		return sqlSession.selectList("agent.estateListEnd", memberNo);
 	}
 
+	@Override
+	public Agent selectOneAgent(String memberEmail) {
+		return sqlSession.selectOne("agent.selectOneAgent", memberEmail);
+	}
+
 }
