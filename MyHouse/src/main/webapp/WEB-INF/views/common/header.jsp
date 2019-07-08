@@ -12,12 +12,13 @@
 <script src="${pageContext.request.contextPath }/resources/js/jquery-3.4.0.js"></script>
 <!-- 부트스트랩관련 라이브러리 -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/index.css" />
 <!--다음 지도 api : 예림 api key -->
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=52628547fe813f9f2accb85c95efcde3&libraries=services,clusterer"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d4275a07a4af1fbc6337cd3fd731620b&libraries=services,clusterer"></script>
 
 </head>
 <body>
@@ -66,6 +67,7 @@
 				</div>
 			</div>
 			<div id="login-div">
+			<button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath }/search/EnrollTest.do'">매물등록</button>
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".login">로그인</button>
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".enroll">회원가입</button>
 			</div>

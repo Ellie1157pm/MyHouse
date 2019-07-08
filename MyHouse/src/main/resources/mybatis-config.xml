@@ -17,6 +17,9 @@
   	<typeAlias type="com.kh.myhouse.agent.model.vo.Agent" alias="agent"/>
 	<typeAlias type="com.kh.myhouse.estate.model.vo.Estate" alias="estate"/>
 	<typeAlias type="com.kh.myhouse.estate.model.vo.EstatePhoto" alias="estatePhoto"></typeAlias>
+	<typeAlias type="com.kh.myhouse.estate.model.vo.Option" alias="option"/>
+	<typeAlias type="com.kh.myhouse.common.typehandler.StrArrTypeHandler" 
+  			   alias="strArrTypeHandler"/>
   </typeAliases>
   
 <!--   <mappers>
