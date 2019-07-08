@@ -14,7 +14,10 @@
   </settings>
   
   <typeAliases>
-
+	<typeAlias type="com.kh.myhouse.estate.model.vo.Estate" alias="estate"/>
+	<typeAlias type="com.kh.myhouse.estate.model.vo.Option" alias="option"/>
+<typeAlias type="com.kh.myhouse.common.typehandler.StrArrTypeHandler" 
+  			   alias="strArrTypeHandler"/>
   </typeAliases>
   
 <!--   <mappers>

@@ -12,12 +12,14 @@ div#header-container{
 /*header 로고*/
 div#header-container img{
     margin: auto;
+    cursor: pointer;
 }
 span#header-title{
     position: absolute;
     margin: 50px 0 0 -8px;
     font-size: 24px;
     font-weight: bold;
+    cursor:pointer;
 }
 /*header 메뉴 버튼*/
 div#header-button-group{
@@ -123,7 +125,11 @@ div#search-container-div p{font-size: 10px;display:inline-block;}
 div#search-container-div a{color:white;cursor: pointer;}
 div#search-input {margin-top:12px;background: #ffa409;display:inline-block;}
 div#search-input img{width:40px;height: 30px;}
-div#search-input input[type=search]{width:750px;margin:5px; height:60px;font-size: 40px;}
+div#search-input input[type=search]{    width: 750px;
+    margin: 5px;
+    height: 60px;
+    font-size: 24px;
+        text-align: center;}
 div#search-input input[type=button]{width:160px; height: 40px;background: none;border: none;color:white;font-weight: bold;font-size: 23px;position: relative;bottom: 8px;right:2px;}
 
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="estate">
+	<select id="selectLocalCodeFromRegion" resultType="string">
+		SELECT substr(region_code,0,5)  FROM REGION where legal_dong like '%'||#{localName}||'%' and rownum=1
+	</select>
+	<select  id="selectApartmentname" resultType="string">
+
+	select address from estate where region_code= #{localCode}
+	
+	</select>
+	<insert id="estateoptionlist">
+	 insert into tbl_option(estate_no,option_detail)
+	 values(seq_estate_no.currval,#{optionDetail, typeHandler=strArrTypeHandler})
+	
+	</insert>
+	
+	<resultMap type="option" id="optionMap">
+		<result column="option_detail" property="optionDetail" typeHandler="strArrTypeHandler"/>
+	</resultMap>
+	
+	
+	
+	
+	<insert id="EstateInsert">
+	 insert into estate (estate_no,region_code,member_no,business_member_no,phone,business_phone,
+	             address,estate_type,transaction_type,estate_price,management_fee,estate_area,subway_station,
+	              estate_content,written_date,deposit)
+	 values(seq_estate_no.nextval,#{RegionCode},#{MemberNo},#{BusinessMemberNo},#{Phone},#{BusinessPhone},#{Address},
+	         #{EstateType},#{TransActionType},#{EstatePrice},#{ManageMenetFee},#{EstateArea},#{SubwayStation},#{EstateContent},
+	         sysdate,#{Deposit})
+	</insert>
+	<insert id="insertattach">
+		insert into
+		estate_photo (photo_no,estate_no,original_filename,renamed_filename,upload_date)
+		values(seq_estate_photo.nextval,seq_estate_no.currval,#{originalFileName},#{renamedFileName},
+		sysdate)
+	
+	</insert>
+	
+
+</mapper> 
+
+
+
+
+
+
+
