@@ -13,7 +13,6 @@
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
-
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<!-- resources 로 요청이 들어오면 webapp밑에 resources 로 찾아가게 설정됨 -->
 	<!-- 이미지,동영상,js,css 파일 등으로 제공. -->
@@ -32,8 +31,15 @@
 	<!-- bean의 이름은 소문자로 시작하는 클래스명이 기본값이다. -->
 	<context:component-scan base-package="com.kh.myhouse" />
 	
+	  <beans:bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
 	
-	
-	
-	
+	<beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" > 
+		<beans:property name="messageConverters">
+			<beans:list>
+				<beans:ref bean="jacksonMessageConverter"/>
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+	<beans:bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"></beans:bean>
+
 </beans:beans>
