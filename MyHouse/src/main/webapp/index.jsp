@@ -27,7 +27,7 @@
 	</div>
 	</div>
 	
-	<form action="${pageContext.request.contextPath }/search/searchKeyword" method="get" id="indexFrm" >
+	<form action="${pageContext.request.contextPath }/estate/searchKeyword" method="get" id="indexFrm" >
 	<input type="hidden" name="estateType" id="estateType"  />
 	<input type="hidden" name="searchKeyword" id="searchKeyword"  />
 	<input type="hidden" name="locate" id="locate"  />
@@ -36,7 +36,6 @@
 	
 	
 <script charset="utf-8">
-
 //search bar에서 엔터키 누르면 검색
 $(function(){
 	$("#insertSearchKeyword").keydown(function(e) {
@@ -46,19 +45,10 @@ $(function(){
 		}
 	});
 });
-
-
 /*다음 지도 api 설정  */
 //=>법정동 주소를 받아오기 위함.
-
-
-
 //장소 검색 객체 생성 
 var ps = new daum.maps.services.Places();
-
-
-
-
 //키워드 검색 완료 시 호출되는 콜백함수
 function placesSearchCB (data, status, pagination) {
 	
@@ -91,14 +81,12 @@ function placesSearchCB (data, status, pagination) {
         }       
     } 
 }
-
 function searchAddress(obj){
 	var keyword=obj.value;
 	console.log('입력값='+keyword);
 	ps.keywordSearch(keyword, placesSearchCB);
 }
 var typeCheck=$('#typeCheck');
-
 function setestate(obj,type){
 	$("#insertSearchKeyword").attr("placeholder",type=='A'?"원하시는 지역명,지하철역,단지명(아파트명)을 입력해주세요":
 		                                         type=='B'?"원하시는 지역명,지하철역을 입력해주세요":
@@ -111,35 +99,29 @@ function setestate(obj,type){
 	console.log(typeCheck)
 	
 }
-
 function validate(){
-
 	var $keyword=$('#insertSearchKeyword').val().trim();
 	console.log($keyword);
 	if($keyword.length==0){
 		alert('검색어를 입력해주세요');
 		return true;
 	}
-
 	
 	else if(typeCheck.value==null||typeCheck.value==''){
 		alert('검색하실 매물 타입을 선택해주세요');
 		return false;
 	}else if(typeCheck.value==true){
 	$('#searchKeyword').val($keyword);
-	if($('#searchKeyword').val()==null||$('#searchKeyword').val()==''){
-		setTimeout(function() {
-			$('#indexFrm').submit();
-			}, 2000);
-	}
+	if($('#locate').val()==null||$('#locate').val()==''){
+	 	setTimeout(function() {
+	 		$('#indexFrm').submit();
+			}, 2000); 
+		
+	}else{
 	$('#indexFrm').submit();
-
-	} 
+	}
+} 
 }
-
  
-
-
-
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
