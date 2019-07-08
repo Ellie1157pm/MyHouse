@@ -1,0 +1,34 @@
+@charset "UTF-8";
+
+div#map{width:70%;height:700px;margin-bottom: 2px;margin-left: 5px;position:relative;}
+div#searchArea{height:145px;  width:400px;display:inline-block; background: rgba(255,255,255,0.95);z-index: 1;bottom:300px;top: 125px;position: absolute;left:10px; }
+div#searchArea input[type=search]{position: relative;margin:1px 0 1px 1px; box-shadow: none;border: 1px solid gray;width:150px;}
+
+div#search1 button img{width:25px;height: 25px;position: relative; margin:0;}
+div#search1 button{margin:0;background:none;border:none;bottom: 2px;right: 2px;position: relative;margin:0;}
+div#search1 {background:rgb(250,136,11);display: inline-block;margin:15px 0 0 15px;border-radius: 6px;line-height: 35px;}
+div#search1 input[type=search]{width:320px;border-radius: 6px;}
+div#search2{position:relative;margin:0 0 0 7px; display: inline-block;}
+div#search2 select{width:65px;height: 35px;position:relative;}
+div#search2 input[type=button]{cursor:pointer;width:230px;height: 35px;background: none;border:gray;text-align: center;}
+div#search2 #filter{cursor:pointer;display:inline-block;}
+div#search3{position: relative;display: block;height:430px;overflow: auto;}
+div#search3 img{position:relative;botton:7px; width:30px;height: 30px;cursor:pointer;}
+div#search3 #fil{font-size: 28px;}
+div#search3 #reset{font-size:20px;margin-left: 130px;cursor:pointer;}
+button.first{width:95px;margin: 5px;color:black;background:white;}
+div#search3 p.filterTitle{font-size: 30px;font-weight: bold;color:orange;}
+button.second{background:white;color:black;border:none;}
+button.third{background:white;color:black;border:none;}
+div#search3 table#areaTbl td{border:1px solid gray;width:80px;padding:4px;text-align: center;}
+#areaTbl td:hover{background:#6c757d;}
+div#search3{display:none;margin-left: 5px;}
+div#search3 p.range{font-size: 30px;font-weight: bold;color:orange; }
+
+
+
+
+
+ 
+
+
