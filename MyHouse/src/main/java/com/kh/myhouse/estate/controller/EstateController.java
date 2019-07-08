@@ -122,6 +122,99 @@ public class EstateController {
 		return  JSONArray.fromObject(list);
 	}
 
+	@RequestMapping("/findAllTerms")
+	public ModelAndView fineAllTerms(ModelAndView mav, HttpServletRequest req) {
+		Map<String, String> map=new HashMap<>();
+		List<Estate>list=new ArrayList<>();
+
+
+		String estateType=req.getParameter("estateType");//건물 유형(빌라,원룸,오피스텔)
+		String dealType=req.getParameter("dealType");//거래유형
+		String range1=req.getParameter("range_1");	//가격범위
+		String range2=req.getParameter("range_2"); //가격범위
+		String range3=req.getParameter("range_3");	//가격범위(보증-월세로 나눠질때)
+		String range4=req.getParameter("range_4"); //가격범위(보증-월세로 나눠질때)
+		String structure=req.getParameter("structure");	//all인 경우와 아닌 경우로 나눠서 list에 넣어야할듯.
+		String[] option=req.getParameterValues("optionResult");	//option길이만큼 for문 돌려서 list에 add 하는 방식으로.
+		String topOption=req.getParameter("topOption");
+		System.out.println("옵션 "+option);
+
+		//파라미터 확인
+		System.out.println("건물 유형 : "+estateType);
+		System.out.println("매매 유형 : "+dealType);
+		System.out.println("금액 최소 : "+range1);
+		System.out.println("금액 최대 : "+range2);
+		if(dealType.equals("O")) {
+			System.out.println("월세 최소 : "+range3);
+			System.out.println("월세 최대 : "+range4);
+		}
+
+		if(structure==null) {
+			structure="all";
+		}
+		System.out.println(" 구조 유형 : "+structure);
+		if(option!=null) {
+			for(int i=0;i<option.length;i++) {
+				System.out.println("옵션 유형 : "+option[i]);
+			}
+		}
+		if(topOption==null) {			
+			topOption="all";
+		}
+		System.out.println("topOption : "+ topOption);
+
+		map.put("estateType", estateType);
+		map.put("dealType", dealType);
+		//전세 혹은 매매금 범위 between #{range1} and #{range2}
+		map.put("range1", range1);
+		map.put("range2", range2);
+		//빌라 인 경우
+		if(estateType.equals("B")) {
+			//빌라 매매/전세인 경우
+			if(dealType.equals("M")||dealType.equals("J")) {
+				//structure =>all, 2,3,4 <-방 개수
+				//매매가/구조/주차옵션 || //전세금/구조/주차옵션
+			}
+			//월세인 경우
+			else {
+				map.put("range3", range3);
+				map.put("range4", range4);
+				//보증금,집 구조,월세,주차옵션
+			}
+		}
+		//원룸인 경우=>옵션 다수
+		else if(estateType.equals("O") ||estateType.equals("P")) {
+			//전체 혹은 월세인 경우
+			if(dealType.equals("all")||dealType.equals("O")) {
+				map.put("range3", range3);
+				map.put("range4", range4);
+				map.put("topOption", topOption);
+
+			}else {
+				//전세인경우
+				map.put("topOption", topOption);
+
+			}
+		}
+
+
+
+		mav.addObject("dealType",dealType);
+		mav.addObject("estateType",estateType);
+		mav.addObject("range1",range1);
+		mav.addObject("range2",range2);
+		mav.addObject("range3",range3);
+		mav.addObject("range4",range4);
+		mav.addObject("topOption",topOption);
+		mav.addObject("structure",structure);
+		mav.addObject("option",option);
+
+		mav.addObject("msg","viewFilter();");
+
+		mav.setViewName("search/otherResult");
+		return mav;
+	}
+
 
 	//지도상에 아파트클릭시 사이드바에 상세정보를 가져오기위해서
 	@RequestMapping("/detailEstate")

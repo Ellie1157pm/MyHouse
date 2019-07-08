@@ -61,6 +61,4 @@ public class EstateDAOImpl implements EstateDAO{
 		System.out.println("DAO의 ATTACH@@@@"+a);
 		return sqlSession.insert("estate.insertattach",a);
 	}
-
-
 }

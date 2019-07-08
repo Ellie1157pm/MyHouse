@@ -30,7 +30,7 @@
 		<result column="option_detail" property="optionDetail"
 			typeHandler="strArrTypeHandler" />
 	</resultMap>
-	
+
 	<insert id="EstateInsert">
 		insert into estate
 		(estate_no,region_code,member_no,business_member_no,phone,business_phone,

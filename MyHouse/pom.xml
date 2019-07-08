@@ -41,6 +41,13 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+			<version>1.18.8</version>
+			<optional>true</optional>
+		</dependency>		
 				
 		<!-- AspectJ -->
 		<dependency>

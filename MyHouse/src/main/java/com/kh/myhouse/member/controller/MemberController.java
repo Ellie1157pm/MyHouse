@@ -172,7 +172,7 @@ public class MemberController {
 	}
 	
 	/* 관심매물 설정 */
-	@RequestMapping("/interestList.do")
+//	@RequestMapping("/interestList.do")
 }
 
 
