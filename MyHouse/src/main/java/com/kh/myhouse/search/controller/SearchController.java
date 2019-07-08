@@ -39,6 +39,29 @@ public class SearchController {
 		
 		System.out.println("로컬 코드 @controller = " +localCode);
 		
+		//매물 리스트 받아오기
+		//List<>
+		
+		
+		
+		//searchkeyword를 view단으로 보내 지도 api의 중심지를 searchKeyword로 잡도록 한다.
+		//List관련 코드는 넣기 쉽게 정리해놓을테니 확인 요망
+		
+		//아파트의 경우에는 매매/전월세 외에 신축분양,인구흐름,우리집내놓기 등 탭이 있으므로 
+		//다른 jsp파일로 보낸다.		
+		if(searchKeyword!=null) {
+		mav.addObject("searchKeyword",searchKeyword);
+		}
+		if(estateType.equals("A")) {
+			mav.setViewName("search/apartResult");
+		}else {
+			//나머지 매물들은 동일한 jsp에서 처리한다.
+			mav.setViewName("/search/otherResult");
+		}
+		
+		
+		
+		
 		
 		return mav;
 	}

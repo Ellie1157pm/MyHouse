@@ -35,10 +35,18 @@
 	
 	
 <script charset="utf-8">
+
+
 /*다음 지도 api 설정  */
 //=>법정동 주소를 받아오기 위함.
+
+
+
 //장소 검색 객체 생성 
 var ps = new daum.maps.services.Places();
+
+
+
 //키워드 검색 완료 시 호출되는 콜백함수
 function placesSearchCB (data, status, pagination) {
     		var address="";
@@ -59,12 +67,14 @@ function placesSearchCB (data, status, pagination) {
         }       
     } 
 }
+
 function searchAddress(obj){
 	var keyword=obj.value;
 	console.log('입력값'+keyword);
 	ps.keywordSearch(keyword, placesSearchCB);
 }
 var typeCheck=$('typeCheck');
+
 function setestate(obj,type){
 	$('.check').css('color','white');
 	obj.style.color="yellow";
@@ -72,12 +82,15 @@ function setestate(obj,type){
 	typeCheck.value=true;
 	
 }
+
 function validate(){
+
 	var $keyword=$('#insertSearchKeyword').val().trim();
 	if($keyword.length==0){
 		alert('검색어를 입력해주세요');
 		return false;
 	}
+
 	
 	else if(typeCheck.value==null||typeCheck.value==''){
 		alert('검색하실 매물 타입을 선택해주세요');
@@ -87,6 +100,10 @@ function validate(){
 	$('#indexFrm').submit();
 	} 
 }
+
  
+
+
+
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
