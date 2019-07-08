@@ -198,3 +198,31 @@ div#search-input input[type=button] {
 	bottom: 8px;
 	right: 2px;
 }
+
+/*로그인 폼*/
+div.login-modal {
+	margin-left: 85px;
+}
+
+/*일반회원가입*/
+div.modal-header {
+	background: lightgray;
+}
+
+div.modal-body input {
+	margin-bottom: 15px;
+}
+
+div.member-enroll-modal {
+	text-align: right !important;
+	margin-right: 150px;
+}
+
+span#s-email {
+	position: absolute;
+	text-align: left;
+	width: 142px;
+	right: -135px;
+	top: 23px;
+	font-size: 11px;
+}

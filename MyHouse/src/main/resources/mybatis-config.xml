@@ -20,6 +20,7 @@
 	<typeAlias type="com.kh.myhouse.estate.model.vo.Option" alias="option"/>
 	<typeAlias type="com.kh.myhouse.common.typehandler.StrArrTypeHandler" 
   			   alias="strArrTypeHandler"/>
+	<typeAlias type="com.kh.myhouse.member.model.vo.Member" alias="member"/>
   </typeAliases>
   
 <!--   <mappers>

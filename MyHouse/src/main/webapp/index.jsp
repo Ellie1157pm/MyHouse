@@ -63,8 +63,10 @@ $(function() {
 /*다음 지도 api 설정  */
 //=>법정동 주소를 받아오기 위함.
 
+
 //장소 검색 객체 생성 
 var ps = new daum.maps.services.Places();
+
 
 //키워드 검색 완료 시 호출되는 콜백함수
 function placesSearchCB(data, status, pagination) {
@@ -105,6 +107,7 @@ function searchAddress(obj) {
 	console.log('입력값=' + keyword);
 	ps.keywordSearch(keyword, placesSearchCB);
 }
+
 var typeCheck = $('#typeCheck');
 
 function setestate(obj, type) {
@@ -123,6 +126,7 @@ function setestate(obj, type) {
 	console.log(typeCheck)
 
 }
+
 
 function validate() {
 
