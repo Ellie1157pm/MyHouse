@@ -21,6 +21,67 @@ $(function() {
 	$("#warning_memo").on("click", function(){
 		location.href="${pageContext.request.contextPath}/member/memoList";
 	});
+	
+	/* updateMember submit */
+	$("button#member-enroll-end-btn").on("click", function() {
+		$("#member-enrollFrm").submit();
+	});
+
+	/* 입력한 기존 비밀번호가 맞는지 검사 */
+	$("input#oldPwd").blur(function(){
+		var oldPwd = $("input#oldPwd").val();
+		$.ajax({	
+			url: "${pageContext.request.contextPath}/member/pwdIntegrity.do",
+			data: oldPwd,
+			type : "post",
+			success : function(data) {
+				console.log(data);
+				if (data == "true") {
+					$("input#oldPwd").css("color", "blue");
+					$("button#member-update-btn").attr("disabled", false);
+				}
+				else{
+					$("input#newPwd").css("color", "red");
+					$("button#member-update-btn").attr("disabled", true);
+				}
+			}
+			error : function(jqxhr, textStatus,	errorThrown) {
+				console.log("ajax처리실패: " + jqxhr.status);
+				console.log(errorThrown);
+			}
+		});	
+	});
+
+		
+	/*비밀번호 유효성검사*/
+	$("input#newPwd").blur(function() {
+		var regExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/;
+		var pwd = $(this).val();
+		var pwd_ = $("input#oldPwd").val();
+		var bool = regExp.test(pwd);
+		var bool_ = (pwd == pwd_);
+
+		if (bool != true) {
+			alert("비밀번호는 문자, 숫자 ,특수문자 1개 이상 포함하고, 8글자 이상 15글자 이하여야 합니다.");
+			$("input#newPwd").css("color", "red");
+			$("button#member-update-btn").attr("disabled", true);
+		} else {
+			$("input#newPwd").css("color", "blue");
+			$("button#member-update-btn").attr("disabled", false);
+		}
+		
+		/* 기존 비밀번호와 새로운 비밀번호가 같은지 확인, 같다면 경고 */
+		if(bool_ != true){
+			$("input#newPwd").css("color", "blue");
+			$("button#member-update-btn").attr("disabled", false);
+		}
+		else{
+			$("input#newPwd").css("color", "red");
+			$("button#member-update-btn").attr("disabled", true);
+		}
+
+	});
+
 });
 </script>
 
@@ -34,10 +95,12 @@ $(function() {
 			<button type="button" class="btn btn-secondary" id="warning_memo">쪽지함</button>
 		</div>
 		<div id="list-container">
+		<form name="memberUpdateFrm" action="${pageContext.request.contextPath}/member/memberUpdate.do" method="post">
+			<input type="hidden" name="memberNo" value="${memberLoggedIn.getMemberNo()}"/>
 			<table>
 				<tr>
 					<th>이름</th>
-					<td><input type="text" value="${member.memberName}"/></td>
+					<td><input type="text" name="memberName" value="${member.memberName}"/></td>
 				</tr>
 				<tr>
 					<th>아이디(이메일)</th>
@@ -45,24 +108,25 @@ $(function() {
 				</tr>
 				<tr>
 					<th>기존비밀번호</th>
-					<td><input type="password" /></td>
+					<td><input type="password" name="oldPwd" id="oldPwd"/></td>
 				</tr>
 				<tr>
 					<th>새로운비밀번호</th>
-					<td><input type="password" /></td>
+					<td><input type="password" name="newPwd" id="newPwd"/></td>
 				</tr>
 				<tr>
 					<th>알림서비스 수신여부</th>
 					<td>
-						<!-- member.receiveMemoYN의 값을 받아서 찍어줌 변경하면 해당 변수값 set으로 변경 -->
-						<input type="radio"/>		
+						<input type="radio" name="receiveMemo" value="Y" ${member.receiveMemoYN=='Y'?'selected':'' }/>
+						<input type="radio" name="receiveMemo" value="N" ${member.receiveMemoYN=='N'?'selected':'' }/>		
 					</td>
 				</tr>
 			</table>
 			<div id="agentSet-btnGroup">
-				<input type="submit" class="btn btn-outline-success" value="수정" >&nbsp;
-				<input type="button" class="btn btn-outline-success" value="회원탈퇴">
+				<input type="submit" class="btn btn-outline-success" id="member-update-btn" value="수정" >&nbsp;
+				<input type="button" class="btn btn-outline-success" id="member-delete-btn" value="회원탈퇴">
 			</div>
+		</form>
 		</div>	
 	</div>
 </div>

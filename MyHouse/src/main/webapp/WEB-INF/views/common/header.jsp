@@ -16,17 +16,6 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
 	integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
 	crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-	crossorigin="anonymous"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-	integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-	crossorigin="anonymous"></script>
-<script
-	src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-	crossorigin="anonymous"></script>
 <!-- 사용자작성 css -->
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/css/index.css" />
@@ -146,8 +135,7 @@
 							data-toggle="modal" data-target=".id-find-end">[아이디 찾기]</button>
 						&nbsp;&nbsp;
 						<button id="pwd-find-btn" type="button" class="btn btn-link"
-							data-toggle="modal" data-target=".pwd-find-end">[비밀번호
-							찾기]</button>
+							data-toggle="modal" data-target=".pwd-find-end">[비밀번호 찾기]</button>
 					</div>
 					<div class="modal-footer">
 						<button type="submit" id="login-btn" class="btn btn-primary">확인</button>
@@ -220,8 +208,8 @@
 				</div>
 				<div class="modal-footer">
 					<!-- 입력한 아이디와 전화번호가 유효(해당 정보를 모두 포함한 멤버데이터가 있는 경우)한 경우에만 비밀번호 리셋 버튼을 누르면
-		      새로운 모달창이 나오게 됨(새로운 비밀번호 입력과 비밀번호 확인 입력창이 있음, 확인과 취소도 있음) 
-		      만약 유효하지 않다면 경고창을 띄움 -->
+		      		새로운 모달창이 나오게 됨(새로운 비밀번호 입력과 비밀번호 확인 입력창이 있음, 확인과 취소도 있음) 
+		    		만약 유효하지 않다면 경고창을 띄움 -->
 					<button type="button" id="pwd-find-end-btn" class="btn btn-primary">비밀번호
 						리셋</button>
 					<button type="button" class="btn btn-secondary"
@@ -323,72 +311,50 @@
 			});
 
 			/*아이디 유효성검사,중복확인*/
-			$("input#member-enroll-email")
-					.blur(
-							function() {
-								var param = {
-									memberEmail : $("input#member-enroll-email")
-											.val()
-								}
+			$("input#member-enroll-email").blur(function() {
+				var param = {
+					memberEmail : $("input#member-enroll-email").val()
+				}
 
-								$
-										.ajax({
-											url : "${pageContext.request.contextPath}/member/checkMemberEmail.do",
-											data : param,
-											type : "post",
-											success : function(data) {
-												console.log(data);
-												if (data == "true") {
-													$("span#s-email").text(
-															"이미 사용중인 이메일입니다.");
-													$("span#s-email").css(
-															"color", "red");
-													$(
-															"button#member-enroll-end-btn")
-															.attr("disabled",
-																	true);
-												} else {
-													$("span#s-email").text(
-															"사용가능한 이메일입니다.");
-													$("span#s-email").css(
-															"color", "blue");
-													$(
-															"button#member-enroll-end-btn")
-															.attr("disabled",
-																	false);
-												}
-											},
-											error : function(jqxhr, textStatus,
-													errorThrown) {
-												console.log("ajax처리실패: "
-														+ jqxhr.status);
-												console.log(errorThrown);
-											}
-										});
-							});
+				$.ajax({
+					url : "${pageContext.request.contextPath}/member/checkMemberEmail.do",
+					data : param,
+					type : "post",
+					success : function(data) {
+						console.log(data);
+						if (data == "true") {
+							$("span#s-email").text("이미 사용중인 이메일입니다.");
+							$("span#s-email").css("color", "red");
+							$("button#member-enroll-end-btn").attr("disabled",true);
+						} else {
+							$("span#s-email").text("사용가능한 이메일입니다.");
+							$("span#s-email").css("color", "blue");
+							$("button#member-enroll-end-btn").attr("disabled",false);
+						}
+					},
+					error : function(jqxhr, textStatus,	errorThrown) {
+						console.log("ajax처리실패: " + jqxhr.status);
+						console.log(errorThrown);
+					}
+				});
+			});
 
 			/*비밀번호 유효성검사*/
-			$("input#member-enroll-password")
-					.blur(
-							function() {
-								var regExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/;
-								var pwd = $(this).val();
-								var bool = regExp.test(pwd);
+			$("input#member-enroll-password").blur(function() {
+				var regExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/;
+				var pwd = $(this).val();
+				var bool = regExp.test(pwd);
 
-								if (bool != true) {
-									alert("비밀번호는 문자, 숫자 ,특수문자 1개 이상 포함하고, 8글자 이상 15글자 이하여야 합니다.");
-									$("input#member-enroll-password").css(
-											"color", "red");
-									$("button#member-enroll-end-btn").attr(
-											"disabled", true);
-								} else {
-									$("input#member-enroll-password").css(
-											"color", "blue");
-									$("button#member-enroll-end-btn").attr(
-											"disabled", false);
-								}
+				if (bool != true) {
+					alert("비밀번호는 문자, 숫자 ,특수문자 1개 이상 포함하고, 8글자 이상 15글자 이하여야 합니다.");
+					$("input#member-enroll-password").css("color", "red");
+					$("button#member-enroll-end-btn").attr("disabled", true);
+				} else {
+					$("input#member-enroll-password").css("color", "blue");
+					$("button#member-enroll-end-btn").attr("disabled", false);
+				}
 
-							});
+			});
 
 			$("input#member-enroll-password_").blur(function() {
 				var pwd = $("input#member-enroll-password").val();
@@ -406,68 +372,58 @@
 			});
 
 			/*전화번호 유효성검사*/
-			$("input#member-enroll-phone")
-					.blur(
-							function() {
-								var regExp = /^[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]$/;
-								var phone = $(this).val();
-								var bool = regExp.test(phone);
+			$("input#member-enroll-phone").blur(function() {
+				var regExp = /^[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]$/;
+				var phone = $(this).val();
+				var bool = regExp.test(phone);
 
-								if (bool != true) {
-									$("input#member-enroll-phone").css("color",
-											"red");
-									$("button#member-enroll-end-btn").attr(
-											"disabled", true);
-								} else {
-									$("input#member-enroll-phone").css("color",
-											"black");
-									$("button#member-enroll-end-btn").attr(
-											"disabled", false);
-								}
+				if (bool != true) {
+					$("input#member-enroll-phone").css("color","red");
+					$("button#member-enroll-end-btn").attr("disabled", true);
+				} else {
+					$("input#member-enroll-phone").css("color","black");
+					$("button#member-enroll-end-btn").attr("disabled", false);
+				}
 
-							});
+			});
 
 			/* 아이디 찾기 */
-			$("id-find-end-btn")
-					.on(
-							"click",
-							function() {
-								var param = {
-									memberEmail : $("input#find-id-name").val(),
-									phone : $("input#find-id-phone").val()
-								}
+			$("id-find-end-btn").on("click",function() {
+				var param = {
+					memberEmail : $("input#find-id-name").val(),
+					phone : $("input#find-id-phone").val()
+				}
 
-								$
-										.ajax({
-											url : "${pageContext.request.contextPath}/member/findId.do",
-											type : "POST",
-											data : param,
-											contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-											dataType : "json",
+				$.ajax({
+					url : "${pageContext.request.contextPath}/member/findId.do",
+					type : "POST",
+					data : param,
+					contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+					dataType : "json",
 
-											success : function(data) {
-												var emailLists = data.memberEmail;
-												var emailLength = emailLists.length;
-												var emailfind = emailLists
-														.substring(1,
-																emailLength - 1);
-												/* $("span#emailList").append("<h1>"+"회원님의 정보로 등록된 이메일은 : "+emailfind+" 입니다.</h1>"); */
-												alert("찾으시는 아이디(이메일은)"
-														+ emailfind + "입니다.")
-												/* $("span#s-email").text("이미 사용중인 이메일입니다.");
-												$("span#s-email").css("color", "red"); */
+					success : function(data) {
+						var emailLists = data.memberEmail;
+						var emailLength = emailLists.length;
+						var emailfind = emailLists
+								.substring(1,
+										emailLength - 1);
+						/* $("span#emailList").append("<h1>"+"회원님의 정보로 등록된 이메일은 : "+emailfind+" 입니다.</h1>"); */
+						alert("찾으시는 아이디(이메일은)"
+								+ emailfind + "입니다.")
+						/* $("span#s-email").text("이미 사용중인 이메일입니다.");
+						$("span#s-email").css("color", "red"); */
 
-											},
-											error : function(jqxhr, textStatus,
-													errorThrown) {
-												console.log("ajax처리실패: "
-														+ jqxhr.status);
-												console.log(errorThrown);
-												alert('정보를 다시 입력해주시길 바랍니다.');
-											}
-										});
+					},
+					error : function(jqxhr, textStatus,
+							errorThrown) {
+						console.log("ajax처리실패: "
+								+ jqxhr.status);
+						console.log(errorThrown);
+						alert('정보를 다시 입력해주시길 바랍니다.');
+					}
+				});
 
-							});
+			});
 
 		});
 	</script>
