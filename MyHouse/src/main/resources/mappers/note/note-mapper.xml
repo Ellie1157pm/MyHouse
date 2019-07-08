@@ -15,7 +15,7 @@
 		 where memo_no = #{memo_no}
 	</select>
 
-	<delete id="deleteNote" >
+	<delete id="deleteNote">
 		delete from memo where memo_no = #{memo_no}
 	</delete>
 </mapper> 

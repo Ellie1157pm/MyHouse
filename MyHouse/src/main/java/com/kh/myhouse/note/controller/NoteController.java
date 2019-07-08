@@ -57,7 +57,7 @@ public class NoteController {
 	
 	@RequestMapping("/note/noteCon.do")
 	@ResponseBody
-	public void noteContents(@RequestParam(value="noteNo") int noteNo,
+	public void noteContents(@RequestParam int noteNo,
 							HttpServletRequest request, HttpServletResponse response)
 							throws ServletException, IOException {
 		//3. note-modal contents
@@ -70,8 +70,11 @@ public class NoteController {
 	
 	@RequestMapping("/note/noteDelete.do")
 	@ResponseBody
-	public void noteDelete(@RequestParam(value="noteNo") int noteNo) {
+	public String noteDelete(@RequestParam("id") int noteNo) {
 		
-		int deleteResult = noteService.deleteNote(noteNo);
+		noteService.deleteNote(noteNo);
+		return "redirect:/note/noteMain.do";
+		
+	
 	}
 }

@@ -31,8 +31,8 @@ public class NoteDAOImpl implements NoteDAO{
 	}
 
 	@Override
-	public int deleteNote(int noteNo) {
-		return sqlSession.delete("note.deleteNote",noteNo);
+	public void deleteNote(int noteNo) {
+		sqlSession.delete("note.deleteNote",noteNo);
 	}
 
 }

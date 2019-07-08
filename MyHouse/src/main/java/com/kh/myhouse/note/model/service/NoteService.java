@@ -11,6 +11,6 @@ public interface NoteService {
 
 	List<Object> selectNote(int noteno);
 
-	int deleteNote(int noteNo);
+	void deleteNote(int noteNo);
 
 }

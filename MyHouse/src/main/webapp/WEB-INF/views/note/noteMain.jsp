@@ -44,14 +44,31 @@ function noteOpen(){
 function noteDel(){
 	console.log($("input.c1").is(":checked"));
 	
+
+		/*var param = { noteNo: $(this).attr("id")}
+		$.ajax({
+			url: "${pageContext.request.contextPath}/note/noteDelete.do",
+			type: "post",
+			data: param,
+			dataType: "json",
+			success: function(data){
+				console.log(data);
+			}
+		});  */
 	if($("input.c1").is(":checked")){
 		var bool = confirm("정말로 삭제하시겠습니까?");
-		location.href = "${pageContext.request.contextPath}/note/noteDelete";
+		var no = $("input.c1").attr("id");
+		console.log(no);
+		if(bool){
+			location.href = "${pageContext.request.contextPath}/note/noteDelete.do?="+no;
+			return true;
+		}
+		return false;
 		
-		return true;
 	}
 	
-	return false;
+		
+		
 	
 }
 
