@@ -3,11 +3,15 @@
  <mapper namespace="note">
 	
 	<select id="selectNoteList" resultType="map">
-		select * from memo	
+		select * from memo order by memo_date desc
 	</select>
 	
 	<select id="selectNoteTotalContents" resultType="_int">
 		select count(*) from memo
+	</select>
+	
+	<select id="selectNoReadContents" resultType="_int">
+		select count(*) from memo where memo_yn = 'N'
 	</select>
 	
 	<select id="selectNote" resultType="string">
@@ -16,6 +20,12 @@
 	</select>
 
 	<delete id="deleteNote">
-		delete from memo where memo_no = #{memo_no}
+		delete from memo where memo_no in
+		<foreach collection="list" item="memo_no" open="(" close=")" separator=",">
+		 #{memo_no}
+		</foreach>
 	</delete>
+	
+	<update id="updateNoteYN">
+	</update>
 </mapper> 
