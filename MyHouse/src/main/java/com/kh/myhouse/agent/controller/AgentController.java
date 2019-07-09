@@ -182,6 +182,24 @@ public class AgentController {
 		model.addAttribute("list", list);
 	}
 	
+	@RequestMapping("/updateEstate")
+	public String updateEstate(int estateNo, int memberNo, String phone
+								,Model model) {
+		Map<String, Object> map = new HashMap();
+		map.put("estateNo", estateNo);
+		map.put("memberNo", memberNo);
+		map.put("phone", phone);
+		
+		int result = agentService.updateEstate(map);
+		
+		String msg = result>0?"등록성공!":"등록실패!";
+		
+		model.addAttribute("msg", msg);
+		model.addAttribute("loc", "/agent/estateList");
+		
+		return "common/msg";
+	}
+	
 	@RequestMapping("/estateListEnd")
 	public void estateListEnd(int memberNo, Model model) {
 		

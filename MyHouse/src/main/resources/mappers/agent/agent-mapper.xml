@@ -34,9 +34,12 @@
 	</select>
 	<resultMap type="map" id="estate"></resultMap>
 	<select id="estateList" resultType="map">
-		select e.*, p.*
-		from estate e left join estate_photo p on e.estate_no = p.estate_no
-		where business_member_no is null
+		select e.estate_no, e.business_member_no, e.transaction_type, e.estate_price, e.estate_area, e.address, e.estate_content,
+         p.renamed_filename
+		from estate e left join (select estate_no, renamed_filename from estate_photo
+		                                where rowid in (select min(rowid) from estate_photo group by estate_no))p
+		                                on e.estate_no = p.estate_no
+		where e.business_member_no is null
 		<if test="searchType != null">
 			and estate_type like #{searchType}
 		</if>
@@ -44,11 +47,17 @@
 			and address like '%' || #{searchKeyword} || '%'
 		</if>
 	</select>
+	<update id="updateEstate">
+		update estate
+		set business_member_no = #{memberNo}, business_phone = #{phone}
+		where estate_no = #{estateNo}
+	</update>
 	<select id="estateListEnd" resultMap="estate">
 		select e.estate_no, e.transaction_type, e.estate_price, e.estate_area, e.address, e.estate_content,
-         p.renamed_filename, nvl(l.start_date-sysdate, 0) as adate
-		from estate e left join estate_photo p on e.estate_no = p.estate_no
+         p.renamed_filename, nvl(l.period-sysdate, 0) as adate
+		from estate e left join (select estate_no, renamed_filename from estate_photo
+                                where rowid in (select min(rowid) from estate_photo group by estate_no))p
+                                on e.estate_no = p.estate_no
         left join power_link l on e.estate_no = l.estate_no
-		where business_member_no = #{memberNo}
 	</select>
 </mapper>

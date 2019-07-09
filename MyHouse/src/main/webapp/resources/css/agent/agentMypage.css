@@ -94,12 +94,12 @@ div.estateList-box p{
     white-space: nowrap;
 	text-overflow: ellipsis;
 }
-div.estateList-box p:nth-child(2){
-	margin-top: 10px;
+div.estateList-box p:nth-child(3){
+	margin-top: -22px;
 	font-size: 16px;
 	font-weight: bold;
 }
-div.estateList-box p:nth-child(5){
+div.estateList-box p:nth-child(6){
 	color: gray;
 }
 /*등록된매물*/
@@ -129,6 +129,13 @@ div.estateListEnd-box img{
     float: left;
     margin-right: 10px;
 }
+/*매물등록버튼*/
+button.update-estate-btn{
+    position: relative;
+	width: 48px !important;
+    padding: 2px;
+    margin-left: 90px;
+}
 div.estateListEnd-box p{
 	margin: 0;
 	float: left;
@@ -138,6 +145,7 @@ div.estateListEnd-box p{
 	text-overflow: ellipsis;
 }
 div.estateListEnd-box p:nth-child(3){
+	width: 87px;
 	margin-top: -7px;
 	font-size: 20px;
 	font-weight: bold;

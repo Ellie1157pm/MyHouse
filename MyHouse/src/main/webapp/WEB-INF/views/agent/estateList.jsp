@@ -10,6 +10,15 @@
 function changeDropBtn(e){
 	$("button.btn-info").text(e.text);
 }
+function updateEstate(e){
+	if(confirm("선택한 매물을 등록하시겠습니까?")){
+		var estateNo = $(e).attr('id');
+		$("input[name=estateNo]").val(estateNo);
+		$("#updateEstateFrm").submit();		
+	} else {
+		return;
+	}
+}
 
 $(function() {
 	$("#estateList").css("opacity", 0.6);
@@ -39,6 +48,13 @@ $(function() {
 	  id="estateListEndFrm"
 	  method="post">
 	<input type="hidden" name="memberNo" value="0" />
+</form>
+<form action="${pageContext.request.contextPath}/agent/updateEstate"
+	  id="updateEstateFrm"
+	  method="post">
+	  <input type="hidden" name="estateNo" value="" />
+	  <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+	  <input type="hidden" name="phone" value="${memberLoggedIn.phone}" />
 </form>
 <div id="back-container">
 	<div id="info-container">
@@ -71,6 +87,7 @@ $(function() {
 				<c:forEach var="e" items="${list}">
 					<div class="estateList-box">
 						<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/${e.RENAMED_FILENAME}" alt="매물사진"/>
+						<button type="button" class="btn btn-info update-estate-btn" onclick="updateEstate(this);" id="${e.ESTATE_NO}">등록</button>
 						<p>
 							<c:choose>
 								<c:when test="${e.TRANSACTION_TYPE eq 'M'}">

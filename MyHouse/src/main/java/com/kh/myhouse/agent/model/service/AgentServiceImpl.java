@@ -50,4 +50,9 @@ public class AgentServiceImpl implements AgentService {
 		return agentDAO.selectOneAgent(memberEmail);
 	}
 
+	@Override
+	public int updateEstate(Map<String, Object> map) {
+		return agentDAO.updateEstate(map);
+	}
+
 }
