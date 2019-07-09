@@ -1,6 +1,7 @@
 package com.kh.myhouse.estate.model.vo;
 
 import java.util.Date;
+import java.util.List;
 
 public class Estate {
 	private int EstateNo;
@@ -19,6 +20,15 @@ public class Estate {
 	private String EstateContent;
 	private Date WrittenDate;
 	private int Deposit;
+	private List<EstateAttach> attachList;
+
+	public List<EstateAttach> getAttachList() {
+		return attachList;
+	}
+
+	public void setAttachList(List<EstateAttach> attachList) {
+		this.attachList = attachList;
+	}
 
 	public Estate() {
 		super();
@@ -144,11 +154,11 @@ public class Estate {
 	}
 	@Override
 	public String toString() {
-		return "Search [EstateNo=" + EstateNo + ", RegionCode=" + RegionCode + ", MemberNo=" + MemberNo
+		return "Estate [EstateNo=" + EstateNo + ", RegionCode=" + RegionCode + ", MemberNo=" + MemberNo
 				+ ", BusinessMemberNo=" + BusinessMemberNo + ", Phone=" + Phone + ", BusinessPhone=" + BusinessPhone
 				+ ", Address=" + Address + ", EstateType=" + EstateType + ", TransActionType=" + TransActionType
 				+ ", EstatePrice=" + EstatePrice + ", ManageMenetFee=" + ManageMenetFee + ", EstateArea=" + EstateArea
-				+ ", SubwayStation=" + SubwayStation + ", EstateContent=" + EstateContent + ", WrittenDate=" + WrittenDate
-				+ ", Deposit=" + Deposit + "]";
+				+ ", SubwayStation=" + SubwayStation + ", EstateContent=" + EstateContent + ", WrittenDate="
+				+ WrittenDate + ", Deposit=" + Deposit + ", attachList=" + attachList + "]";
 	}
 }

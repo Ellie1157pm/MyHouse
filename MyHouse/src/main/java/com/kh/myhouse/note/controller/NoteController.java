@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,8 +39,12 @@ public class NoteController {
 		//2. 전체컨텐츠 수 구하기
 		int totalContents = noteService.selectNoteTotalContents();
 		
+		//3. 안읽은 컨텐츠 수 구하기
+		int noReadContents = noteService.selectNoContents();
+		
 		mav.addObject("list",list);
 		mav.addObject("totalContents",totalContents);
+		mav.addObject("noReadContents",noReadContents);
 		mav.addObject("numPerPage",numPerPage);
 		mav.addObject("cPage", cPage);
 	
@@ -47,14 +52,9 @@ public class NoteController {
 		
 		return mav;
 		
-//		return "note/noteMain";
+
 	}
-	
-//	@RequestMapping("/note/noteList.do")
-//	public void selectNoteList() {
-//		List<Note> list = noteService.select
-//	}
-	
+
 	@RequestMapping("/note/noteCon.do")
 	@ResponseBody
 	public void noteContents(@RequestParam int noteNo,
@@ -69,12 +69,19 @@ public class NoteController {
 	}
 	
 	@RequestMapping("/note/noteDelete.do")
-	@ResponseBody
-	public String noteDelete(@RequestParam("id") int noteNo) {
+	public String noteDelete(@RequestParam List<Integer> list, Model model) {
+		System.out.println("list@controller="+list);
+		noteService.deleteNote(list);
 		
-		noteService.deleteNote(noteNo);
 		return "redirect:/note/noteMain.do";
-		
-	
 	}
+	
+	@RequestMapping("/note/noteYN.do")
+	public String noteYN() {
+		
+		noteService.updateNoteYN();
+		return "redirect:/note/noteMain.do";
+	}
+	
+	
 }

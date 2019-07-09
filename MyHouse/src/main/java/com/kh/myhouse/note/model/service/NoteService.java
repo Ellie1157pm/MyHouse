@@ -11,6 +11,10 @@ public interface NoteService {
 
 	List<Object> selectNote(int noteno);
 
-	void deleteNote(int noteNo);
+	void deleteNote(List<Integer> list);
+
+	int selectNoContents();
+
+	void updateNoteYN();
 
 }

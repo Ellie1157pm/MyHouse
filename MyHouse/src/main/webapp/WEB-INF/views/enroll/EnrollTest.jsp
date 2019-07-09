@@ -8,7 +8,6 @@
 </jsp:include>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
-//2019년07월09일(화) 수정한 부분
  function validate(){
 	  var estateType = $(':input[name=estateType]:radio:checked').val();
 	  var transactiontype = $(':input[name=transactiontype]:radio:checked').val();
@@ -234,6 +233,7 @@ enctype="multipart/form-data">
 		<tr id="oneroom" style="display:none;">
 			<th>구조옵션</th>
 			<td>
+<<<<<<< HEAD
 				<input type="radio" name="construction" id="one1" value="오픈형(방1)" />
 			<label for="one1" >오픈형(방1)</label> 
 			<input type="radio" name="construction" id="one2"  value="분리형(방1,거실1)" />

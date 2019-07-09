@@ -82,6 +82,7 @@ div.estateList-box{
 }
 div.estateList-box img{
 	width: 111px;
+	height: 90px;
     float: left;
     margin-right: 10px;
 }
@@ -118,8 +119,13 @@ div.estateListEnd-box{
 	text-align: left;
 	background: white;
 }
+div.estateListEnd-box:hover{
+	cursor: pointer;
+	border: 2px solid black;
+}
 div.estateListEnd-box img{
 	width: 150px;
+	height: 120px;
     float: left;
     margin-right: 10px;
 }
