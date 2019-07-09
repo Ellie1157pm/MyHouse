@@ -121,7 +121,7 @@ public class MemberController {
 		return mav;
 	}
 	
-	/*
+	
 	@RequestMapping("/memberUpdate.do")
 	public ModelAndView memberUpdate(Member member) {
 		ModelAndView mav = new ModelAndView();
@@ -145,7 +145,7 @@ public class MemberController {
 
 		return mav;
 	}
-*/
+
 	@RequestMapping("/checkMemberEmail.do")
 	@ResponseBody
 	public String checkEmail(@RequestParam(value="memberEmail") String memberEmail) {
@@ -171,8 +171,40 @@ public class MemberController {
 		return findEmail;
 	}
 	
+	/* 비밀번호 변경시 기존 비밀번호 매칭 확인 */
+	@RequestMapping("/pwdIntegrity.do")
+	public String pwdIntegrity(@RequestParam(value="oldPwd") String oldPwd, Member m) {
+		return bcryptPasswordEncoder.matches(oldPwd, m.getMemberPwd())?"true":"false";
+		
+	}
+	
 	/* 관심매물 설정 */
-//	@RequestMapping("/interestList.do")
+	/* 관심매물 설정 시, 첫 입력때는 insert, 두번째부터는 update로 처리해야 한다. */
+	/*@RequestMapping("/interestList.do")
+	public ModelAndView interestList(@RequestParam String memberNo, Interest interest) {
+		ModelAndView mav = new ModelAndView();
+		System.out.println(memberNo);
+		
+		// 1.비지니스로직 실행
+		int result = memberService.insertInterestList(memberNo);
+		memberService.updateInterestList(memberNo);
+
+		// 2.처리결과에 따라 view단 분기처리
+		String loc = "/";
+		String msg = "";
+		if (result > 0) {
+			msg = "관심매물수정성공!";
+			mav.addObject("interest", interest);
+		} else
+			msg = "관심매물수정실패!";
+
+		mav.addObject("msg", msg);
+		mav.addObject("loc", loc);
+		mav.setViewName("common/msg");
+
+		
+		return mav;
+	}*/
 }
 
 
