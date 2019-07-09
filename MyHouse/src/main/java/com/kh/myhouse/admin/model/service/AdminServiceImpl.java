@@ -2,19 +2,31 @@ package com.kh.myhouse.admin.model.service;
 
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.myhouse.admin.model.dao.AdminDAO;
 import com.kh.myhouse.admin.model.vo.Item;
+import com.kh.myhouse.admin.model.vo.Rss;
 
 @Service
 public class AdminServiceImpl implements AdminService {
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired 
 	private AdminDAO adminDAO;
 
@@ -71,22 +83,52 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public void newsAllData(String title) {
-		adminDAO.newsAllData(title);
+		List<Item> list = new ArrayList<>();
+		SimpleDateFormat rssFmt = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US);
+		SimpleDateFormat strFmt = new SimpleDateFormat("yyyy/MM/dd");
+		
+		try {
+			URL url = new URL("http://newssearch.naver.com/search.naver?where=rss&query="
+							+URLEncoder.encode(title, "UTF-8"));
+			
+			JAXBContext jc = JAXBContext.newInstance(Rss.class);
+			Unmarshaller um = jc.createUnmarshaller();
+			Rss rss = (Rss)um.unmarshal(url);
+			list = rss.getChannel().getItem();
+			for(Item item : list) {
+				Map<String, String> news = new HashMap<>();
+				news.put("newsTitle", item.getTitle());
+				news.put("newsLink", item.getLink());
+				String desc = item.getDescription();
+				desc = desc.replace(".", "")
+						   .replaceAll("[A-Za-z]", "")
+						   .replace("'", "");
+				news.put("newsContent", desc);
+				Date date = rssFmt.parse(item.getPubDate());
+				String strDate = strFmt.format(date);
+				news.put("newsDate", strDate);
+				news.put("newsAuthor", item.getAuthor());
+				news.put("newsCategory", item.getCategory());
+				adminDAO.insertNews(news);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public List<Map<String, String>> newsAllData(int cPage) {
+	public List<Map<String, String>> selectAllNews(int cPage) {
 		List<Map<String, String>> list = new ArrayList<>();
 		
 		try {
 			int numPerPage = 10;
-			int offset = (cPage*numPerPage)-numPerPage;
-			RowBounds rb = new RowBounds(numPerPage*(cPage-1), numPerPage);
+			int offset = numPerPage*(cPage-1);
+			RowBounds rb = new RowBounds(offset, numPerPage);
 			
 			list = adminDAO.selectAllNews(rb);
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return list;
 	}
