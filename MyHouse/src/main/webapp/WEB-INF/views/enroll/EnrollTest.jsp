@@ -7,11 +7,28 @@
 	<jsp:param value="" name="pageTitle" />
 </jsp:include>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-<script >
+<script>
+//2019년07월09일(화) 수정한 부분
+ function validate(){
+	  var estateType = $(':input[name=estateType]:radio:checked').val();
+	  var transactiontype = $(':input[name=transactiontype]:radio:checked').val();
+   var etcoption = $(':input[name=etcoption]:checkbox:checked').val(); 
+	     if( estateType && transactiontype ){
+	         return true;
+	     }else{
+	         alert("버튼을 체크해주세요");
+	         return false;
+	     }            
+	     
+	 
+       return true;
+}
+
+
+
 
 //주소찾기
 function searchAddr(){
-
 new daum.Postcode({
 oncomplete: function(data) {
     // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
@@ -21,6 +38,7 @@ oncomplete: function(data) {
     
     var address1=data.address;
     var jibun=data.jibunAddress;
+    $('#taddress1').val(address1);
     $('#address1').val(address1);
     //지번주소 표기는 폐기처리.$('#address2').val('(지번주소)'+jibun+' ');
 
@@ -29,9 +47,38 @@ oncomplete: function(data) {
 }).open();
 
 }
-	
+//2019년07월09일(화) 수정한 부분	
 $(document).ready(function() {
-
+	
+	$("input:radio[id='apt']").on('click',function(){
+		 $("#flooroption").hide();
+		$("#oneroom").hide();
+		 $("#villa").hide();
+		 $("#officetel").hide();
+	 });
+	
+ $("input:radio[id='raidovilla']").on('click',function(){
+	 $("#flooroption").hide();
+	 $("#oneroom").hide();
+	 $("#villa").show();
+	 $("#officetel").hide();
+ });
+ 
+ $("input:radio[id='radiooneroom']").on('click',function(){
+	 $("#flooroption").show();
+	 $("#oneroom").show();
+	 $("#villa").hide();
+	 $("#officetel").hide();
+ });
+ 
+ $("input:radio[id='radioopi']").on('click',function(){
+	 $("#flooroption").hide();
+	 $("#oneroom").hide();
+	 $("#villa").hide();
+	 $("#officetel").show();
+ });
+ 
+	
  $("input:radio[id='monthly']").on('click',function(){
 	$("#mon").show();
 	$("#deposit").show();
@@ -56,9 +103,9 @@ $(document).ready(function() {
  
 }); 
 
-
+//2019년07월09일(화) 수정한 부분
 </script>
-<form action="${pageContext.request.contextPath}/search/EnrollTestEnd.do" method="post"
+<form action="${pageContext.request.contextPath}/search/EnrollTestEnd.do" method="post" onsubmit="return validate();"
 enctype="multipart/form-data">
 	<table>
 		<tr style="display:none;">
@@ -72,36 +119,40 @@ enctype="multipart/form-data">
 
 		<tr>
 			<th>주소</th>
-			<td><input type="text" name="address1" id="address1" class="addr"
-				required>
+			<td><input type="text" name="taddress1" id="taddress1" class="addr"
+				disabled="disabled" style="width: 250px">
 				<button type="button" onclick='searchAddr();'>주소검색</button>
 				</td>
 
 		</tr>
 		<tr>
+			<td><input type="hidden" name="address1" id="address1" class="addr"></td>
+		</tr>
+		<tr>
 			<th>상세정보</th>
-			<td><input type="text" name="address2" id="address2" class="addr" required></td>
+			<td><input type="text" name="address2" id="address2" class="addr" required pattern="^[1-9][0-9][0-9][동][1-2][1-9][층][1-4][호]"
+			    placeholder="124동15층4호 공백없이 이력하세요"></td>
 		</tr>
 		
 		 <tr>
           <th>핸드폰 번호</th>
-           <td><input type="text"name="phone1" required> -
-               <input type="text" name="phone2" required> -
-               <input type="text" name="phone3" required>
+           <td><input type="text"name="phone1" pattern="01(0|1)" required> -
+               <input type="text" name="phone2" pattern="\d{4}" required> -
+               <input type="text" name="phone3"  pattern="\d{4}"required>
            </td>
           </tr>
 		<tr>
 			<th>매물정보</th>
 			<td><input type="radio" name="estateType" id="apt" value="A" />
 			<label for="apt">아파트</label> 
-			<input type="radio" name="estateType" id="villa" value="V" />
+			<input type="radio" name="estateType" id="raidovilla" value="V" />
 			<label for="villa">빌라</label> 
 			
-			<input type="radio" name="estateType" id="oneroom" value="O" />
+			<input type="radio" name="estateType" id="radiooneroom" value="O" />
 			<label for="oneroom">원룸</label>
 				
 				
-				<input type="radio" name="estateType" id="opi" value="P"/>
+				<input type="radio" name="estateType" id="radioopi" value="P"/>
 				<label for="opi">오피스텔</label>
 
 			</td>
@@ -120,33 +171,32 @@ enctype="multipart/form-data">
 	</td>
 		<tr id="deposit" style="display:none;">
 			<th>보증금</th>
-			<td><input type="text" name="deposit"  value="0"/></td>
+			<td><input type="number" name="deposit" id="dd" min="0" value="0"/>만원</td>
 			
 		</tr>
 	 	<tr id="mon" style="display:none;">
 			<th>월세</th>
-			<td><input type="number" name="mon" value="0"/></td>
+			<td><input type="number" name="mon"  min="0" value="0"/>만원</td>
 		</tr>
 		
 		<tr id="char" style="display:none;">
 			<th>전세</th>
-			<td><input type="number" name="mon"  value="0"/></td>
+			<td><input type="number" name="mon" min="0"  value="0"/>만원</td>
 		</tr>
 		<tr id="forsale" style="display:none;">
 			<th>매물가</th>
-			<td><input type="number" name="mon" value="0" /></td>
+			<td><input type="number" name="mon" min="0" value="0" />만원</td>
 		</tr>
 		<tr>
 			<th>관리비</th>
-			<td><input type="number" name="ManageMenetFee" id="ManageMenetFee" 
-				 /></td>
+			<td><input type="number" name="ManageMenetFee" id="ManageMenetFee"  min="0"
+				required />만원</td>
 		</tr>
 	
 		<tr>
 			<th>평수</th>
-			<td><input type="number" name="estateArea" id="estateArea"
-			
-				 /></td>
+			<td><input type="number" name="estateArea" id="estateArea"  min="0"
+			required />평</td>
 		</tr>
 		
 		
@@ -156,19 +206,70 @@ enctype="multipart/form-data">
 			<td><input type="text" name="estatecontent" id="estatecontent"
 				placeholder="주변환경에 대해 적어주세요" /></td>
 		</tr>
-		<tr>
-			<th>매물옵션</th>
+		<tr >
+			<th>아파트옵션</th>
 			<td>
-				<input type="checkbox" name="etcoption" id="opt1" value="elevator"/>
+				<input type="checkbox" name="etcoption" id="opt1" value="엘레베이터" />
 			<label for="opt1" >엘레베이터</label> 
-			<input type="checkbox" name="etcoption" id="opt2"  value="animal" />
+			<input type="checkbox" name="etcoption" id="opt2"  value="애완동물" />
 			<label for="opt2"  >애완동물</label>
-			<input type="checkbox" name="etcoption" id="opt3" value="underparking" />
+			<input type="checkbox" name="etcoption" id="opt3" value="지하주차장" />
 			<label for="opt3">지하주차장</label>
-			<input type="checkbox" name="etcoption" id="opt3" value="culturespace" />
+			<input type="checkbox" name="etcoption" id="opt3" value="복합문화공간" />
 			<label for="opt3">복합문화공간</label>
 			</td>
 		</tr>
+		
+			<tr id="villa" style="display:none;">
+			<th>구조옵션</th>
+			<td>
+				<input type="radio" name="construction" id="con1" value="투룸" />
+			<label for="con1" >투룸</label> 
+			<input type="radio" name="construction" id="con2"  value="쓰리룸" />
+			<label for="con2"  >쓰리룸</label>
+			
+			</td>
+		</tr>
+		
+		<tr id="oneroom" style="display:none;">
+			<th>구조옵션</th>
+			<td>
+				<input type="radio" name="construction" id="one1" value="오픈형(방1)" />
+			<label for="one1" >오픈형(방1)</label> 
+			<input type="radio" name="construction" id="one2"  value="분리형(방1,거실1)" />
+			<label for="one2"  >분리형(1방,거실1)</label>
+				<input type="radio" name="construction" id="one3"  value="복층형" />
+			<label for="one3">복층형</label>
+			</td>
+		</tr>
+		
+			<tr id="flooroption" style="display:none;">
+			<th>층수옵션</th>
+			<td>
+				<input type="radio" name="flooropt" id="flop1" value="지상층" />
+			<label for="flop1">지상층</label> 
+			<input type="radio" name="flooropt" id="flop2"  value="반지하,옥탑" />
+			<label for="flop2"  >반지하,옥탑</label>
+			
+			</td>
+		</tr>
+		
+			<tr id="officetel" style="display:none;">
+			<th>구조옵션</th>
+			<td>
+				<input type="radio" name="construction" id="off1" value="오픈형 원룸" />
+			<label for="off1" >오픈형 원룸</label> 
+			<input type="radio" name="construction" id="off2"  value="분리형" />
+			<label for="off2"  >분리형 </label>
+				<input type="radio" name="construction" id="off3"  value="복층형" />
+			<label for="off3">복층형</label>
+			</td>
+		</tr>
+		
+		
+		
+		
+		
 
 		<tr>
 			<th>인근전철역</th>
@@ -178,7 +279,7 @@ enctype="multipart/form-data">
 		<tr>
 			<th>매물사진</th>
 			<td>
-		   <input type="file" name="upFile" id="upFile" multiple />
+		   <input type="file" name="upFile" id="upFile" multiple required/>
 			</td>
 			
 		</tr>

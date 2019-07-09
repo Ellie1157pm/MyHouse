@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.kh.myhouse.estate.model.vo.Estate;
 import com.kh.myhouse.estate.model.vo.EstateAttach;
-import com.kh.myhouse.estate.model.vo.EstatePhoto;
 import com.kh.myhouse.estate.model.vo.Option;
 
 public interface EstateService {
@@ -16,11 +15,21 @@ public interface EstateService {
 	
 	Estate selectDetailEstate(Map<String, String> param);
 
-	EstatePhoto selectEstatePhoto(int estateNo);
+	EstateAttach selectEstateAttach(int estateNo);
 
 	int estateoptionlist(Option option);
 
 	int EstateInsert(Estate estate);
 
 	int insertattach(List<EstateAttach> attachList);
+
+	List<String> selectApartListForAll(Map<String, Object> map);
+
+	List<String> selectApartListForAllSelectOption(Map<String, Object> map);
+
+	List<String> selectApartListSelectStructureNotOption(Map<String, Object> map);
+
+	List<String> selectApartListSelectStructureSelectOption(Map<String, Object> map);
+
+	List<Map<String, String>> selectShowEstate(int cPage, int numPerPage, String roadAddressName);
 }

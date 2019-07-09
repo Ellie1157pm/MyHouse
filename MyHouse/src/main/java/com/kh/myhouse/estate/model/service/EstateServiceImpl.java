@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.kh.myhouse.estate.model.dao.EstateDAO;
 import com.kh.myhouse.estate.model.vo.Estate;
 import com.kh.myhouse.estate.model.vo.EstateAttach;
-import com.kh.myhouse.estate.model.vo.EstatePhoto;
 import com.kh.myhouse.estate.model.vo.Option;
 
 @Service
@@ -38,8 +37,8 @@ public class EstateServiceImpl implements EstateService{
 
 
 	@Override
-	public EstatePhoto selectEstatePhoto(int estateNo) {
-		return estateDAO.selectEstatePhoto(estateNo);
+	public EstateAttach selectEstateAttach(int estateNo) {
+		return estateDAO.selectEstateAttach(estateNo);
 	}
 
 	@Override
@@ -71,5 +70,35 @@ public class EstateServiceImpl implements EstateService{
 		}
 		System.out.println("Service의result@@=="+result);
 		return result;
+	}
+
+
+	@Override
+	public List<String> selectApartListForAll(Map<String, Object> map) {
+		return estateDAO.selectApartListForAll(map);
+	}
+
+
+	@Override
+	public List<String> selectApartListForAllSelectOption(Map<String, Object> map) {
+		return estateDAO.selectApartListForAllSelectOption(map);
+	}
+
+
+	@Override
+	public List<String> selectApartListSelectStructureNotOption(Map<String, Object> map) {
+		return estateDAO.selectApartListSelectStructureNotOption(map);
+	}
+
+
+	@Override
+	public List<String> selectApartListSelectStructureSelectOption(Map<String, Object> map) {
+		return estateDAO.selectApartListSelectStructureSelectOption(map);
+	}
+
+
+	@Override
+	public List<Map<String, String>> selectShowEstate(int cPage, int numPerPage, String roadAddressName) {
+		return estateDAO.selectShowEstate(cPage,numPerPage,roadAddressName);
 	}
 }
