@@ -26,14 +26,6 @@ public class AdminController {
 	@Autowired
 	private AdminService adminService;
 	
-	/*@RequestMapping("/info")
-	public String adminInfo(Model model) {
-		List<Map<String, String>> list = adminService.selectMemberList();
-		logger.info("list={}", list);
-		model.addAttribute("list", list);
-		return "admin/adminInfo";
-	}*/
-	
 	@RequestMapping("/listView")
 	public String adminListView(@RequestParam String item,
 								Model model) {
@@ -71,28 +63,50 @@ public class AdminController {
 		return map;
 	}
 	
-	@RequestMapping("/news.do")
-	public String newsSearch(HttpServletRequest req) throws Exception {
-		req.setCharacterEncoding("EUC-KR");
-		String title = req.getParameter("title");
-		if(title == null) {
-			title = "부동산";
-		}
-		
+	@RequestMapping("/newsRss")
+	public void saveTodayNews(HttpServletRequest request) throws Exception {
+		request.setCharacterEncoding("EUC-KR");
+		adminService.newsAllData("부동산");
+	}
+	
+	/*@RequestMapping("/news.do")
+	public String selectAllNews(HttpServletRequest req) throws Exception {		
 		String page = req.getParameter("page");
 		if(page == null) 
 			page = "1";
 		int cPage = Integer.parseInt(page);
-		adminService.newsAllData(title);
-		List<Map<String, String>> list = adminService.newsAllData(cPage);
+		List<Map<String, String>> list = adminService.selectAllNews(cPage);
+		logger.info("list@selectAllNews={}", list);
 //		int totalPage = adminService.newsTotalPage();
 		int totalPage = 10;
 		
 		req.setAttribute("list", list);
 		req.setAttribute("cpage", cPage);
 		req.setAttribute("totalPage", totalPage);
-		req.setAttribute("title", title);
 		
 		return "admin/newsTest";
+	}*/
+	
+	@RequestMapping("/board")
+	public String showAdminBoard(HttpServletRequest req) throws Exception {
+		String page = req.getParameter("page");
+		if(page == null) 
+			page = "1";
+		int cPage = Integer.parseInt(page);
+		List<Map<String, String>> list = adminService.selectAllNews(cPage);
+		logger.info("list@selectAllNews={}", list);
+//		int totalPage = adminService.newsTotalPage();
+		int totalPage = 10;
+		
+		req.setAttribute("list", list);
+		req.setAttribute("cpage", cPage);
+		req.setAttribute("totalPage", totalPage);
+		
+		return "admin/adminBoard";
+	}
+	
+	@RequestMapping("/indexBoard")
+	public String showAdminIndexBoard() {
+		return "admin/adminIndexBoard";
 	}
 }

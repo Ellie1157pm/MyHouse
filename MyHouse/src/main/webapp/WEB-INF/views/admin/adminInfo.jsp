@@ -65,6 +65,7 @@ $(function() {
 			<button type="button" class="btn btn-secondary adminBtn" id="memberList">일반회원관리</button>
 			<button type="button" class="btn btn-secondary adminBtn" id="realtorList">중개회원관리</button>
 			<button type="button" class="btn btn-secondary adminBtn" id="reportList">신고목록</button>
+			<button type="button" class="btn btn-secondary adminBtn" id="noticeForm">공지작성</button>
 			<button type="button" class="btn btn-secondary adminBtn" id="statics">통계</button>
 		</div>
 		<div id="list-container">

@@ -17,6 +17,6 @@ public interface AdminService {
 
 	void newsAllData(String title);
 
-	List<Map<String, String>> newsAllData(int cPage);
+	List<Map<String, String>> selectAllNews(int cPage);
 
 }

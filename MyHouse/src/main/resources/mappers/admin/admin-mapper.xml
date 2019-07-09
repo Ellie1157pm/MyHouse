@@ -26,8 +26,11 @@
 	values (
 		seq_news_no.nextval,
 		#{newsTitle},
+		#{newsLink},
 		#{newsContent},
-		#{newsDate}
+		#{newsDate},
+		#{newsAuthor},
+		#{newsCategory}
 	)
 	</select>
 	
