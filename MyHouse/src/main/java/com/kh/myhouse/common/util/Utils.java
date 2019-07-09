@@ -23,12 +23,12 @@ public class Utils {
 		//[이전]section
 		if(pageNo == 1) {
 			pageBar += "<li class='page-item disabled'>";
-			pageBar += "<a class='page-link' href='#' >이전</a>";
+			pageBar += "<a class='page-link' href='#' ><</a>";
 			pageBar += "</li>";
 		}
 		else {
 			pageBar += "<li class='page-item'>";
-			pageBar += "<a class='page-link' href='javascript:paging("+(pageNo-1)+")'>이전</a>";
+			pageBar += "<a class='page-link' href='javascript:paging("+(pageNo-1)+")'><</a>";
 			pageBar += "</li>";
 			
 		}
@@ -55,12 +55,12 @@ public class Utils {
 		//다음페이지가 없는 경우
 		if(pageNo > totalPage) {
 			pageBar += "<li class='page-item'>";
-			pageBar += "<a class='page-link' href='#'>다음</a>";
+			pageBar += "<a class='page-link' href='#'>></a>";
 			pageBar += "</li>";
 		}
 		else {
 			pageBar += "<li class='page-item'>";
-			pageBar += "<a class='page-link' href='javascript:paging("+pageNo+")'>다음</a>";
+			pageBar += "<a class='page-link' href='javascript:paging("+pageNo+")'>></a>";
 			pageBar += "</li>";
 			
 		}
@@ -71,7 +71,7 @@ public class Utils {
 		//paging함수
 		pageBar += "<script>";
 		pageBar += "function paging(cPage){";
-		pageBar += "	location.href='"+url+"?cPage='+cPage;";
+		pageBar += "	location.href='"+url+"?cPage='+cPage;";	
 		pageBar += "}";
 		pageBar += "</script>";
 		

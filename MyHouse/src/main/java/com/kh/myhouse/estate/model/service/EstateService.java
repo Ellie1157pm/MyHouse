@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.myhouse.estate.model.vo.Estate;
+import com.kh.myhouse.estate.model.vo.EstateAttach;
 import com.kh.myhouse.estate.model.vo.EstatePhoto;
+import com.kh.myhouse.estate.model.vo.Option;
 
 public interface EstateService {
 
@@ -16,4 +18,9 @@ public interface EstateService {
 
 	EstatePhoto selectEstatePhoto(int estateNo);
 
+	int estateoptionlist(Option option);
+
+	int EstateInsert(Estate estate);
+
+	int insertattach(List<EstateAttach> attachList);
 }

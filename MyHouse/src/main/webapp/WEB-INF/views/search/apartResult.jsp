@@ -11,8 +11,6 @@
     List list = (List)request.getAttribute("list");  //마커를 찍기위한 아파트 리스트
 %>
 <style>
-
-
 </style>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/map/map.css" />
@@ -103,8 +101,6 @@ function viewFilter(){
 	$('#search3').css('display','block');
 	$('#searchArea').css('height','600px');
 }
-
-
 //리셋
 function filterReset(){
 	//거래 유형(매매,전,월세)
@@ -143,15 +139,12 @@ function filterReset(){
 	
 	ajax();
 	
-
 }
-
 //매매/전세 셀렉트 박스 변경시 필터의 거래유형도 변경.
 function changeDeal(obj){
 	var value=obj.value;
 	$('div#search3 .first').css('color','black;');
 	for(var i=0;i<$('div#search3 .first').length;i++){
-
  		if(value==$('div#search3 .first')[i].value){
  			$('div#search3 .first')[i].style.background="#6c757d";
  			$('div#search3 .first')[i].style.color="white";
@@ -184,10 +177,8 @@ function changeDeal2(obj){
 	ajax();
 	
 }
-
 //평수(면적) 선택시 호출되는 함수.
 function changeARea(obj){
-
  	//전체 초기화
 	 $('#areaTbl td').css('background','white')
 		.css('color','#6c757d'); 
@@ -210,12 +201,10 @@ function changeARea(obj){
 	ajax();
 	
 }
-
 function closeSearch3(){
 	$('#search3').css('display','none');
 	$('#searchArea').css('height','145px');
 }
-
 function ajax(){
 	var areaType;
 	for(var i=0;i<$('#search3 .second').length;i++){
@@ -251,81 +240,50 @@ function ajax(){
 		
 	}); 
 }
-
-
-
-
-
-
-
-
 //지도 관련
-
 //default 지도 생성
 var mapContainer=document.getElementById('map'),
 mapOption={
 	center:new daum.maps.LatLng(37.566826, 126.9786567),
 	level:5
 	}
-
 var map=new daum.maps.Map(mapContainer,mapOption);
 /////////////////////
-
-
 //클러스터링 
  var clusterer = new kakao.maps.MarkerClusterer({
      map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
      averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
      minLevel: 6 // 클러스터 할 최소 지도 레벨 
  });
-
-
-
-
-
 //controller에서 가져온 검색값 사용하기.
 //장소 검색 객체를 생성
 var ps = new daum.maps.services.Places();
-
 //검색 장소를 기준으로 지도 재조정.
 <% if(keyword!=null){%>
 var gap='<%=keyword%>';
 ps.keywordSearch(gap, placesSearchCB); 
 <%}%>
-
-
 //이건 아파트 리스트(주소던 아파트 이름이던 알아서 마커 찍고 클러스터링 해줌)
-
-
 <%if(list!=null){for(int i=0; i<list.size(); i++) {%>
 var loc ="<%=list.get(i)%>";
 console.log(loc);
 ps.keywordSearch(loc, placesSearchCB2);
-
 <%}}%>
-
-
 /* for(var i in output){
 	loc = output[i];
 	 console.log(loc);
 	 ps.keywordSearch(loc, placesSearchCB2);
 } */
-
  <%-- <% for(int i=0;i<list.size();i++){ %>
 var loc =new Array();   
  
  console.log(loc);
 ps.keywordSearch(loc, placesSearchCB2); <% }%> --%> 
-
-
-
-
 //사용자가 지도상에서 이동시 해당 매물 뿌려주는 부분
  //1.좌표=>주소 변환 객체 생성
  var geocoder = new kakao.maps.services.Geocoder();
 //주소 받아올 객체
  var address="";
-
 //사용자가 지도 위치를 옮기면(중심 좌표가 변경되면)
 kakao.maps.event.addListener(map, 'dragend', function() {     
 	//법정동 상세주소 얻어오기
@@ -343,25 +301,18 @@ kakao.maps.event.addListener(map, 'dragend', function() {
     }); */
     
 });
-
 /////////////////////////////////////////////////////////////////////////////
-
 //사용자 사용함수----------------------------------------------------------------
-
-
-
 function searchDetailAddrFromCoords(coords, callback) {
     // 좌표로 법정동 상세 주소 정보를 요청
     geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
 }
-
 //지도에 마커-클러스터링 하는 함수
 function displayMarker(place) {
 	var markerPosition  = new kakao.maps.LatLng(place.y, place.x); 
         // 데이터에서 좌표 값을 가지고 마커를 표시합니다
         
         var markers = $(place).map(function(markerPosition) {
-
             return new kakao.maps.Marker({
                 position : new kakao.maps.LatLng(place.y, place.x)
             });
@@ -438,7 +389,6 @@ function displayMarker(place) {
                 infowindow.open(map, markers);
             };
         }
-
         // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
         function makeOutListener(infowindow) {
             return function() {
@@ -458,19 +408,14 @@ function displayMarker(place) {
         	
             // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
             infowindow.open(map, markers);
-
         }); */
         
      
      // 클러스터러에 마커들을 추가합니다
         clusterer.addMarkers(markers); 
 }
-
-
 /////////////////////////////////////////////////////////////////////////////
-
 //콜백함수--------------------------------------------------------------------
-
 //키워드 검색 완료 시 호출되는 콜백함수
 function placesSearchCB (data, status, pagination) {
   if (status === daum.maps.services.Status.OK) {
@@ -502,29 +447,22 @@ function placesSearchCB (data, status, pagination) {
       map.setBounds(bounds);
   } 
 }
-
-
 //주소로 좌표를 검색하고 마커찍기
 function placesSearchCB2 (data, status, pagination) {
     if (status === daum.maps.services.Status.OK) {
     	
-
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
         // LatLngBounds 객체에 좌표를 추가합니다
        // var bounds = new daum.maps.LatLngBounds();
-
         for (var i=0; i<1; i++) {
         	//좌표찍는 메소드
             displayMarker(data[0]);    
             //bounds.extend(new daum.maps.LatLng(data[i].y, data[i].x));
         }       
-
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
         //map.setBounds(bounds);
     } 
 }
-
-
 function showEstate(no,addressName,roadAddressName){
 	 var param = {};
 	 param.estateNo = no;
@@ -542,7 +480,6 @@ function showEstate(no,addressName,roadAddressName){
     	}
 	});
 }
-
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
