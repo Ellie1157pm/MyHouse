@@ -69,23 +69,10 @@ public class AdminController {
 		adminService.newsAllData("부동산");
 	}
 	
-	/*@RequestMapping("/news.do")
-	public String selectAllNews(HttpServletRequest req) throws Exception {		
-		String page = req.getParameter("page");
-		if(page == null) 
-			page = "1";
-		int cPage = Integer.parseInt(page);
-		List<Map<String, String>> list = adminService.selectAllNews(cPage);
-		logger.info("list@selectAllNews={}", list);
-//		int totalPage = adminService.newsTotalPage();
-		int totalPage = 10;
-		
-		req.setAttribute("list", list);
-		req.setAttribute("cpage", cPage);
-		req.setAttribute("totalPage", totalPage);
-		
-		return "admin/newsTest";
-	}*/
+	@RequestMapping("/noticeForm")
+	public String noticeForm() {
+		return "admin/noticeForm";
+	}
 	
 	@RequestMapping("/board")
 	public String showAdminBoard(HttpServletRequest req) throws Exception {

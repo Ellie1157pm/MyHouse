@@ -1,14 +1,7 @@
 package com.kh.myhouse.admin.model.dao;
 
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -16,9 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.kh.myhouse.admin.model.vo.Item;
-import com.kh.myhouse.admin.model.vo.Rss;
 
 @Repository
 public class AdminDAOImpl implements AdminDAO {
