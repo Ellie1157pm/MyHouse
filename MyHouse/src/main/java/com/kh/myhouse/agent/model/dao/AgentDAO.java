@@ -21,4 +21,6 @@ public interface AgentDAO {
 
 	Agent selectOneAgent(String memberEmail);
 
+	int updateEstate(Map<String, Object> map);
+
 }

@@ -50,4 +50,9 @@ public class AgentDAOImpl implements AgentDAO {
 		return sqlSession.selectOne("agent.selectOneAgent", memberEmail);
 	}
 
+	@Override
+	public int updateEstate(Map<String, Object> map) {
+		return sqlSession.update("updateEstate", map);
+	}
+
 }
