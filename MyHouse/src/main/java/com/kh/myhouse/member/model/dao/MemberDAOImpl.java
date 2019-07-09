@@ -38,5 +38,25 @@ public class MemberDAOImpl implements MemberDAO {
 	public List<Member> findId(Member member) {
 		return sqlSession.selectList("member.findId", member);
 	}
+	
+	@Override
+	public int deleteMember(String memberNo) {
+		return sqlSession.update("member.deleteMember", memberNo);
+	}
+
+	@Override
+	public Member selectOneMember(int memberNo) {
+		return sqlSession.selectOne("member.selectOneMember_", memberNo);
+	}
+
+	@Override
+	public int insertInterest(Member member) {
+		return sqlSession.insert("member.insertInterest", member);
+	}
+
+	@Override
+	public int updateInterest(int memberNo) {
+		return sqlSession.update("member.updateInterest", memberNo);
+	}
 
 }

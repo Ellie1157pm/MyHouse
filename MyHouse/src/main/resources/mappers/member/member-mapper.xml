@@ -16,20 +16,35 @@
 		SELECT * FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail}
 	</select>
 	
-<!-- 	<resultMap type="member" id="memberMap">
-	</resultMap> -->
-	
 	<select id="checkEmail" resultType="_int">
 		SELECT COUNT(*) FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail}
 	</select>
 	
-<!--     <update id="updateMember">
-		UPDATE MEMBER SET MEMBERNAME = #{memberName}, PHONE = #{phone}, 
-		WHERE MEMBERID = #{memberId}
-	</update> -->
+	<update id="updateMember">
+		UPDATE MEMBER SET MEMBER_NAME = #{memberName}, MEMBER_PWD = #{memberPwd}, RECEIVE_MEMO_YN = #{receiveMemoYN} 
+		WHERE MEMBER_NO = #{memberNo}
+	</update>
 	
 	<select id="findId" resultType="member">
 		SELECT MEMBER_EMAIL FROM MEMBER WHERE MEMBER_NAME = #{memberName} AND PHONE = #{phone}
 	</select>
 	
+	<update id="deleteMember">
+		UPDATE MEMBER SET QUIT_DATE = sysdate, QUIT_YN = 'Y' WHERE MEMBER_NO = #{memberNo}
+	</update>
+	
+	<select id="selectOneMember_" resultType="member">
+		SELECT * FROM MEMBER WHERE MEMBER_NO = #{memberNo}
+	</select>
+	
+	<insert id="insertInterest">
+		INSERT INTO INTEREST(INTEREST_NO, MEMBER_NO) VALUES(seq_interest_no.nextval, seq_member_no.currval)
+	</insert>
+	
+	<update id="updateInterest">
+		UPDATE INTEREST 
+		SET REGION = #{region}, ESTATE_TYPE = #{estateType, typeHandler=strArrTypeHandler}, 
+		PET = #{pet}, ELEVATOR = #{elevator}, PARKING = #{parking}, SUBWAY = #{subway}
+		WHERE MEMBER_NO = #{MEMBER_NO}
+	</update>
 </mapper>

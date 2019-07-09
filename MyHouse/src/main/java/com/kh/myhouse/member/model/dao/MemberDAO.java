@@ -16,4 +16,12 @@ public interface MemberDAO {
 
 	List<Member> findId(Member member);
 
+	int deleteMember(String memberNo);
+
+	Member selectOneMember(int memberNo);
+
+	int insertInterest(Member member);
+
+	int updateInterest(int memberNo);
+
 }

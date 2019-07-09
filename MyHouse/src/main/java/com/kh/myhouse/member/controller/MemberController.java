@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.myhouse.interest.model.vo.Interest;
 import com.kh.myhouse.member.model.exception.MemberException;
 import com.kh.myhouse.member.model.service.MemberService;
 import com.kh.myhouse.member.model.vo.Member;
@@ -47,9 +48,11 @@ public class MemberController {
 		member.setMemberPwd(encodedPassword);
 
 		int result = memberService.insertMember(member);
+		//회원 가입시, interest테이블에 회원번호를 insert해서 만들어둔다.
+		int result_ = memberService.insertInterest(member);
 		
 		String loc = "/";
-		String msg = result>0?"회원가입성공!":"회원가입실패!";
+		String msg = result>0 && result_>0?"회원가입성공!":"회원가입실패!";
 		
 		model.addAttribute("loc", loc);
 		model.addAttribute("msg", msg);
@@ -65,7 +68,6 @@ public class MemberController {
 			logger.debug("로그인 요청!");
 		
 		String encodedPassword = bcryptPasswordEncoder.encode(memberPwd);
-		System.out.println("암호화후: "+encodedPassword);
 		
 		try {
 
@@ -114,18 +116,25 @@ public class MemberController {
 	
 
 	@RequestMapping("/memberView.do")
-	public ModelAndView memberView(@RequestParam String memberEmail) {
+	public ModelAndView memberView(@RequestParam int memberNo) {
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("member", memberService.selectOneMember(memberEmail));
+		mav.addObject("member", memberService.selectOneMember(memberNo));
 		mav.setViewName("member/memberView");
 		return mav;
 	}
 	
-	/*
+	
 	@RequestMapping("/memberUpdate.do")
 	public ModelAndView memberUpdate(Member member) {
 		ModelAndView mav = new ModelAndView();
 		System.out.println(member);
+		member = memberService.selectOneMember(member.getMemberNo());
+		System.out.println(member);
+		String rawPassword = member.getMemberPwd();
+		System.out.println("패스워드 변경 암호화 전: " + rawPassword);
+		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
+		System.out.println("패스워드 변경 암호화 후: " + encodedPassword);
+		member.setMemberPwd(encodedPassword);
 
 		// 1.비지니스로직 실행
 		int result = memberService.updateMember(member);
@@ -135,7 +144,8 @@ public class MemberController {
 		String msg = "";
 		if (result > 0) {
 			msg = "회원정보수정성공!";
-			mav.addObject("memberLoggedIn", member);
+			mav.addObject("member", member);
+			System.out.println("수정후 회원정보:" + member);
 		} else
 			msg = "회원정보수정실패!";
 
@@ -145,7 +155,7 @@ public class MemberController {
 
 		return mav;
 	}
-*/
+
 	@RequestMapping("/checkMemberEmail.do")
 	@ResponseBody
 	public String checkEmail(@RequestParam(value="memberEmail") String memberEmail) {
@@ -171,8 +181,48 @@ public class MemberController {
 		return findEmail;
 	}
 	
+	/* 비밀번호 변경시 기존 비밀번호 매칭 확인 */
+	@RequestMapping("/pwdIntegrity.do")
+	@ResponseBody
+	public String pwdIntegrity(@RequestParam(value="oldPwd") String oldPwd, 
+							   @RequestParam(value="memberNo") int memberNo) {
+		
+		Member m = memberService.selectOneMember(memberNo);
+
+		String str = bcryptPasswordEncoder.matches(oldPwd, m.getMemberPwd())?"true":"false";
+
+		return str;
+	}
+	
 	/* 관심매물 설정 */
-//	@RequestMapping("/interestList.do")
+	@RequestMapping("/interestList")
+	public ModelAndView interestList(@RequestParam int memberNo, Interest interest) {
+		ModelAndView mav = new ModelAndView();
+
+		int result = memberService.updateInterest(memberNo);
+
+		String loc = "/member/interestList?memberNo="+memberNo;
+		String msg = "";
+		if (result > 0) {
+			msg = "관심매물수정성공!";
+			mav.addObject("interest", interest);
+		} else
+			msg = "관심매물수정실패!";
+
+		mav.addObject("msg", msg);
+		mav.addObject("loc", loc);
+		mav.setViewName("common/msg");
+
+		
+		return mav;
+	}
+	
+	@RequestMapping("/deleteMember.do")
+	public void deleteMember(@RequestParam String memberNo) {
+
+		int result = memberService.deleteMember(memberNo);
+
+	}
 }
 
 

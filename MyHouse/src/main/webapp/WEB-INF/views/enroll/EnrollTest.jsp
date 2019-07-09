@@ -22,10 +22,6 @@
 	 
        return true;
 }
-
-
-
-
 //주소찾기
 function searchAddr(){
 new daum.Postcode({
@@ -40,11 +36,8 @@ oncomplete: function(data) {
     $('#taddress1').val(address1);
     $('#address1').val(address1);
     //지번주소 표기는 폐기처리.$('#address2').val('(지번주소)'+jibun+' ');
-
-
 }
 }).open();
-
 }
 //2019년07월09일(화) 수정한 부분	
 $(document).ready(function() {
@@ -101,7 +94,6 @@ $(document).ready(function() {
  
  
 }); 
-
 //2019년07월09일(화) 수정한 부분
 </script>
 <form action="${pageContext.request.contextPath}/search/EnrollTestEnd.do" method="post" onsubmit="return validate();"
@@ -233,7 +225,6 @@ enctype="multipart/form-data">
 		<tr id="oneroom" style="display:none;">
 			<th>구조옵션</th>
 			<td>
-<<<<<<< HEAD
 				<input type="radio" name="construction" id="one1" value="오픈형(방1)" />
 			<label for="one1" >오픈형(방1)</label> 
 			<input type="radio" name="construction" id="one2"  value="분리형(방1,거실1)" />
