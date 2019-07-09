@@ -15,8 +15,7 @@ public interface AdminDAO {
 
 	String selectMemberEmail(String recipient);
 
-	void newsAllData(String title);
-
 	List<Map<String, String>> selectAllNews(RowBounds rb);
 
+	public int insertNews(Map<String, String> news);
 }

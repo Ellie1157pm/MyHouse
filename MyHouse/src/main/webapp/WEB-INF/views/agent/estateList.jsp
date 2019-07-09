@@ -70,7 +70,7 @@ $(function() {
 			<div id="estateList">
 				<c:forEach var="e" items="${list}">
 					<div class="estateList-box">
-						<img src="${pageContext.request.contextPath }/resources/upload/estatesample.PNG" alt="매물사진"/>
+						<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/${e.RENAMED_FILENAME}" alt="매물사진"/>
 						<p>
 							<c:choose>
 								<c:when test="${e.TRANSACTION_TYPE eq 'M'}">

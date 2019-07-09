@@ -38,14 +38,13 @@ $(function() {
 				<c:forEach var="e" items="${list}">
 					<div class="estateListEnd-box">
 						<span>
-						<c:if test="${e.POWER_LINK_NO ne null}">
+						<c:if test="${e.POWER_LINK_NO ne 0}">
 							<c:if test="${e.ADATE > 0}">
 								광고중
 							</c:if>
 						</c:if>
-						광고중
 						</span>
-						<img src="${pageContext.request.contextPath }/resources/upload/estatesample.PNG" alt="매물사진"/>
+						<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/${e.RENAMED_FILENAME}" alt="매물사진"/>
 						<p>
 							<c:choose>
 								<c:when test="${e.TRANSACTION_TYPE eq 'M'}">

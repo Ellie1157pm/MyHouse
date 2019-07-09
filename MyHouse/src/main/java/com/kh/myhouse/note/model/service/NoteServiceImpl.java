@@ -30,9 +30,18 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 	@Override
-	public void deleteNote(int noteNo) {
+	public void deleteNote(List<Integer> noteNo) {
 		noteDAO.deleteNote(noteNo);
-		
+	}
+
+	@Override
+	public int selectNoContents() {
+		return noteDAO.selectNoReadContents();
+	}
+
+	@Override
+	public void updateNoteYN() {
+		noteDAO.updateNoteYN();
 	}
 
 }

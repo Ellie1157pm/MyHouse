@@ -31,8 +31,18 @@ public class NoteDAOImpl implements NoteDAO{
 	}
 
 	@Override
-	public void deleteNote(int noteNo) {
+	public void deleteNote(List<Integer> noteNo) {
 		sqlSession.delete("note.deleteNote",noteNo);
+	}
+
+	@Override
+	public int selectNoReadContents() {
+		return sqlSession.selectOne("note.selectNoReadContents");
+	}
+
+	@Override
+	public void updateNoteYN() {
+		sqlSession.update("note.updateNoteYN");
 	}
 
 }

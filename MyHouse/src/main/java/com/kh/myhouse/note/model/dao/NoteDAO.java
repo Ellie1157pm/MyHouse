@@ -11,7 +11,13 @@ public interface NoteDAO {
 
 	List<Object> selectNote(int noteno);
 
-	void deleteNote(int noteNo);
+	void deleteNote(List<Integer> noteNo);
+
+	int selectNoReadContents();
+
+	void updateNoteYN();
+
+	
 
 
 }

@@ -25,50 +25,39 @@ $(function(){
 				noteNo : $(this).attr("id")
 		}
 		console.log($(this).attr("id"));
+		//모달에 내용찍기
 		$.ajax({
 			url: "${pageContext.request.contextPath}/note/noteCon.do",
 			type: "post",
 			data: param,
 			dataType: "json",
 			success: function(data){
-				console.log(data);
 				$(".note-contents").html(data[0]);
 			}
 		});
+		
+		//열람여부
+		location.href = "${pageContext.request.contextPath}/note/noteYN";
 	});
 });
-function noteOpen(){
+/* function noteOpen(){
 	$(".notebox").css("visibility","visible");	
-}
+} */
 
 function noteDel(){
-	console.log($("input.c1").is(":checked"));
-	
+	var list = new Array();
 
-		/*var param = { noteNo: $(this).attr("id")}
-		$.ajax({
-			url: "${pageContext.request.contextPath}/note/noteDelete.do",
-			type: "post",
-			data: param,
-			dataType: "json",
-			success: function(data){
-				console.log(data);
-			}
-		});  */
-	if($("input.c1").is(":checked")){
-		var bool = confirm("정말로 삭제하시겠습니까?");
-		var no = $("input.c1").attr("id");
-		console.log(no);
-		if(bool){
-			location.href = "${pageContext.request.contextPath}/note/noteDelete.do?="+no;
-			return true;
-		}
-		return false;
-		
+	var bool = confirm("정말로 삭제하시겠습니까?");
+	
+	$("input[type=checkbox]:checked").each(function(){
+		list.push($(this).val());
+	});
+	alert(list+"번 을 삭제합니다");
+	if(bool){
+		location.href = "${pageContext.request.contextPath}/note/noteDelete.do?list="+list;
+		return true;
 	}
 	
-		
-		
 	
 }
 
@@ -84,9 +73,9 @@ function noteDel(){
 	<div class="notebox">
 		<div class="not-sub">
 			<span class="noteBOX">받은 쪽지함</span>
-			<span class="note1">안읽은쪽지</span>
+			<span class="note1">안읽은쪽지 ${noReadContents }통</span>
 			<span class="note1">전체쪽지 ${totalContents }통</span>
-			<button type="button" class="btn btn-primary" onclick="noteDel();">삭제하기</button>
+			<button type="button" id="deleteBtn" class="btn btn-primary" onclick="noteDel()">삭제하기</button>
 		</div>
 		<div class="table-note-div">
 			<table id="tbl-note" class="table-note-class">
@@ -99,7 +88,7 @@ function noteDel(){
 				</tr>
 				<c:forEach items="${list }" var="n">
 				<tr class="note-select">
-					<td><input type="checkbox" id="${n.MEMO_NO }" class="c1"/></td>
+					<td><input type="checkbox" class="c1" name="list" value="${n.MEMO_NO }" /></td>
 					<td id="${n.MEMO_NO }" class="td-primary" data-toggle="modal" data-target=".bd-example-modal-sm">관리자</td>			
 					<td id="${n.MEMO_NO }" class="td-primary" data-toggle="modal" data-target=".bd-example-modal-sm" value="${n.MEMO_CONTENTS }"><div id="contentC">${n.MEMO_CONTENTS }</div></td>
 					<td id="${n.MEMO_NO }" class="td-primary" data-toggle="modal" data-target=".bd-example-modal-sm"><fmt:formatDate value="${n.MEMO_DATE}" pattern="yyyy-MM-dd" /></td>

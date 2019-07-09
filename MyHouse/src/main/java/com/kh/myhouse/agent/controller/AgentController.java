@@ -147,11 +147,14 @@ public class AgentController {
 	}
 	
 	@RequestMapping("/advertisedQuestion")
-	public void advertisedQuestion() {}
+	public void advertisedQuestion(int memberNo, Model model) {
+		List<Map<String, String>> list = agentService.estateListEnd(0);
+		
+		model.addAttribute("list", list);
+	}
 	
 	@RequestMapping("/agentMypage")
-	public void agentMypage(int memberNo) {
-		System.out.println("memberNo@controller="+memberNo);
+	public void agentMypage() {
 	}
 	
 	@RequestMapping("/estateList")
@@ -183,8 +186,6 @@ public class AgentController {
 	public void estateListEnd(int memberNo, Model model) {
 		
 		List<Map<String, String>> list = agentService.estateListEnd(memberNo);
-		
-		System.out.println("list@controller="+list);
 		
 		model.addAttribute("list", list);
 	}
