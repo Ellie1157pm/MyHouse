@@ -46,39 +46,12 @@ public class AdminDAOImpl implements AdminDAO {
 	public String selectMemberEmail(String recipient) {
 		return sqlSession.selectOne("admin.selectMemberEmail", recipient);
 	}
-
-	@Override
-	public void newsAllData(String title) {
-		List<Item> list = new ArrayList<>();
-		
-		try {
-			URL url = new URL("http://newssearch.naver.com/search.naver?where=rss&query="
-							+URLEncoder.encode(title, "UTF-8"));
-			
-			JAXBContext jc = JAXBContext.newInstance(Rss.class);
-			Unmarshaller um = jc.createUnmarshaller();
-			Rss rss = (Rss)um.unmarshal(url);
-			list = rss.getChannel().getItem();
-			for(Item item : list) {
-				Map<String, String> news = new HashMap<>();
-				news.put("newsTitle", item.getTitle());
-				String desc = item.getDescription();
-				desc = desc.replace(".", "");
-				desc = desc.replaceAll("[A-Za-z", "");
-				desc = desc.replace("'", "");
-//				news.put("msg", item.getDescription());
-				news.put("newsContent", desc);
-				news.put("newsDate", item.getPubDate());
-				newsInsert(news);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
-	public void newsInsert(Map<String, String> news) {
+	@Override
+	public int insertNews(Map<String, String> news) {
+		int result = 0;
 		try {
-			int result = sqlSession.insert("admin.newsInsert", news);
+			result = sqlSession.insert("admin.newsInsert", news);
 			
 			if(result>0)
 				logger.info("뉴스 저장 성공");
@@ -88,6 +61,8 @@ public class AdminDAOImpl implements AdminDAO {
 		} catch (Exception e) {
 			logger.info("newsInsert@dao={}", e.getMessage());
 		}
+		
+		return result;
 	}
 
 	@Override
