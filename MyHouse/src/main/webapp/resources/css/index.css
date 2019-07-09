@@ -217,6 +217,17 @@ div.member-enroll-modal {
 	text-align: right !important;
 	margin-right: 150px;
 }
+/*중개회원가입*/
+div.modal-header{
+	background: lightgray;
+}
+div.modal-body input{
+	margin-bottom: 15px;
+}
+div.agent-enroll-modal{
+	text-align: right !important;
+	margin-right: 150px;
+}
 
 span#s-email {
 	position: absolute;

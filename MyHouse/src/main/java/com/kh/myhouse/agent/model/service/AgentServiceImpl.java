@@ -45,4 +45,9 @@ public class AgentServiceImpl implements AgentService {
 		return agentDAO.estateListEnd(memberNo);
 	}
 
+	@Override
+	public Agent selectOneAgent(String memberEmail) {
+		return agentDAO.selectOneAgent(memberEmail);
+	}
+
 }

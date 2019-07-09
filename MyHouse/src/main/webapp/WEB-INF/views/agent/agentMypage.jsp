@@ -37,11 +37,11 @@ $(function() {
 			<table>
 				<tr>
 					<th>이름</th>
-					<td>최재민</td>
+					<td>${memberLoggedIn.memberName}</td>
 				</tr>
 				<tr>
 					<th>아이디(이메일)</th>
-					<td>asde2016@naver.com</td>
+					<td>${memberLoggedIn.memberEmail}</td>
 				</tr>
 				<tr>
 					<th>기존비밀번호</th>
@@ -53,11 +53,18 @@ $(function() {
 				</tr>
 				<tr>
 					<th>사업자번호</th>
-					<td>15-15424-78945</td>
+					<td>${memberLoggedIn.companyRegNo}</td>
 				</tr>
 				<tr>
 					<th>승인여부</th>
-					<td>확인중</td>
+					<td>
+						<c:if test="${memberLoggedIn.approveYN eq 'N'.charAt(0)}">
+							확인중
+						</c:if>
+						<c:if test="${memberLoggedIn.approveYN eq 'Y'.charAt(0)}">
+							승인
+						</c:if>
+					</td>
 				</tr>
 			</table>
 			<div id="agentSet-btnGroup">
