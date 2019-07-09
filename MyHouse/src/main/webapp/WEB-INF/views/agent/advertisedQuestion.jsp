@@ -4,6 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/agent/agent.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/agent/agentMypage.css" />
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 	<div id="advertised-container">
@@ -14,7 +15,35 @@
 		<br /><br />
 		<p id="advertised-c1">광고매물 선택</p>
 		<div id="advertised-choice">
-			
+			<c:forEach var="e" items="${list}">
+				<div class="estateListEnd-box" id="${e.ESTATE_NO}">
+					<span>
+					<c:if test="${e.ADATE ne 0}">
+						<c:if test="${e.ADATE > 0}">
+							광고중
+						</c:if>
+					</c:if>
+					</span>
+					<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/${e.RENAMED_FILENAME}" alt="매물사진"/>
+					<p>
+						<c:choose>
+							<c:when test="${e.TRANSACTION_TYPE eq 'M'}">
+								매매
+							</c:when>
+							<c:when test="${e.TRANSACTION_TYPE eq 'J'}">
+								전세
+							</c:when>
+							<c:when test="${e.TRANSACTION_TYPE eq 'O'}">
+								월세
+							</c:when>
+						</c:choose>
+						${e.ESTATE_PRICE}
+					</p>
+					<p>${e.ESTATE_AREA}㎡</p>
+					<p>${e.ADDRESS}</p>
+					<p>${e.ESTATE_CONTENT}</p>
+				</div>
+			</c:forEach>
 		</div>
 		<p id="advertised-c2">상품 선택</p>
 		<form action="">
