@@ -46,22 +46,32 @@ oncomplete: function(data) {
 }).open();
 
 }
-	
+//2019년07월09일(화) 수정한 부분	
 $(document).ready(function() {
-
+	
+	$("input:radio[id='apt']").on('click',function(){
+		 $("#flooroption").hide();
+		$("#oneroom").hide();
+		 $("#villa").hide();
+		 $("#officetel").hide();
+	 });
+	
  $("input:radio[id='raidovilla']").on('click',function(){
+	 $("#flooroption").hide();
 	 $("#oneroom").hide();
 	 $("#villa").show();
 	 $("#officetel").hide();
  });
  
  $("input:radio[id='radiooneroom']").on('click',function(){
+	 $("#flooroption").show();
 	 $("#oneroom").show();
 	 $("#villa").hide();
 	 $("#officetel").hide();
  });
  
  $("input:radio[id='radioopi']").on('click',function(){
+	 $("#flooroption").hide();
 	 $("#oneroom").hide();
 	 $("#villa").hide();
 	 $("#officetel").show();
@@ -92,7 +102,7 @@ $(document).ready(function() {
  
 }); 
 
-
+//2019년07월09일(화) 수정한 부분
 </script>
 <form action="${pageContext.request.contextPath}/search/EnrollTestEnd.do" method="post" onsubmit="return validate();"
 enctype="multipart/form-data">
@@ -223,23 +233,35 @@ enctype="multipart/form-data">
 		<tr id="oneroom" style="display:none;">
 			<th>구조옵션</th>
 			<td>
-				<input type="radio" name="construction" id="one1" value="투룸" />
+<<<<<<< HEAD
+				<input type="radio" name="construction" id="one1" value="오픈형(방1)" />
 			<label for="one1" >오픈형(방1)</label> 
-			<input type="radio" name="construction" id="one2"  value="쓰리룸" />
+			<input type="radio" name="construction" id="one2"  value="분리형(방1,거실1)" />
 			<label for="one2"  >분리형(1방,거실1)</label>
-				<input type="radio" name="construction" id="one3"  value="쓰리룸" />
+				<input type="radio" name="construction" id="one3"  value="복층형" />
 			<label for="one3">복층형</label>
+			</td>
+		</tr>
+		
+			<tr id="flooroption" style="display:none;">
+			<th>층수옵션</th>
+			<td>
+				<input type="radio" name="flooropt" id="flop1" value="지상층" />
+			<label for="flop1">지상층</label> 
+			<input type="radio" name="flooropt" id="flop2"  value="반지하,옥탑" />
+			<label for="flop2"  >반지하,옥탑</label>
+			
 			</td>
 		</tr>
 		
 			<tr id="officetel" style="display:none;">
 			<th>구조옵션</th>
 			<td>
-				<input type="radio" name="construction" id="off1" value="투룸" />
+				<input type="radio" name="construction" id="off1" value="오픈형 원룸" />
 			<label for="off1" >오픈형 원룸</label> 
-			<input type="radio" name="construction" id="off2"  value="쓰리룸" />
+			<input type="radio" name="construction" id="off2"  value="분리형" />
 			<label for="off2"  >분리형 </label>
-				<input type="radio" name="construction" id="off3"  value="쓰리룸" />
+				<input type="radio" name="construction" id="off3"  value="복층형" />
 			<label for="off3">복층형</label>
 			</td>
 		</tr>

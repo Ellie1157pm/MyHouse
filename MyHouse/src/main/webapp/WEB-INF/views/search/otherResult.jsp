@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Arrays"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -15,7 +16,10 @@
     String structure=(String)request.getAttribute("structure");
     
     String[] option=(String[])request.getAttribute("option");
-    List<String> options=Arrays.asList(option);
+    List<String> options=new ArrayList<>();
+    if(option!=null){
+    options=Arrays.asList(option);
+    }
 %>
 
 
@@ -73,9 +77,9 @@
 	<c:if test="${estateType eq 'B' }">
 		<p class="filterSubTitle" style="margin:0;">거래유형</p>
 		<p class="filterTitle select" style="margin-bottom:4px;">${dealType eq 'M'?'신축 분양·매매':(dealType eq 'J'?'전세':(dealType eq 'O'?'월세':''))}</p>
-		<button type="button" class="btn btn-secondary first" value="M" data-type="매매" <%=dealType.equals("M")?"data-value='checked' style='background:#6c757d;color:white;width:130px;'":"style='width:130px;'" %>  onclick="changeDeal2(this);" >신축 분양·매매</button>
-		<button type="button" class="btn btn-secondary first" value="J" data-type="전세" <%=dealType.equals("J")?"data-value='checked' style='background:#6c757d;color:white;'":"" %>  onclick="changeDeal2(this);">전세</button>
-		<button type="button" class="btn btn-secondary first" value="O" data-type="월세" <%=dealType.equals("O")?"data-value='checked' style='background:#6c757d;color:white;'":"" %> onclick="changeDeal2(this);">월세</button>
+		<button type="button" class="btn btn-secondary first" value="M" data-type="매매" <%=dealType.equals("M")?" style='background:#6c757d;color:white;width:130px;'":"style='width:130px;'" %>  onclick="changeDeal2(this);" >신축 분양·매매</button>
+		<button type="button" class="btn btn-secondary first" value="J" data-type="전세" <%=dealType.equals("J")?" style='background:#6c757d;color:white;'":"" %>  onclick="changeDeal2(this);">전세</button>
+		<button type="button" class="btn btn-secondary first" value="O" data-type="월세" <%=dealType.equals("O")?" style='background:#6c757d;color:white;'":"" %> onclick="changeDeal2(this);">월세</button>
 		<hr />
 		<!-- 거래 유형이 매매/신축분양 일 때 -->
 		<c:if test="${dealType eq 'M' }">
@@ -268,14 +272,10 @@
 	</div>
 </div>
 
-<!-- 로딩 화면  -->
-<div class="spinner-border" role="status">
-  <span class="sr-only">Loading...</span>
-</div>
 
 
 
-	<form action="${pageContext.request.contextPath }/estate/findAllTerms" id="estateFrm" method="post">
+	<form action="${pageContext.request.contextPath }/estate/findOtherTerms" id="estateFrm" method="post" style="visibility: hidden">
 		<input type="hidden" name="estateType" id="estateType" value="${estateType }" />
 		<input type="hidden" name="dealType" id="dealType" value="${dealType }"  />
 		<input type="hidden" name="range_1" id="range_1" value="0"/>
@@ -284,8 +284,8 @@
 		<input type="hidden" name="range_4" id="range_4" value="3000000" />
 		<!--구조  --><input type="hidden" name="structure" id="structure" value="${structure }" />
 		<input type="hidden" name="topOption" id="topOption" value="${topOption }" />
-		<input type="checkbox" name="optionResult" id="optionResult1" style="visibility: hidden" value="0" checked/>
-		<input type="checkbox" name="optionResult" id="optionResult2" style="visibility: hidden" value="0" checked/>
+		<input type="checkbox" name="optionResult" id="optionResult1" />
+		<input type="checkbox" name="optionResult" id="optionResult2" />
 	</form>
 
 <script>
@@ -293,8 +293,7 @@
 <%if(msg!=null){%>
 		<%=msg%>
 <%}%>
-$(function() {
-	 $('.spinner-border').hide();  
+$(function() { 
 	
 	//빌라-매매 최대 20억
 	if('${dealType}'=='M'){
@@ -414,8 +413,6 @@ function submit(){
 		if($('input[name=option]')[i].checked==true){
 			$('#optionResult'+(i+1)).val($('input[name=option]')[i].value);
 			$('input[name=optionResult]')[i].checked=true;
-		}else{
-			$('#optionResult'+(i+1)).val('0');
 		}
 	}
 	$('#estateFrm').submit();
@@ -722,12 +719,14 @@ function sale(){
 	    	var toValue=data.to;
 	    	var fromValue=data.from;
 	    	//form안의 range 태그의 value 입력
-	    	$('#range_1').val(fromValue*10000000);
-	    	$('#range_2').val(toValue*10000000);
+	    	$('#range_1').val((fromValue*10000000)/10000);
+	    	$('#range_2').val((toValue*10000000)/10000);
 	    	$('#estateFrm').submit();
 	    }
 	});//end of 매매금
 }
+
+//전세
 function deposit(){
 	$( ".js-range-slider3" ).ionRangeSlider({
 		type: "double",
@@ -821,8 +820,8 @@ function deposit(){
 	    	var toValue=data.to;
 	    	var fromValue=data.from;
 	    	//form안의 range 태그의 value 입력
-	    	$('#range_1').val(fromValue*10000000);
-	    	$('#range_2').val(toValue*10000000);
+	    	$('#range_1').val((fromValue*10000000)/10000);
+	    	$('#range_2').val((toValue*10000000)/10000);
 	    	$('#estateFrm').submit();
 	    }
 	});//end of 보증금
@@ -857,15 +856,14 @@ function monthlyLent(){
 	    		}
 	    	}else if(fromValue==0){
 	    		$('.range2').html(" ~ "+toValue+"만원");
-	    		$('#estateFrm').submit();
 	    	}
 	    },
 		onFinish:function(data){
 	    	var toValue=data.to;
 	    	var fromValue=data.from;
 	    	//form안의 range 태그의 value 입력
-	    	$('#range_1').val(fromValue*10000000);
-	    	$('#range_2').val(toValue*10000000);
+	    	$('#range_3').val(fromValue);
+	    	$('#range_4').val(toValue);
 	    	$('#estateFrm').submit();
     }
 	});//end of 월세

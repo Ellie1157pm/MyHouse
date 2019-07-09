@@ -28,7 +28,6 @@ import com.google.gson.Gson;
 import com.kh.myhouse.estate.model.service.EstateService;
 import com.kh.myhouse.estate.model.vo.Estate;
 import com.kh.myhouse.estate.model.vo.EstateAttach;
-import com.kh.myhouse.estate.model.vo.EstatePhoto;
 import com.kh.myhouse.estate.model.vo.Option;
 
 import net.sf.json.JSONArray;
@@ -71,6 +70,7 @@ public class EstateController {
 
 		//searchkeyword를 view단으로 보내 지도 api의 중심지를 searchKeyword로 잡도록 한다.
 		//List관련 코드는 넣기 쉽게 정리해놓을테니 확인 요망
+		
 
 		//아파트의 경우에는 매매/전월세 외에 신축분양,인구흐름,우리집내놓기 등 탭이 있으므로 
 		//다른 jsp파일로 보낸다.		
@@ -80,6 +80,17 @@ public class EstateController {
 		if(estateType.equals("A")) {
 			mav.addObject("list", list);
 			mav.addObject("estateType",estateType);
+			mav.addObject("dealType","M");
+			mav.addObject("structure","all");
+			mav.addObject("range1","0");
+			mav.addObject("range2","0");
+			mav.addObject("range3","0");
+			mav.addObject("range4","0");
+			mav.addObject("localName",localName);
+			
+			//null처리를 위한 문자배열
+			String[] arr= {"0"};
+			mav.addObject("option",arr);
 			mav.setViewName("search/apartResult");
 		}else {
 			//나머지 매물들은 동일한 jsp에서 처리한다.
@@ -87,7 +98,12 @@ public class EstateController {
 			//default값(매매 등등등) 지정
 			if(estateType.equals("B")) {
 				mav.addObject("dealType","M");
+			}else {
+				mav.addObject("dealType","all");
 			}
+			String[] arr= {"0"};
+			mav.addObject("option",arr);
+			mav.addObject("structure","all");
 			mav.setViewName("/search/otherResult");
 		}
 
@@ -97,36 +113,11 @@ public class EstateController {
 		return mav;
 	}
 
-	@ResponseBody
-	@RequestMapping( value="/findEstateTerms",produces="text/plain;application/json; charset=UTF-8",headers = {"Accept=text/xml, application/json"})
-	public JSONArray fineEstateTermsApart(ModelAndView mav,String dealType,
-			String areaType,String localName,String estateType ) {
-		System.out.println("ajax 테스트");
-		//dealType : 거래 유형 (매매,전,월세)
-		System.out.println("거래유형 : "+dealType);
-		//지역명 
-		System.out.println("지역명: "+localName);
-		//areaType : 면적(평수)=>1,10,20,30,40,50,60    <=1은 10평 이하, 나머지는 적혀진 평수의 구간, 60은 60평대 이상!! 60~69아님!
-		System.out.println("평수 : "+areaType);
-		//거래 매물 타입(A,V,O,P)
-		System.out.println("매물 타입 : "+estateType);
 
-		//지역명으로 코드 가져오기
-		String localCode=estateService.selectLocalCodeFromRegion(localName.substring(0, 8));
-		System.out.println(localCode);
-
-		//테스트용 코드임 이건 따로 넣어야됨
-		List<Estate> list =estateService.selectApartmentname(localCode);
-		System.out.println(list);
-
-		return  JSONArray.fromObject(list);
-	}
-
-	@RequestMapping("/findAllTerms")
-	public ModelAndView fineAllTerms(ModelAndView mav, HttpServletRequest req) {
+	@RequestMapping("/findOtherTerms")
+	public ModelAndView fineOtherTerms(ModelAndView mav, HttpServletRequest req) {
 		Map<String, String> map=new HashMap<>();
 		List<Estate>list=new ArrayList<>();
-
 
 		String estateType=req.getParameter("estateType");//건물 유형(빌라,원룸,오피스텔)
 		String dealType=req.getParameter("dealType");//거래유형
@@ -137,7 +128,6 @@ public class EstateController {
 		String structure=req.getParameter("structure");	//all인 경우와 아닌 경우로 나눠서 list에 넣어야할듯.
 		String[] option=req.getParameterValues("optionResult");	//option길이만큼 for문 돌려서 list에 add 하는 방식으로.
 		String topOption=req.getParameter("topOption");
-		System.out.println("옵션 "+option);
 
 		//파라미터 확인
 		System.out.println("건물 유형 : "+estateType);
@@ -153,11 +143,14 @@ public class EstateController {
 			structure="all";
 		}
 		System.out.println(" 구조 유형 : "+structure);
-		if(option!=null) {
+		if(option==null) {
+			
+		}else{
 			for(int i=0;i<option.length;i++) {
 				System.out.println("옵션 유형 : "+option[i]);
 			}
 		}
+		
 		if(topOption==null) {			
 			topOption="all";
 		}
@@ -200,6 +193,7 @@ public class EstateController {
 
 
 		mav.addObject("dealType",dealType);
+		mav.addObject("searchKeyword",list.get(0));
 		mav.addObject("estateType",estateType);
 		mav.addObject("range1",range1);
 		mav.addObject("range2",range2);
@@ -208,12 +202,141 @@ public class EstateController {
 		mav.addObject("topOption",topOption);
 		mav.addObject("structure",structure);
 		mav.addObject("option",option);
-
+		mav.addObject("list",list);
 		mav.addObject("msg","viewFilter();");
-
+		
 		mav.setViewName("search/otherResult");
 		return mav;
 	}
+	
+	//아파트 필터링
+	@RequestMapping("/findApartTerms")
+	public ModelAndView findApartTerms(HttpServletRequest req,ModelAndView mav) {
+		Map<String, Object> map=new HashMap<>();
+		List<String> list=new ArrayList<>();
+		
+		String estateType=req.getParameter("estateType");//건물 유형(빌라,원룸,오피스텔)
+		String dealType=req.getParameter("dealType");//거래유형
+		String range1=req.getParameter("range_1");	//가격범위
+		String range2=req.getParameter("range_2"); //가격범위
+		String range3=req.getParameter("range_3");	//가격범위(보증-월세로 나눠질때)
+		String range4=req.getParameter("range_4"); //가격범위(보증-월세로 나눠질때)
+		String structure=req.getParameter("structure");	//all인 경우와 아닌 경우로 나눠서 list에 넣어야할듯.
+		String[] option=req.getParameterValues("optionResult");
+		String address=req.getParameter("address");	
+		String localName=req.getParameter("localName");	
+	
+		System.out.println("=========정보=========시작");
+		System.out.println("매물종류 : "+estateType);
+		System.out.println("거래 유형 :"+dealType);
+		System.out.println("시작금액1 : "+range1);
+		System.out.println("시작금액2 : "+range2);
+		System.out.println("시작금액3 : "+range3);
+		System.out.println("시작금액4 : "+range4);
+		System.out.println("옵션"+option);
+		System.out.println("구조 "+structure);
+		System.out.println("주소"+address);
+		
+		
+		if(option==null) {
+			String[] option2=new String[3];
+			for(int i=0;i<option2.length;i++) {		
+				//null포인트 exception방지용
+				option2[i]="a";
+			}
+			mav.addObject("option",option2);
+		}else{
+				map.put("option", option);	
+				mav.addObject("option",option);
+		}
+		System.out.println("=========정보==========끝");
+		String localCode=estateService.selectLocalCodeFromRegion(address);
+		
+		
+		//=====================================매물 가져오기
+		
+		
+		//매물 종류 아파트
+		map.put("estateType", estateType);
+		//거래 타입 M,J,O
+		map.put("dealType",dealType);
+		map.put("structure", structure);
+		if(dealType.equals("M")||dealType.equals("J")) {
+			//매매 or 전세일 경우
+			map.put("range1", range1);//최소금액
+			map.put("range2", range2);//최대금액
+			map.put("localCode", localCode);//지역코드
+			//all 이면 전체 검색
+			//평형대가 전체이고 옵션이 있을때
+			if(structure.equals("all")&&option!=null) {
+				map.put("option", option);
+				list=estateService.selectApartListForAllSelectOption(map);					
+			}
+			//평형대가 전체고 옵션 선택 안했을때
+			else if(structure.equals("all")&&(option==null)) {
+				list=estateService.selectApartListForAll(map);
+			}
+			//평형대 선택을 했고 옵션이 없을떄
+			else if(!structure.equals("all")&&option==null) {
+				map.put("structure", structure);
+				list=estateService.selectApartListSelectStructureNotOption(map);
+			}
+			//평형대 선택을 했고 옵션이 있을때.
+			else if(!structure.equals("all")&&option!=null) {
+				list=estateService.selectApartListSelectStructureSelectOption(map);
+			}
+		}
+		//월세일 때
+		else {
+			map.put("range1", range1);//최소금액
+			map.put("range2", range2);//최대금액
+			map.put("localCode", localCode);//지역코드
+			map.put("range3", range3);//월세 최소금액
+			map.put("range4", range4);//월세 최대금액
+			
+			if(structure.equals("all")&&option!=null) {
+				map.put("option", option);
+				list=estateService.selectApartListForAllSelectOptionAndMontlyFee(map);
+			}else if(!structure.equals("all")&&option!=null) {
+				map.put("option", option);
+				list=estateService.selectApartListForSelectStructureSelectOptionAndMontlyFee(map);
+				
+			}else if(!structure.equals("all")&&option==null) {
+				list=estateService.selectApartListForSelectStructureNotOptionAndMontlyFee(map);
+			}else {
+				list=estateService.selectApartListForAllNotOptionAndMontlyFee(map);
+			}
+		}
+
+		
+		
+		
+		
+		System.out.println(list);
+		
+		//view단 처리
+		mav.addObject("dealType",dealType);
+		System.out.println(list.isEmpty());
+		mav.addObject("searchKeyword",localName);
+		mav.addObject("estateType",estateType);
+		mav.addObject("range1",range1);
+		mav.addObject("range2",range2);
+		mav.addObject("range3",range3);
+		mav.addObject("range4",range4);
+		mav.addObject("structure",structure);
+		mav.addObject("list",list);
+		mav.addObject("localName",address);
+		mav.addObject("msg","viewFilter();");
+		
+		mav.setViewName("search/apartResult");
+		return mav;
+	}
+	
+	
+	
+	
+	
+	
 
 
 	//지도상에 아파트클릭시 사이드바에 상세정보를 가져오기위해서
@@ -231,11 +354,11 @@ public class EstateController {
 		param.put("roadAddressName", roadAddressName);
 
 		Estate detailEstate = estateService.selectDetailEstate(param);
-		EstatePhoto estatePhoto = estateService.selectEstatePhoto(detailEstate.getEstateNo());
+		EstateAttach estateAttach = estateService.selectEstateAttach(detailEstate.getEstateNo());
 
 		Map<String,Object> map = new HashMap<>();
 		map.put("detailEstate", detailEstate);
-		map.put("estatePhoto", estatePhoto);
+		map.put("EstateAttach", estateAttach);
 
 		System.out.println(detailEstate+"상세정보");
 
@@ -262,6 +385,38 @@ public class EstateController {
 
 
 	}
+	
+	
+	 //마크 클릭후 해당하는 매물들 가져오는 컨트롤러
+    @RequestMapping("/getEstate")
+    public void getEstate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        
+        int numPerPage = 10;
+        int cPage = Integer.parseInt(request.getParameter("cPage"));
+        
+        System.out.println("클릭페이지="+cPage);
+        
+        String roadAddressName=request.getParameter("roadAddressName");
+        System.out.println("도로명 : "+roadAddressName);
+        
+        
+        List<Map<String,String>> showEstate = estateService.selectShowEstate(cPage,numPerPage,roadAddressName);
+        
+        System.out.println("제발나와라"+showEstate);
+        
+        response.setContentType("application/json; charset=utf-8");
+        new Gson().toJson(showEstate,response.getWriter());
+    }
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@RequestMapping("/EnrollTest.do")
 	public String EnrollTest() {
@@ -284,6 +439,8 @@ public class EstateController {
 			@RequestParam String estatecontent,
 			@RequestParam String[] etcoption,
 			@RequestParam String SubwayStation,
+			@RequestParam String[] construction,
+            @RequestParam String[] flooropt,
 			MultipartFile[] upFile,
 			HttpServletRequest request,
 			Model model
@@ -338,9 +495,10 @@ public class EstateController {
 		System.out.println("ESTATE E의 값은@@@@@@@"+estate);
 		int result =estateService.EstateInsert(estate);
 		System.out.println("result@@@@=="+result);
+		
 
 		// tbl_option에 etcoption 엘레베이터,애완동물 등 insert
-		Option option = new Option(0, etcoption);
+		Option option = new Option(0, etcoption, construction,flooropt);
 
 		int result2 = estateService.estateoptionlist(option);
 		System.out.println("result22222222@@@@=="+result2);
