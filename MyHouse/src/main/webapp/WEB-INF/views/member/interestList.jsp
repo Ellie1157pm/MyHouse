@@ -40,7 +40,7 @@ $(function() {
 		</div>
 		<div id="interest-container">
 			<form name="interestFrm" action="${pageContext.request.contextPath}/member/interest.do" method="post">
-			<input type="hidden" name="memberNo" value="${memberLoggedIn.getMemberNo }"/>
+			<input type="hidden" name="memberNo" value="${memberLoggedIn.getMemberNo() }"/>
 			<!-- interest테이블의 region에 담길 관심지역 설정 -->
 			<div class="input-group mb-3">
   				<div class="input-group-prepend">

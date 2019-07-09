@@ -1,3 +1,4 @@
+<%@page import="com.kh.myhouse.agent.model.vo.Agent"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -9,6 +10,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>우리집</title>
+<!-- agent js jsp -->
+<jsp:include page="/resources/js/agentScript.jsp"/>
+<!-- member js jsp -->
+<jsp:include page="/resources/js/memberScript.jsp"/>
 <script
 	src="${pageContext.request.contextPath }/resources/js/jquery-3.4.0.js"></script>
 <!-- 부트스트랩관련 라이브러리 -->
@@ -16,9 +21,6 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
 	integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
 	crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-	crossorigin="anonymous"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
 	integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
@@ -108,17 +110,19 @@
 							data-target=".enroll">회원가입</button>
 					</c:if>
 					<c:if test="${memberLoggedIn != null }">
-						<span><a
-							href="${pageContext.request.contextPath }/member/memberView.do?memberEmail=${memberLoggedIn.memberEmail}">${memberLoggedIn.memberName }</a>님
-							환영합니다.</span>
+						<c:if test="${memberLoggedIn.status eq 'B'.charAt(0)}">
+							<span><a href="${pageContext.request.contextPath }/agent/agentMypage">${memberLoggedIn.memberName }</a>님 환영합니다.</span>
+						</c:if>
+						<c:if test="${memberLoggedIn.status eq 'U'.charAt(0)}">
+							<span><a href="${pageContext.request.contextPath }/member/memberView.do?memberEmail=${memberLoggedIn.memberEmail}">${memberLoggedIn.memberName }</a>님
+								환영합니다.</span>
+						</c:if>
 			    	&nbsp;
 				    <button type="button" class="btn btn-outline-success"
 							onclick="location.href='${pageContext.request.contextPath}/member/memberLogout.do'">로그아웃</button>
 					</c:if>
 				</div>
-				<button type="button" class="btn btn-warning" id="advertised-btn">
-					중개사무소 가입<br /> 및 광고문의
-				</button>
+							<button type="button" class="btn btn-warning" id="advertised-btn" data-toggle="modal" data-target=".advertised">중개사무소 가입<br/> 및 광고문의</button>
 			</div>
 		</header>
 	</div>
@@ -137,7 +141,8 @@
 				</div>
 				<form
 					action="${pageContext.request.contextPath}/member/memberLogin.do"
-					method="post">
+					method="post"
+					id="loginFrm">
 					<div class="modal-body login-modal">
 						<label for="id">아이디(이메일)</label> <input type="text"
 							name="memberEmail" id="id" /><br /> <label for="password">비밀번호</label>
@@ -149,7 +154,7 @@
 							data-toggle="modal" data-target=".pwd-find-end">[비밀번호 찾기]</button>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" id="login-btn" class="btn btn-primary">확인</button>
+						<button type="button" id="login-btn" class="btn btn-primary" onclick="loginSubmit();">확인</button>
 						<button type="button" class="btn btn-secondary"
 							data-dismiss="modal">닫기</button>
 					</div>
@@ -219,8 +224,8 @@
 				</div>
 				<div class="modal-footer">
 					<!-- 입력한 아이디와 전화번호가 유효(해당 정보를 모두 포함한 멤버데이터가 있는 경우)한 경우에만 비밀번호 리셋 버튼을 누르면
-		      		새로운 모달창이 나오게 됨(새로운 비밀번호 입력과 비밀번호 확인 입력창이 있음, 확인과 취소도 있음) 
-		    		만약 유효하지 않다면 경고창을 띄움 -->
+		      새로운 모달창이 나오게 됨(새로운 비밀번호 입력과 비밀번호 확인 입력창이 있음, 확인과 취소도 있음) 
+		      만약 유효하지 않다면 경고창을 띄움 -->
 					<button type="button" id="pwd-find-end-btn" class="btn btn-primary">비밀번호
 						리셋</button>
 					<button type="button" class="btn btn-secondary"
@@ -262,6 +267,41 @@
 			</div>
 		</div>
 	</div>
+	<!-- 중개회원 가입 -->
+	<div class="modal fade agent-enroll-end" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">중개회원가입</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body agent-enroll-modal" id="enroll-division">
+		      <form action="${pageContext.request.contextPath}/agent/insertAgent" id="agent-enrollFrm" method="post">
+		      	  <span id="s-email"></span>
+		      	  <label for="agent-enroll-email">아이디(이메일)</label>
+			      <input type="text" name="memberEmail" id="agent-enroll-email"/><br />
+			      <label for="agent-enroll-name">이름</label>
+			      <input type="text" name="memberName" id="agent-enroll-name"/><br />
+			      <label for="agent-enroll-password">비밀번호</label>
+			      <input type="password" name="memberPwd" id="agent-enroll-password"/><br />
+			      <label for="agent-enroll-password_">비밀번호 확인</label>
+			      <input type="password"  id="agent-enroll-password_"/><br />
+			      <label for="agent-enroll-phone">전화번호</label>
+			      <input type="text" name="phone" id="agent-enroll-phone"/><br />
+			      <label for="agent-enroll-companyno">사업자 번호</label>
+			      <input type="text" name="companyRegNo" id="agent-enroll-companyno"/><br />
+			      <input type="hidden" name="status" id="agent-enroll-status" value="B"/><br />
+			  </form>
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" id="agent-enroll-end-btn" class="btn btn-primary">회원가입</button>
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
 	<!-- 일반회원 가입 modal -->
 	<div class="modal fade member-enroll-end" id="exampleModal"
@@ -302,139 +342,25 @@
 		</div>
 	</div>
 	<!-- 일반회원 가입 modal 끝 -->
-
-	<script>
-		$(function() {
-			/* 일반회원 */
-			/*기존modal 닫기*/
-			$("button#member-enroll-btn").on("click", function() {
-				$("#exampleModal_").modal("hide");
-			});
-
-			$("button#id-find-btn, button#pwd-find-btn").on("click",
-					function() {
-						$("#exampleModal").modal("hide");
-					});
-
-			/*회원가입submit*/
-			$("button#member-enroll-end-btn").on("click", function() {
-				$("#member-enrollFrm").submit();
-			});
-
-			/*아이디 유효성검사,중복확인*/
-			$("input#member-enroll-email").blur(function() {
-				var param = {
-					memberEmail : $("input#member-enroll-email").val()
-				}
-
-				$.ajax({
-					url : "${pageContext.request.contextPath}/member/checkMemberEmail.do",
-					data : param,
-					type : "post",
-					success : function(data) {
-						console.log(data);
-						if (data == "true") {
-							$("span#s-email").text("이미 사용중인 이메일입니다.");
-							$("span#s-email").css("color", "red");
-							$("button#member-enroll-end-btn").attr("disabled",true);
-						} else {
-							$("span#s-email").text("사용가능한 이메일입니다.");
-							$("span#s-email").css("color", "blue");
-							$("button#member-enroll-end-btn").attr("disabled",false);
-						}
-					},
-					error : function(jqxhr, textStatus,	errorThrown) {
-						console.log("ajax처리실패: " + jqxhr.status);
-						console.log(errorThrown);
-					}
-				});
-			});
-
-			/*비밀번호 유효성검사*/
-			$("input#member-enroll-password").blur(function() {
-				var regExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/;
-				var pwd = $(this).val();
-				var bool = regExp.test(pwd);
-
-				if (bool != true) {
-					alert("비밀번호는 문자, 숫자 ,특수문자 1개 이상 포함하고, 8글자 이상 15글자 이하여야 합니다.");
-					$("input#member-enroll-password").css("color", "red");
-					$("button#member-enroll-end-btn").attr("disabled", true);
-				} else {
-					$("input#member-enroll-password").css("color", "blue");
-					$("button#member-enroll-end-btn").attr("disabled", false);
-				}
-
-			});
-
-			$("input#member-enroll-password_").blur(function() {
-				var pwd = $("input#member-enroll-password").val();
-				var pwd_ = $(this).val();
-				var bool = (pwd == pwd_);
-
-				if (bool != true) {
-					$("input#member-enroll-password_").css("color", "red");
-					$("button#member-enroll-end-btn").attr("disabled", true);
-				} else {
-					$("input#member-enroll-password_").css("color", "blue");
-					$("button#member-enroll-end-btn").attr("disabled", false);
-				}
-
-			});
-
-			/*전화번호 유효성검사*/
-			$("input#member-enroll-phone").blur(function() {
-				var regExp = /^[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]$/;
-				var phone = $(this).val();
-				var bool = regExp.test(phone);
-
-				if (bool != true) {
-					$("input#member-enroll-phone").css("color","red");
-					$("button#member-enroll-end-btn").attr("disabled", true);
-				} else {
-					$("input#member-enroll-phone").css("color","black");
-					$("button#member-enroll-end-btn").attr("disabled", false);
-				}
-
-			});
-
-			/* 아이디 찾기 */
-			$("id-find-end-btn").on("click",function() {
-				var param = {
-					memberEmail : $("input#find-id-name").val(),
-					phone : $("input#find-id-phone").val()
-				}
-
-				$.ajax({
-					url : "${pageContext.request.contextPath}/member/findId.do",
-					type : "POST",
-					data : param,
-					contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-					dataType : "json",
-
-					success : function(data) {
-						var emailLists = data.memberEmail;
-						var emailLength = emailLists.length;
-						var emailfind = emailLists
-								.substring(1,
-										emailLength - 1);
-						/* $("span#emailList").append("<h1>"+"회원님의 정보로 등록된 이메일은 : "+emailfind+" 입니다.</h1>"); */
-						alert("찾으시는 아이디(이메일은)"
-								+ emailfind + "입니다.")
-						/* $("span#s-email").text("이미 사용중인 이메일입니다.");
-						$("span#s-email").css("color", "red"); */
-
-					},
-					error : function(jqxhr, textStatus,
-							errorThrown) {
-						console.log("ajax처리실패: "
-								+ jqxhr.status);
-						console.log(errorThrown);
-						alert('정보를 다시 입력해주시길 바랍니다.');
-					}
-				});
-
-			});
-		});
-	</script>
+	
+	<!-- 광고문의 -->
+	<div class="modal fade advertised" id="exampleModal_" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">중개사무소 가입 및 광고문의</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body" id="enroll-division">
+	      	<button id="estate-agent" type="button" class="btn btn-primary btn-lg">중개사무소 가입</button>
+	      	<button id="advertised-btn-end" type="button" class="btn btn-primary btn-lg">광고 문의</button>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 	<section id="content">

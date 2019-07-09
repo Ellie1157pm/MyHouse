@@ -45,4 +45,24 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return findId;
 	}
+
+	@Override
+	public int deleteMember(String memberNo) {
+		return memberDAO.deleteMember(memberNo);
+	}
+
+	@Override
+	public Member selectOneMember(int memberNo) {
+		return memberDAO.selectOneMember(memberNo);
+	}
+
+	@Override
+	public int insertInterest(Member member) {
+		return memberDAO.insertInterest(member);
+	}
+
+	@Override
+	public int updateInterest(int memberNo) {
+		return memberDAO.updateInterest(memberNo);
+	}
 }
