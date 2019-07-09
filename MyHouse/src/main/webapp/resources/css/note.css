@@ -73,3 +73,6 @@ div #contentC{
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+div.note-contents{
+	margin: 2%;
+}
