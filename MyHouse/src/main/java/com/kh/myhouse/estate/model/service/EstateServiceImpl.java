@@ -101,4 +101,34 @@ public class EstateServiceImpl implements EstateService{
 	public List<Map<String, String>> selectShowEstate(int cPage, int numPerPage, String roadAddressName) {
 		return estateDAO.selectShowEstate(cPage,numPerPage,roadAddressName);
 	}
+
+
+	@Override
+	public List<String> selectApartListForAllSelectOptionAndMontlyFee(Map<String, Object> map) {
+		return estateDAO.selectApartListForAllSelectOptionAndMontlyFee(map);
+	}
+
+
+	@Override
+	public List<String> selectApartListForSelectStructureSelectOptionAndMontlyFee(Map<String, Object> map) {
+		return estateDAO.selectApartListForSelectStructureSelectOptionAndMontlyFee(map);
+	}
+
+
+	@Override
+	public List<String> selectApartListForSelectStructureNotOptionAndMontlyFee(Map<String, Object> map) {
+		return estateDAO.selectApartListForSelectStructureNotOptionAndMontlyFee(map);
+	}
+
+
+	@Override
+	public List<String> selectApartListForAllNotOptionAndMontlyFee(Map<String, Object> map) {
+		return estateDAO.selectApartListForAllNotOptionAndMontlyFee(map);
+	}
+
+
+	@Override
+	public String selectLocalName(String address) {
+		return estateDAO.selectLocalName(address);
+	}
 }

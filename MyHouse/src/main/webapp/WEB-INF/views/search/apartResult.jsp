@@ -155,6 +155,7 @@
 		<input type="hidden" name="range_3" id="range_3" value="${range3 eq '0'?'0':range3 }" />
 		<input type="hidden" name="range_4" id="range_4" value="${range4 eq '0'?'300':range4 }" />
 		<input type="hidden" name="address" id="address" value="${localName }" />
+		<input type="hidden" name="localName" id="localName" value="${localName }" />
 		
 		<div>
 			<input type="checkbox" name="optionResult" id="optionResult1" value="<%=option!=null&&option.contains("underparking")?"underparking":"" %>" <%=option.contains("underparking")?"checked":"" %> />
@@ -294,7 +295,7 @@ var mapContainer=document.getElementById('map'),
 mapOption={
 	center:new daum.maps.LatLng(37.566826, 126.9786567),
 	level:5
-	}
+	};
 var map=new daum.maps.Map(mapContainer,mapOption);
 
 /////////////////////
@@ -336,15 +337,16 @@ ps.keywordSearch(loc, placesSearchCB2); <% }%> --%>
 //사용자가 지도 위치를 옮기면(중심 좌표가 변경되면)
 kakao.maps.event.addListener(map, 'dragend', function() {     
 	//법정동 상세주소 얻어오기
-	searchAddr();
+		searchDetailAddrFromCoords(map.getCenter(),function(result,status){
+		$('#estateFrm #localName').val(result[0].address.address_name);
+		console.log('위치조정용'+$('#estateFrm #localName').val());
+		address=(result[0].address.address_name).substring(0,8);
+		$('#estateFrm #address').val(address);
+		//$('#estateFrm').submit();
+	});
     
    //address에 구단위 검색용 값이 들어온 상태-확인 후 지울것
-   console.log(address);
-    //ajax 로  매물 불러오기
-	
-    /* $.ajax({
-    	
-    }); */
+   console.log('컨트롤러에 보낼거'+address);
     
 });
 /////////////////////////////////////////////////////////////////////////////
@@ -361,9 +363,8 @@ function displayMarker(place) {
         var markers = $(place).map(function(markerPosition) {
             return new kakao.maps.Marker({
                 position : new kakao.maps.LatLng(place.y, place.x)
+          
             });
-         
-     
         });       
         
         //인포 윈도우 객체 생성
@@ -386,15 +387,13 @@ function displayMarker(place) {
             param.addressName = place.address_name;  //주소명
             param.roadAddressName = place.road_address_name; //도로명
         
-        
-        
-        
             // 마커 위에 인포윈도우를 표시합니다
             infowindow.open(map, markers[0]);
         
      
      // 클러스터러에 마커들을 추가합니다
         clusterer.addMarkers(markers); 
+        });
 }
 /////////////////////////////////////////////////////////////////////////////
 //콜백함수--------------------------------------------------------------------
@@ -445,23 +444,7 @@ function placesSearchCB2 (data, status, pagination) {
         //map.setBounds(bounds);
     } 
 }
-function showEstate(no,addressName,roadAddressName){
-	 var param = {};
-	 param.estateNo = no;
-	 param.addressName = addressName;  //주소명
-	 param.roadAddressName = roadAddressName; //도로명
-	 
-	 
-	$.ajax({
-		url:"${pageContext.request.contextPath}/estate/showEstate",
-    	data: param,
-    	contentType:"json",
-    	type:"get",
-    	success: function(data){
-    		
-    	}
-	});
-}
+
 
 //////////////////////////////////////////range관련/////////
 function sale(){
@@ -564,7 +547,7 @@ function sale(){
 	});//end of 매매금
 }
 function deposit(){
-	//max 10억?
+	//max 20억?
 	$( ".js-range-slider2" ).ionRangeSlider({
 		type: "double",
 	    grid: true,

@@ -48,17 +48,64 @@
 		sysdate)
 	</insert>
 	
-	<select id="selectApartListForAll">
+	<select id="selectApartListForAll" resultType="string">
 		select address from estate 
 		where estate_type=#{estateType} and transaction_type=#{dealType} and region_code=#{localCode} and estate_price between #{range1} and #{range2}
 	</select>
-	<select id="selectApartListForAllSelectOption">
+	<select id="selectApartListForAllSelectOption" resultType="string">
 		select e.address from
 			estate e left join tbl_option o on  e.estate_no=o.estate_no
 			where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code=#{localCode} 
 			and e.estate_price between #{range1} and #{range2}and o.option_detail in(#{option,typeHandler=strArrTypeHandler})
 	</select>
 	
+	<select id="selectApartListSelectStructureNotOption" resultType="string">
+		select address from estate 
+		where estate_type=#{estateType} and transaction_type=#{dealType} and region_code=#{localCode}  and estate_price between #{range1} and #{range2} 
+		and estate_area between #{structure} and #{structure+9}
+	</select>
+	
+	<select id="selectApartListSelectStructureSelectOption" resultType="string">
+			select e.address from
+			estate e left join tbl_option o on  e.estate_no=o.estate_no
+			where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code=#{localCode} 
+			and e.estate_price between #{range1} and #{range2}and o.option_detail in(#{option,typeHandler=strArrTypeHandler})
+			and e.estate_area between #{structure} and #{structure+9}
+	</select>
+	
+	<select id="selectApartListForAllSelectOptionAndMontlyFee" resultType="string">
+		select address from estate 
+		where estate_type=#{estateType} and transaction_type=#{dealType} 
+		and region_code=#{localCode} and estate_price between #{range3} and #{range4}
+		and deposit between #{range1} and #{range2}
+	</select>
+	
+	<select id="selectApartListForSelectStructureSelectOptionAndMontlyFee" resultType="string">
+		select e.address from
+		estate e left join tbl_option o on  e.estate_no=o.estate_no
+		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code=#{localCode} 
+		and e.estate_price between #{range3} and #{range4}and o.option_detail in(#{option,typeHandler=strArrTypeHandler})
+		and e.estate_area between #{structure} and #{structure+9} and e.deposit between #{range1} and #{range2}
+	</select>
+	
+	<select id="selectApartListForSelectStructureNotOptionAndMontlyFee" resultType="string">
+		select address from estate 
+		where estate_type=#{estateType} and transaction_type=#{dealType} and region_code=#{localCode}  and estate_price between #{range3} and #{range4} 
+		and estate_area between #{structure} and #{structure+9} and deposit between #{range1} and #{range2}
+	</select>
+	
+	<select id="selectApartListForAllNotOptionAndMontlyFee" resultType="string">
+		select e.address from
+		estate e left join tbl_option o on  e.estate_no=o.estate_no
+		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code=#{localCode} 
+		and e.estate_price between #{range3} and #{range4} and e.estate_area between #{structure} and #{structure+9} 
+		and e.deposit between #{range1} and #{range2}
+	</select>
+	
+	<select id="selectLocalName" resultType="string" parameterType="string">
+		select legal_dong from region where legal_dong like '%'||#{address}||'%' and rownum=1
+	</select>
+
 	
 </mapper> 
 

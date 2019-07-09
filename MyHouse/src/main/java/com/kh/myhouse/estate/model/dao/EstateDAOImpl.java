@@ -81,4 +81,46 @@ public class EstateDAOImpl implements EstateDAO{
 		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage, numPerPage);
 		return sqlSession.selectList("estate.selectShowEstate",roadAddressName,rowBounds);
 	}
+
+
+	@Override
+	public List<String> selectApartListSelectStructureNotOption(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectApartListSelectStructureNotOption",map);
+	}
+
+
+	@Override
+	public List<String> selectApartListSelectStructureSelectOption(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectApartListSelectStructureSelectOption",map);
+	}
+
+
+	@Override
+	public List<String> selectApartListForAllSelectOptionAndMontlyFee(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectApartListForAllSelectOptionAndMontlyFee",map);
+	}
+
+
+	@Override
+	public List<String> selectApartListForSelectStructureSelectOptionAndMontlyFee(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectApartListForSelectStructureSelectOptionAndMontlyFee",map);
+	}
+
+
+	@Override
+	public List<String> selectApartListForSelectStructureNotOptionAndMontlyFee(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectApartListForSelectStructureNotOptionAndMontlyFee",map);
+	}
+
+
+	@Override
+	public List<String> selectApartListForAllNotOptionAndMontlyFee(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectApartListForAllNotOptionAndMontlyFee",map);
+	}
+
+
+	@Override
+	public String selectLocalName(String address) {
+		return sqlSession.selectOne("estate.selectLocalName",address);
+	}
 }

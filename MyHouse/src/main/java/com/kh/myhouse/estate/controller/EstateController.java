@@ -193,6 +193,7 @@ public class EstateController {
 
 
 		mav.addObject("dealType",dealType);
+		mav.addObject("searchKeyword",list.get(0));
 		mav.addObject("estateType",estateType);
 		mav.addObject("range1",range1);
 		mav.addObject("range2",range2);
@@ -222,8 +223,8 @@ public class EstateController {
 		String range4=req.getParameter("range_4"); //가격범위(보증-월세로 나눠질때)
 		String structure=req.getParameter("structure");	//all인 경우와 아닌 경우로 나눠서 list에 넣어야할듯.
 		String[] option=req.getParameterValues("optionResult");
-		String address=req.getParameter("address");	//option길이만큼 for문 돌려서 list에 add 하는 방식으로.
-		String localName=req.getParameter("address");
+		String address=req.getParameter("address");	
+		String localName=req.getParameter("localName");	
 	
 		System.out.println("=========정보=========시작");
 		System.out.println("매물종류 : "+estateType);
@@ -232,11 +233,14 @@ public class EstateController {
 		System.out.println("시작금액2 : "+range2);
 		System.out.println("시작금액3 : "+range3);
 		System.out.println("시작금액4 : "+range4);
+		System.out.println("옵션"+option);
 		System.out.println("구조 "+structure);
 		System.out.println("주소"+address);
+		
+		
 		if(option==null) {
 			String[] option2=new String[3];
-			for(int i=0;i<option.length;i++) {		
+			for(int i=0;i<option2.length;i++) {		
 				//null포인트 exception방지용
 				option2[i]="a";
 			}
@@ -246,7 +250,7 @@ public class EstateController {
 				mav.addObject("option",option);
 		}
 		System.out.println("=========정보==========끝");
-		String localCode=estateService.selectLocalCodeFromRegion(localName);
+		String localCode=estateService.selectLocalCodeFromRegion(address);
 		
 		
 		//=====================================매물 가져오기
@@ -256,6 +260,7 @@ public class EstateController {
 		map.put("estateType", estateType);
 		//거래 타입 M,J,O
 		map.put("dealType",dealType);
+		map.put("structure", structure);
 		if(dealType.equals("M")||dealType.equals("J")) {
 			//매매 or 전세일 경우
 			map.put("range1", range1);//최소금액
@@ -288,17 +293,31 @@ public class EstateController {
 			map.put("localCode", localCode);//지역코드
 			map.put("range3", range3);//월세 최소금액
 			map.put("range4", range4);//월세 최대금액
-			map.put("localCode", localCode);//지역코드
+			
+			if(structure.equals("all")&&option!=null) {
+				map.put("option", option);
+				list=estateService.selectApartListForAllSelectOptionAndMontlyFee(map);
+			}else if(!structure.equals("all")&&option!=null) {
+				map.put("option", option);
+				list=estateService.selectApartListForSelectStructureSelectOptionAndMontlyFee(map);
+				
+			}else if(!structure.equals("all")&&option==null) {
+				list=estateService.selectApartListForSelectStructureNotOptionAndMontlyFee(map);
+			}else {
+				list=estateService.selectApartListForAllNotOptionAndMontlyFee(map);
+			}
 		}
 
 		
 		
 		
 		
-		
+		System.out.println(list);
 		
 		//view단 처리
 		mav.addObject("dealType",dealType);
+		System.out.println(list.isEmpty());
+		mav.addObject("searchKeyword",localName);
 		mav.addObject("estateType",estateType);
 		mav.addObject("range1",range1);
 		mav.addObject("range2",range2);
@@ -306,7 +325,7 @@ public class EstateController {
 		mav.addObject("range4",range4);
 		mav.addObject("structure",structure);
 		mav.addObject("list",list);
-		mav.addObject("localName",localName);
+		mav.addObject("localName",address);
 		mav.addObject("msg","viewFilter();");
 		
 		mav.setViewName("search/apartResult");

@@ -29,4 +29,18 @@ public interface EstateDAO {
 
 	List<Map<String, String>> selectShowEstate(int cPage, int numPerPage, String roadAddressName);
 
+	List<String> selectApartListSelectStructureNotOption(Map<String, Object> map);
+
+	List<String> selectApartListSelectStructureSelectOption(Map<String, Object> map);
+
+	List<String> selectApartListForAllSelectOptionAndMontlyFee(Map<String, Object> map);
+
+	List<String> selectApartListForSelectStructureSelectOptionAndMontlyFee(Map<String, Object> map);
+
+	List<String> selectApartListForSelectStructureNotOptionAndMontlyFee(Map<String, Object> map);
+
+	List<String> selectApartListForAllNotOptionAndMontlyFee(Map<String, Object> map);
+
+	String selectLocalName(String address);
+
 }
