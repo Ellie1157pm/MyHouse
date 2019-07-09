@@ -43,7 +43,8 @@
 	
 	<update id="updateInterest">
 		UPDATE INTEREST 
-		SET REGION = #{region}, ESTATE_TYPE = #{}, PET = #{pet}, ELEVATOR = #{elevator}, PARKING = #{parking}, SUBWAY = #{subway}
+		SET REGION = #{region}, ESTATE_TYPE = #{estateType, typeHandler=strArrTypeHandler}, 
+		PET = #{pet}, ELEVATOR = #{elevator}, PARKING = #{parking}, SUBWAY = #{subway}
 		WHERE MEMBER_NO = #{MEMBER_NO}
 	</update>
 </mapper>
