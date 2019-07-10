@@ -404,19 +404,13 @@ public class EstateController {
         
         System.out.println("제발나와라"+showEstate);
         
+        System.out.println(showEstate.size()+"dsaf0");
+        
         response.setContentType("application/json; charset=utf-8");
         new Gson().toJson(showEstate,response.getWriter());
     }
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 
 	@RequestMapping("/EnrollTest.do")
 	public String EnrollTest() {
@@ -561,20 +555,6 @@ public class EstateController {
 
 
 		model.addAttribute("msg",msg);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 		return "common/msg";
 	}
