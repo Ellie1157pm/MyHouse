@@ -19,7 +19,6 @@ function updateEstate(e){
 		return;
 	}
 }
-
 $(function() {
 	$("#estateList").css("opacity", 0.6);
 	

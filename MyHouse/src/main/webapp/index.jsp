@@ -51,19 +51,13 @@
 
 
 <script charset="utf-8">
-
-
 /*다음 지도 api 설정  */
 //=>법정동 주소를 받아오기 위함.
-
-
 //키워드-장소 검색 객체 생성 
 var ps = new daum.maps.services.Places();
 //주소로의 검색을 대비한 geocoder객체
 var geocoder = new kakao.maps.services.Geocoder();
-
 var flag;
-
 //search bar에서 엔터키 누르면 검색
 $(function() {
 	$("#insertSearchKeyword").keydown(function(e) {
@@ -73,8 +67,6 @@ $(function() {
 		}
 	});
 });
-
-
 function searchAddress(obj) {
 	var keyword = obj;
 	console.log('입력값=' + keyword);
@@ -85,7 +77,6 @@ function searchAddress(obj) {
 		geocoder.addressSearch(keyword, function(result, status) {
 		    // 정상적으로 검색이 완료됐으면 
 		     if (status === kakao.maps.services.Status.OK) {
-
 		        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 				console.log('좌표검색 : '+coords);
 				searchDetailAddrFromCoords(coords,function(data){
@@ -105,22 +96,16 @@ function searchAddress(obj) {
 		 $('#indexFrm').submit();
 	}
 }
-
-
-
 //키워드 검색 완료 시 호출되는 콜백함수
 function placesSearchCB(data, status, pagination) {
 	console.log('status=' + status); //넘어갈때 전송이 완료되면 OK
 	console.log('data=' + data); // api 데이터를 뿌려주는것같음
 	console.log('pagination=' + pagination); //페이지? 몇페이지 나눈는거 같음
-
 	var address = "";
-
 	if (status === daum.maps.services.Status.OK) {
 		// 전송이 잘 됬다면 status가 ok이므로  실행
 		for (var i = 0; i < data.length; i++) {
 			address = data[i].address_name;
-
 			//데이터의 address_name필드명의 값을 address변수에 담아줌
 			//서울과 경기권이 우선이므로 서울부터 확인
 			if (address.indexOf('서울') > -1) {
@@ -146,11 +131,7 @@ function placesSearchCB(data, status, pagination) {
 		}
 	}
 }
-
-
-
 var typeCheck = $('#typeCheck');
-
 function setestate(obj, type) {
 	$("#insertSearchKeyword")
 			.attr(
@@ -165,10 +146,7 @@ function setestate(obj, type) {
 	$('#estateType').val(type);
 	typeCheck.value = true;
 	console.log(typeCheck)
-
 }
-
-
 function validate() {
 	var flag;
 	var $keyword = $('#insertSearchKeyword').val().trim();
@@ -177,7 +155,6 @@ function validate() {
 		alert('검색어를 입력해주세요');
 		return false;
 	}
-
 	else if (typeCheck.value == null || typeCheck.value == '') {
 		alert('검색하실 매물 타입을 선택해주세요');
 		return false;
@@ -186,8 +163,5 @@ function validate() {
 		searchAddress($keyword);
 	}
 }
-
-
-
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />

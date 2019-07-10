@@ -660,7 +660,6 @@ function sale(){
 	    }
 	});//end of 매매금
 }
-
 //전세
 function deposit(){
 	$( ".js-range-slider3" ).ionRangeSlider({

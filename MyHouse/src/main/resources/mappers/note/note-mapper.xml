@@ -3,15 +3,18 @@
  <mapper namespace="note">
 	
 	<select id="selectNoteList" resultType="map">
-		select * from memo order by memo_date desc
+		select * from memo 
+		where member_no= #{member_no} order by memo_date desc
 	</select>
 	
 	<select id="selectNoteTotalContents" resultType="_int">
 		select count(*) from memo
+		where member_no = #{member_no}
 	</select>
 	
 	<select id="selectNoReadContents" resultType="_int">
-		select count(*) from memo where memo_yn = 'N'
+		select count(*) from memo 
+		where memo_yn = 'N' and member_no = #{member_no}
 	</select>
 	
 	<select id="selectNote" resultType="string">
@@ -27,5 +30,6 @@
 	</delete>
 	
 	<update id="updateNoteYN">
+		update memo set memo_yn = 'Y' where memo_yn = 'N' and memo_no = #{memo_no}
 	</update>
 </mapper> 
