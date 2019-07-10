@@ -15,14 +15,14 @@ public class NoteDAOImpl implements NoteDAO{
 	SqlSessionTemplate sqlSession;
 	
 	@Override
-	public List<Map<String, String>> selectNoteList(int cPage, int numPerPage) {
+	public List<Map<String, String>> selectNoteList(int cPage, int numPerPage, int memberNo) {
 		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage, numPerPage);
-		return sqlSession.selectList("note.selectNoteList",null,rowBounds);
+		return sqlSession.selectList("note.selectNoteList",memberNo,rowBounds);
 	}
 
 	@Override
-	public int selectNoteTotalContents() {
-		return sqlSession.selectOne("note.selectNoteTotalContents");
+	public int selectNoteTotalContents(int memberNo) {
+		return sqlSession.selectOne("note.selectNoteTotalContents", memberNo);
 	}
 
 	@Override
@@ -36,13 +36,13 @@ public class NoteDAOImpl implements NoteDAO{
 	}
 
 	@Override
-	public int selectNoReadContents() {
-		return sqlSession.selectOne("note.selectNoReadContents");
+	public int selectNoReadContents(int memberNo) {
+		return sqlSession.selectOne("note.selectNoReadContents", memberNo);
 	}
 
 	@Override
-	public void updateNoteYN() {
-		sqlSession.update("note.updateNoteYN");
+	public void updateNoteYN(int noteno) {
+		sqlSession.update("note.updateNoteYN",noteno);
 	}
 
 }
