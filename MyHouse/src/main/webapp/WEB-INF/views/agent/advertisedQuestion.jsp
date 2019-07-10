@@ -16,38 +16,33 @@
 		<p id="advertised-c1">광고매물 선택</p>
 		<div id="advertised-choice">
 			<c:forEach var="e" items="${list}">
-				<div class="estateListEnd-box" id="${e.ESTATE_NO}">
-					<span>
-					<c:if test="${e.ADATE ne 0}">
-						<c:if test="${e.ADATE > 0}">
-							광고중
-						</c:if>
-					</c:if>
-					</span>
-					<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/${e.RENAMED_FILENAME}" alt="매물사진"/>
-					<p>
-						<c:choose>
-							<c:when test="${e.TRANSACTION_TYPE eq 'M'}">
-								매매
-							</c:when>
-							<c:when test="${e.TRANSACTION_TYPE eq 'J'}">
-								전세
-							</c:when>
-							<c:when test="${e.TRANSACTION_TYPE eq 'O'}">
-								월세
-							</c:when>
-						</c:choose>
-						${e.ESTATE_PRICE}
-					</p>
-					<p>${e.ESTATE_AREA}㎡</p>
-					<p>${e.ADDRESS}</p>
-					<p>${e.ESTATE_CONTENT}</p>
-				</div>
+				<c:if test="${e.ADATE <= 0}">
+					<div class="estateListEnd-box" id="${e.ESTATE_NO}">
+						<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/${e.RENAMED_FILENAME}" alt="매물사진"/>
+						<p>
+							<c:choose>
+								<c:when test="${e.TRANSACTION_TYPE eq 'M'}">
+									매매
+								</c:when>
+								<c:when test="${e.TRANSACTION_TYPE eq 'J'}">
+									전세
+								</c:when>
+								<c:when test="${e.TRANSACTION_TYPE eq 'O'}">
+									월세
+								</c:when>
+							</c:choose>
+							${e.ESTATE_PRICE}
+						</p>
+						<p>${e.ESTATE_AREA}㎡</p>
+						<p>${e.ADDRESS}</p>
+						<p>${e.ESTATE_CONTENT}</p>
+					</div>
+				</c:if>
 			</c:forEach>
 		</div>
 		<p id="advertised-c2">상품 선택</p>
 		<form action="">
-		<input type="hidden" name="estateNo" id="estateNo"/>
+		<input type="hidden" name="estateNo" id=""/>
 		<input type="radio" name="period" id="period1" value="50000"/>
 		<label for="period1">30일</label>&nbsp;&nbsp;&nbsp;
 		<span>50,000원</span>
@@ -64,8 +59,19 @@
 	</div>
 	<script>
 		$(function(){
+			/*매물선택*/
+			$("div.estateListEnd-box").on("click", function(){
+				$("div.estateListEnd-box").css("border", "");
+				$(this).css("border", "2px solid black");
+				$("input[name=estateNo]").attr("id", $(this).attr("id"));
+			});
+			
+			/*신청하기*/
 			$("#advertised-req-btn").on("click", function(){
-				if(!$("input#period1").prop("checked") &&
+				if($("input[name=estateNo]").attr("id") == ""){
+					alert("매물을 선택해주세요.");
+					return;
+				}else if(!$("input#period1").prop("checked") &&
 						!$("input#period2").prop("checked") &&
 						!$("input#period3").prop("checked")){
 					alert("상품을 선택해주세요.");
@@ -73,7 +79,7 @@
 				}
 				
 				var cash = $("input[name=period]:checked").val();
-				var buyer_id = "asde2016@naver.com";
+				var buyer_id = "${memberLoggedIn.memberEmail}";
 				
 				IMP.init("imp94093510");// "imp00000000" 대신 발급받은 "가맹점 식별코드"를 사용합니다.	
 				IMP.request_pay({
@@ -88,6 +94,25 @@
 				           var msg = '결제가 완료되었습니다.';
 				           msg += '결제 금액 : ' + rsp.paid_amount;
 				           msg += '주문자 아이디 : ' + rsp.buyer_name;
+				           
+				           var advertiseDate = "";
+				           if(cash == 50000) advertiseDate = 30;
+				           else if(cash == 100000) advertiseDate = 60;
+				           else if(cash == 140000) advertiseDate = 90;
+				           
+				           var param = {
+				    	   		advertiseDate: advertiseDate,
+				    	   		estateNo: $("input[name=estateNo]").attr("id")
+				           }
+				           
+				           $.ajax({
+				        	  url: "${pageContext.request.contextPath}/agent/advertisedReq",
+				        	  data: param,
+				        	  type: "post",
+				        	  success: function(data){
+				        		  
+				        	  }
+				           });
 				           
 				       } else {
 				           var msg = '결제에 실패하였습니다.';

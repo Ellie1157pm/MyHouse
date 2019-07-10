@@ -13,6 +13,11 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/agent/agentMypage.css" />
 <script>
 $(function() {
+	$("div.estateListEnd-box").on("click", function(){
+		$("div.estateListEnd-box").css("border", "");
+		$(this).css("border", "2px solid black");
+	});
+	
 	$("#estateList-end").css("opacity", 0.6);
 	$("#estateList").on("click", function(){
 		location.href="${pageContext.request.contextPath}/agent/estateList";

@@ -10,12 +10,24 @@
 $(function() {
 	$("#agent-set-btn").css("opacity", 0.6);
 	$("#estateList").on("click", function(){
+		if("${memberLoggedIn.approveYN}" == "N"){
+			alert("가입승인 확인중입니다.");
+			return;
+		}
 		location.href="${pageContext.request.contextPath}/agent/estateList";
 	});
 	$("#estateList-end").on("click", function(){
+		if("${memberLoggedIn.approveYN}" == "N"){
+			alert("가입승인 확인중입니다.");
+			return;
+		}
 		$("#estateListEndFrm").submit();
 	});
 	$("#warning_memo").on("click", function(){
+		if("${memberLoggedIn.approveYN}" == "N"){
+			alert("가입승인 확인중입니다.");
+			return;
+		}
 		location.href="${pageContext.request.contextPath}/agent/warningMemo";
 	});
 });
@@ -23,7 +35,7 @@ $(function() {
 <form action="${pageContext.request.contextPath}/agent/estateListEnd"
 	  id="estateListEndFrm"
 	  method="post">
-	<input type="hidden" name="memberNo" value="0" />
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
 </form>
 <div id="back-container">
 	<div id="info-container">

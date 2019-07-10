@@ -47,7 +47,7 @@ $(function() {
 <form action="${pageContext.request.contextPath}/agent/estateListEnd"
 	  id="estateListEndFrm"
 	  method="post">
-	<input type="hidden" name="memberNo" value="0" />
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
 </form>
 <form action="${pageContext.request.contextPath}/agent/updateEstate"
 	  id="updateEstateFrm"

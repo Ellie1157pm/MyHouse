@@ -11,7 +11,7 @@ public interface AgentDAO {
 
 	int checkMember(String memberEmail);
 
-	int insertEstateAgent(Map map);
+	int insertEstateAgent(Map<String, Object> map);
 
 	int checkCompanyCount(String companyRegNo);
 
@@ -22,5 +22,10 @@ public interface AgentDAO {
 	Agent selectOneAgent(String memberEmail);
 
 	int updateEstate(Map<String, Object> map);
+	
+	int updateAdvertised(Map<String, Integer> map);
+
+	int checkCompany(int memberNo);
+
 
 }

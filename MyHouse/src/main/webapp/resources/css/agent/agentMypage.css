@@ -121,7 +121,7 @@ div.estateListEnd-box{
 }
 div.estateListEnd-box:hover{
 	cursor: pointer;
-	border: 2px solid black;
+	border: 2px solid rgb(0, 0, 0, 0.3);
 }
 div.estateListEnd-box img{
 	width: 150px;

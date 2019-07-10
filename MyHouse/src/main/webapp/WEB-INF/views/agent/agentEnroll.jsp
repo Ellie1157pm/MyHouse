@@ -29,8 +29,9 @@
 					<br />
 					<input type="text" id="companyPhone" name="companyPhone"/>
 				</div>
-				<input type="checkbox" id="estate-agent-agree"/>
-				<label for="estate-agent-agree">개인정보 수집 및 이용에 대한 동의</label>
+					<input type="checkbox" id="estate-agent-agree"/>
+					<label for="estate-agent-agree">개인정보 수집 및 이용에 대한 동의</label>
+					<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}"/>
 			</form>
 		</div>
 	</div>
@@ -42,7 +43,12 @@
 	<script>
 		$(function(){
 			$("#estate-enroll-btn").on("click", function(){
-				if(!$("#estate-agent-agree").prop("checked")){
+				if($("input[id=companyName]").val() == "" ||
+				   $("input[id=companyRegNo]").val() == "" ||
+				   $("input[id=companyPhone]").val() == ""){
+					alert("정보를 모두 입력해주세요.");
+					return;
+				} else if(!$("#estate-agent-agree").prop("checked")){
 					alert("개인정보 수집 및 이용에 대한 동의를 해주세요.");
 					return;
 				}
