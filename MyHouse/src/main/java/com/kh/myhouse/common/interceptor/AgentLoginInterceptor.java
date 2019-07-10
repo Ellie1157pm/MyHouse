@@ -29,6 +29,10 @@ public class AgentLoginInterceptor extends HandlerInterceptorAdapter {
 				   .forward(request, response);
 			
 			return false;
+		} else if(memberLoggedIn.getApproveYN() != 'Y') {
+			request.setAttribute("msg", "가입승인중 입니다.");
+			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp")
+				   .forward(request, response);
 		}
 		
 		
@@ -37,9 +41,3 @@ public class AgentLoginInterceptor extends HandlerInterceptorAdapter {
 
 	
 }
-
-
-
-
-
-
