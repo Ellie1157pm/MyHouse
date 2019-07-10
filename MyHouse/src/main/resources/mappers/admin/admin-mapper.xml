@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="admin">
+	<resultMap type="map" id="memberMap"></resultMap>
+	<select id="selectMemberList" resultMap="memberMap">
+	select * 
+	from member
+	where status='U'
+	</select>
+	<select id="selectRealtorList" resultMap="memberMap">
+	select * 
+	from member
+	where status='B'
+	</select>
+	<select id="selectReportList" resultType="map">
+	select * 
+	from report_estate
+	</select>
+	<select id="selectMemberEmail" resultType="string">
+	select member_email
+	from member
+	where member_no=#{recipient}
+	</select>
+	<select id="newsInsert" resultType="map">
+	insert into news
+	values (
+		seq_news_no.nextval,
+		#{newsTitle},
+		#{newsLink},
+		#{newsContent},
+		#{newsDate},
+		#{newsAuthor},
+		#{newsCategory}
+	)
+	</select>
+	
+	<select id="selectAllNews" resultType="map">
+	select *
+	from news
+	order by news_date desc
+	</select>
+</mapper>
