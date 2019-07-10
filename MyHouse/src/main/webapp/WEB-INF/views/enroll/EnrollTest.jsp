@@ -96,7 +96,7 @@ $(document).ready(function() {
 }); 
 //2019년07월09일(화) 수정한 부분
 </script>
-<form action="${pageContext.request.contextPath}/search/EnrollTestEnd.do" method="post" onsubmit="return validate();"
+<form action="${pageContext.request.contextPath}/estate/EnrollTestEnd.do" method="post" onsubmit="return validate();"
 enctype="multipart/form-data">
 	<table>
 		<tr style="display:none;">

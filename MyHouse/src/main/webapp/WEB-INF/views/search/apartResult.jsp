@@ -139,9 +139,9 @@
 			</div>
 		</c:if>
 		
-			<input type="checkbox" name="option" value="elevator" id="elevator" onchange="checkOption(this)"  <%if(option!=null){%><%= option.contains("elevator")?"checked":"" %><%} %> /><label for="elevator">엘리베이터</label>
-			<input type="checkbox" name="option" value="animal" id="animal" onchange="checkOption(this)" <%if(option!=null){%><%= option.contains("animal")?"checked":"" %><%} %> /><label for="animal">반려동물 가능</label>
-			<input type="checkbox" name="option" value="underparking" id="parking" onchange="checkOption(this)"<%if(option!=null){%><%= option.contains("underparking")?"checked":"" %><%} %>  /><label for="parking">주차 가능</label>
+			<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= option.contains("엘레베이터")?"checked":"" %><%} %> /><label for="elevator">엘리베이터</label>
+			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= option.contains("애완동물")?"checked":"" %><%} %> /><label for="animal">반려동물 가능</label>
+			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(option!=null){%><%= option.contains("지하주차장")?"checked":"" %><%} %>  /><label for="parking">주차 가능</label>
 	</div>
 	
 </div>
@@ -158,9 +158,9 @@
 		<input type="hidden" name="localName" id="localName" value="${localName }" />
 		
 		<div>
-			<input type="checkbox" name="optionResult" id="optionResult1" value="<%=option!=null&&option.contains("underparking")?"underparking":"" %>" <%=option.contains("underparking")?"checked":"" %> />
-			<input type="checkbox" name="optionResult" id="optionResult2" value="<%=option!=null&&option.contains("animal")?"animal":"" %>" <%=option.contains("animal")?"checked":"" %> />
-			<input type="checkbox" name="optionResult" id="optionResult3" value="<%=option!=null&&option.contains("elevator")?"elevator":"" %>"  <%=option.contains("elevator")?"checked":"" %>/>
+			<input type="checkbox" name="optionResult" id="optionResult1" value="<%=option!=null&&option.contains("지하주차장")?"지하주차장":"" %>" <%=option.contains("지하주차장")?"checked":"" %> />
+			<input type="checkbox" name="optionResult" id="optionResult2" value="<%=option!=null&&option.contains("애완동물")?"애완동물":"" %>" <%=option.contains("애완동물")?"checked":"" %> />
+			<input type="checkbox" name="optionResult" id="optionResult3" value="<%=option!=null&&option.contains("엘레베이터")?"엘레베이터":"" %>"  <%=option.contains("엘레베이터")?"checked":"" %>/>
 		</div>
 	</form>
 
@@ -210,11 +210,6 @@ function checkOption(obj){
 function viewFilter(){
 	$('#search3').css('display','block');
 	$('#searchArea').css('height','600px');
-}
-//리셋
-function filterReset(){
-	//거래 유형(매매,전,월세)
-
 }
 
 //매매/전세 셀렉트 박스 변경시 필터의 거래유형도 변경.
@@ -293,7 +288,7 @@ function closeSearch3(){
 //default 지도 생성
 var mapContainer=document.getElementById('map'),
 mapOption={
-	center:new daum.maps.LatLng(37.566826, 126.9786567),
+	center:new daum.maps.LatLng${loc},
 	level:5
 	};
 var map=new daum.maps.Map(mapContainer,mapOption);
@@ -338,11 +333,10 @@ ps.keywordSearch(loc, placesSearchCB2); <% }%> --%>
 kakao.maps.event.addListener(map, 'dragend', function() {     
 	//법정동 상세주소 얻어오기
 		searchDetailAddrFromCoords(map.getCenter(),function(result,status){
-		$('#estateFrm #localName').val(result[0].address.address_name);
-		console.log('위치조정용'+$('#estateFrm #localName').val());
+		$('#estateFrm #localName').val(map.getCenter());
 		address=(result[0].address.address_name).substring(0,8);
 		$('#estateFrm #address').val(address);
-		//$('#estateFrm').submit();
+		$('#estateFrm').submit();
 	});
     
    //address에 구단위 검색용 값이 들어온 상태-확인 후 지울것
@@ -360,7 +354,7 @@ function displayMarker(place) {
 	var markerPosition  = new kakao.maps.LatLng(place.y, place.x); 
         // 데이터에서 좌표 값을 가지고 마커를 표시합니다
         
-        var markers = $(place).map(function(markerPosition) {
+        var markers = $(this).map(function(markerPosition) {
             return new kakao.maps.Marker({
                 position : new kakao.maps.LatLng(place.y, place.x)
           
@@ -392,8 +386,8 @@ function displayMarker(place) {
         
      
      // 클러스터러에 마커들을 추가합니다
-        clusterer.addMarkers(markers); 
         });
+        clusterer.addMarkers(markers); 
 }
 /////////////////////////////////////////////////////////////////////////////
 //콜백함수--------------------------------------------------------------------
@@ -723,6 +717,12 @@ function getEstate(cPage,roadAddressName){
            console.log(jqxhr);
        }
    });
+}
+//리셋
+function filterReset(){
+	//거래 유형(매매,면적 전체,매매가 전체)
+
+	location.href="${pageContext.request.contextPath}/estate/filterReset?localName="+$('#localName').val()+"&estateType=${estateType}";
 }
 
 
