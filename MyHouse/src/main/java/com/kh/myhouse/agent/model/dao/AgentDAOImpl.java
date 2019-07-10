@@ -26,7 +26,7 @@ public class AgentDAOImpl implements AgentDAO {
 	}
 
 	@Override
-	public int insertEstateAgent(Map map) {
+	public int insertEstateAgent(Map<String, Object> map) {
 		return sqlSession.insert("agent.insertEstateAgent", map);
 	}
 
@@ -52,7 +52,17 @@ public class AgentDAOImpl implements AgentDAO {
 
 	@Override
 	public int updateEstate(Map<String, Object> map) {
-		return sqlSession.update("updateEstate", map);
+		return sqlSession.update("agent.updateEstate", map);
+	}
+
+	@Override
+	public int updateAdvertised(Map<String, Integer> map) {
+		return sqlSession.update("agent.updateAdvertised", map);
+	}
+
+	@Override
+	public int checkCompany(int memberNo) {
+		return sqlSession.selectOne("agent.checkCompany", memberNo);
 	}
 
 }

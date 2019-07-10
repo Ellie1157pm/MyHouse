@@ -27,8 +27,13 @@
 		values(seq_company_no.nextval,
 				#{companyRegNo},
 				#{companyName},
-				#{companyPhone})
+				#{companyPhone},
+				#{memberNo},
+				default)
 	</insert>
+	<select id="checkCompany" resultType="_int">
+		select count(*) from company_info where business_member_no = #{memberNo}
+	</select>
 	<select id="checkCompanyCount" resultType="_int">
 		select count(*) from company_info where company_reg_no = #{companyRegNo}
 	</select>
@@ -59,5 +64,16 @@
                                 where rowid in (select min(rowid) from estate_photo group by estate_no))p
                                 on e.estate_no = p.estate_no
         left join power_link l on e.estate_no = l.estate_no
+        where business_member_no = #{memberNo}
 	</select>
+	<update id="updateAdvertised">
+		merge into power_link
+		using dual
+		on(estate_no = #{estateNo})
+		when MATCHED then
+		    update set start_date = sysdate, period = sysdate+#{advertiseDate}, price = #{price}
+		when not MATCHED then
+		    insert
+		    values(SEQ_POWER_LINK_NO.nextval,#{estateNo},sysdate,sysdate+#{advertiseDate},#{price})
+	</update>
 </mapper>

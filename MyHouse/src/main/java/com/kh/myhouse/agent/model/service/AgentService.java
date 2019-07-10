@@ -11,7 +11,7 @@ public interface AgentService {
 
 	int checkMember(String memberEmail);
 
-	int insertEstateAgent(Map<String, String> map);
+	int insertEstateAgent(Map<String, Object> map);
 
 	int checkCompanyCount(String companyRegNo);
 
@@ -22,5 +22,9 @@ public interface AgentService {
 	Agent selectOneAgent(String memberEmail);
 
 	int updateEstate(Map<String, Object> map);
+
+	int updateAdvertised(Map<String, Integer> map);
+
+	int checkCompany(int memberNo);
 
 }

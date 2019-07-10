@@ -26,7 +26,7 @@ public class AgentServiceImpl implements AgentService {
 	}
 
 	@Override
-	public int insertEstateAgent(Map map) {
+	public int insertEstateAgent(Map<String, Object> map) {
 		return agentDAO.insertEstateAgent(map);
 	}
 
@@ -53,6 +53,16 @@ public class AgentServiceImpl implements AgentService {
 	@Override
 	public int updateEstate(Map<String, Object> map) {
 		return agentDAO.updateEstate(map);
+	}
+
+	@Override
+	public int updateAdvertised(Map<String, Integer> map) {
+		return agentDAO.updateAdvertised(map);
+	}
+
+	@Override
+	public int checkCompany(int memberNo) {
+		return agentDAO.checkCompany(memberNo);
 	}
 
 }

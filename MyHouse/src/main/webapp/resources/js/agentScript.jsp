@@ -8,12 +8,12 @@ function loginSubmit(){
 	var param = {
 		memberEmail : $("input#id").val()
 	}
-	console.log(param);
 	$.ajax({
 		url: "${pageContext.request.contextPath}/agent/loginCheck",
 		type: "post",
 		data: param,
 		success: function(data){
+			console.log(data.companyRegNo);
 			if(data.companyRegNo != null){
 				$("#loginFrm").attr("action", "${pageContext.request.contextPath}/agent/agentLogin");
 				$("#loginFrm").submit();
@@ -128,13 +128,21 @@ $(function(){
 	
 	/*중개사무소가입*/
 	$("button#estate-agent").on("click", function(){
-		location.href = "${pageContext.request.contextPath}/agent/agentEnroll";
+		if("${memberLoggedIn.memberNo}" == ""){
+			alert("로그인후 이용해주세요.");
+		} else if("${memberLoggedIn.status}" == "U"){
+			alert("중개회원만 가입이 가능합니다.");
+		} else {
+			location.href = "${pageContext.request.contextPath}/agent/agentEnroll";
+		}
 	});
 	
 	/*광고 문의*/
 	$("button#advertised-btn-end").on("click", function(){
 		if("${memberLoggedIn.memberNo}" == ""){
 			alert("로그인후 이용해주세요.");
+		} else if("${memberLoggedIn.status}" == "U"){
+			alert("중개회원만 광고문의가 가능합니다.");
 		} else {
 			location.href = "${pageContext.request.contextPath}/agent/advertisedQuestion?memberNo="+"${memberLoggedIn.memberNo}";
 		}
