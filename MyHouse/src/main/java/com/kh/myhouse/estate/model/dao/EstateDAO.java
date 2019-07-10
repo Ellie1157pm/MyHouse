@@ -43,4 +43,28 @@ public interface EstateDAO {
 
 	String selectLocalName(String address);
 
+	List<String> selectEstateListForAllNotOption(Map<String, Object> map);
+
+	List<String> selectEstateListForAllSelectOption(Map<String, Object> map);
+
+	List<String> selectEstateListSelectStructureNotOption(Map<String, Object> map);
+
+	List<String> selectEstateListSelectStructureNotOptoin(Map<String, Object> map);
+
+	List<String> selectEstateListForAllNotOptionForMontlyFee(Map<String, Object> map);
+
+	List<String> selectEstateListForAllNotOptionSelectFloorOptionForMontlyFee(Map<String, Object> map);
+
+	List<String> selectEstateListForAllSelectOptionNotFloorOpionForMontlyFee(Map<String, Object> map);
+
+	List<String> selectEstateListForAllSelectOptionSelectFloorOptionMontlyFee(Map<String, Object> map);
+
+	List<String> selectEstateListSelectStructureNotOpionNotFloorOptionMontlyFee(Map<String, Object> map);
+
+	List<String> selectEstateListSelectStructureNotOpionSelectFloorOptionMontlyFee(Map<String, Object> map);
+
+	List<String> selectEstateListSelectStructureSelectOptionNotFloorOptionMontlyFee(Map<String, Object> map);
+
+	List<String> selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee(Map<String, Object> map);
+
 }

@@ -66,7 +66,7 @@ public class EstateDAOImpl implements EstateDAO{
 	@Override
 	public List<String> selectApartListForAll(Map<String, Object> map) {
 		//주소 리턴
-		return sqlSession.selectList("estate.selectApartListForAll",map);
+		return sqlSession.selectList("estate.selectApartListForAllNotOption",map);
 	}
 
 
@@ -122,5 +122,77 @@ public class EstateDAOImpl implements EstateDAO{
 	@Override
 	public String selectLocalName(String address) {
 		return sqlSession.selectOne("estate.selectLocalName",address);
+	}
+
+
+	@Override
+	public List<String> selectEstateListForAllNotOption(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectEstateListForAllNotOption",map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListForAllSelectOption(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectEstateListForAllSelectOption",map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListSelectStructureNotOption(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectEstateListSelectStructureNotOption",map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListSelectStructureNotOptoin(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectEstateListSelectStructureNotOptoin",map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListForAllNotOptionForMontlyFee(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectEstateListForAllNotOptionForMontlyFee",map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListForAllNotOptionSelectFloorOptionForMontlyFee(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectEstateListForAllNotOptionSelectFloorOptionForMontlyFee",map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListForAllSelectOptionNotFloorOpionForMontlyFee(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectEstateListForAllSelectOptionNotFloorOpionForMontlyFee",map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListForAllSelectOptionSelectFloorOptionMontlyFee(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectEstateListForAllSelectOptionSelectFloorOptionMontlyFee",map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListSelectStructureNotOpionNotFloorOptionMontlyFee(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectEstateListSelectStructureNotOpionNotFloorOption",map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListSelectStructureNotOpionSelectFloorOptionMontlyFee(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectEstateListSelectStructureNotOpionSelectFloorOptionMontlyFee",map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListSelectStructureSelectOptionNotFloorOptionMontlyFee(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectEstateListSelectStructureSelectOptionNotFloorOptionMontlyFee",map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee(Map<String, Object> map) {
+		return sqlSession.selectList("estate.selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee",map);
 	}
 }

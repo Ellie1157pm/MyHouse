@@ -94,17 +94,15 @@
 		<p class="filterTitle button" style="margin-bottom:4px;"> <%=structure.equals("all")?"전체":(structure.equals("2")?"투룸":(structure.equals("3")?"쓰리룸":(structure.equals("4")?"포룸":"")))%></p>
 		<table id="areaTbl">
 			<tr>
-				<td <%=structure.equals("all")?"style='background:#6c757d;'":"" %>><button type="button" data-type="전체" class="btn btn-secondary second" <%=structure.equals("all")?"style='background:#6c757d;color:white;'":"" %> value="all" data-value="checked" onclick="changeARea(this);">전체</button></td>
+				<td <%=structure.equals("all")?"style='background:#6c757d;'":"" %>><button type="button" data-type="전체" class="btn btn-secondary second" <%=structure.equals("all")?"style='background:#6c757d;color:white;'":"" %>data-type="전체" value="all" onclick="changeARea(this);">전체</button></td>
 				<td <%=structure.equals("2")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" <%=structure.equals("2")?"style='background:#6c757d;color:white;'":"" %> data-type="투룸" value="2" onclick="changeARea(this);">투룸</button></td>
 				<td <%=structure.equals("3")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" <%=structure.equals("3")?"style='background:#6c757d;color:white;'":"" %>  data-type="쓰리룸" value="3" onclick="changeARea(this);">쓰리룸</button></td>
 				<td <%=structure.equals("4")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" <%=structure.equals("4")?"style='background:#6c757d;color:white;'":"" %> data-type="포룸 이상" value="4" onclick="changeARea(this);">포룸+</button></td>
 			</tr>
 		</table>
 		<hr />
-		<p class="filterSubTitle" style="margin:0;">주차옵션</p>
-		<input type="checkbox" name="option" id="parking" value="parking" <%if(options!=null){ %> <%=options.contains("parking")?"checked":""%><%} %> onchange="submit();" style="width:20px;height: 20px;margin-left:10px;" />
-		<label for="parking">주차 가능만 보기</label>
 		</c:if><!--거래유형이 매매일때  -->
+	
 		
 		<!--거래 유형이 전세  일때  -->
 		<!--보증금  -->
@@ -127,17 +125,14 @@
 			</tr>
 		</table>
 		<hr />
-		<p class="filterSubTitle" style="margin:0;">주차옵션</p>
-		<input type="checkbox" name="option" id="parking" <%=options.contains("parking")?"checked":"" %> onchange="submit();" value="parking" style="width:20px;height: 20px;margin-left:10px;" />
-		<label for="parking">주차 가능만 보기</label>
 		</c:if><!-- end of 거래유형이 전세일때  -->
-		
+
 		<c:if test="${dealType eq 'O' }">
 		<p class="filterSubTitle" style="margin:0;">보증금</p>
 		<p class="filterTitle range" style="margin-bottom:4px;">전체</p>
 			<!--range UI놓을 곳  -->
 			<div id="slider-range">
-			  <input type="text" class="js-range-slider" name="range1" value="" />
+			  <input type="text" class="js-range-slider3" name="range3" value="" />
 			</div>
 		<hr />
 		<!--월세  -->
@@ -159,18 +154,19 @@
 			</tr>
 		</table>
 		<hr />
-		<p class="filterSubTitle" style="margin:0;">주차옵션</p>
-		<input type="checkbox" name="option" id="parking"  <%=options.contains("parking")?"checked":"" %> onChange="submit();" value="parking" style="width:20px;height: 20px;margin-left:10px;" />
-		<label for="parking">주차 가능만 보기</label>
-		
 		</c:if>
+		<p class="filterSubTitle" style="margin:0;">옵션</p>
+		&nbsp;
+			&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= options.contains("엘레베이터")?"checked":"" %><%} %> /><label for="elevator">엘리베이터</label>
+			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= options.contains("애완동물")?"checked":"" %><%} %> /><label for="animal">반려동물 가능</label>
+			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(option!=null){%><%= options.contains("지하주차장")?"checked":"" %><%} %>  /><label for="parking">주차 가능</label>
 		</c:if> <!-- end of 빌라 -->
 		
 		
 		<!-- 원룸 or 오피스텔 일 때 -->
 		<c:if test="${estateType eq 'O' or estateType eq 'P' }">
 			<p class="filterSubTitle" style="margin:0;">거래유형</p>
-			<p class="filterTitle select" style="margin-bottom:4px; ">전체</p>
+			<p class="filterTitle select" style="margin-bottom:4px; ">${dealType eq 'all'?'전체':(dealType eq 'J'?'전세':(dealType eq 'O'?'월세':''))}</p>
 			<button type="button" class="btn btn-secondary first" ${dealType eq 'all'?'style="background:#6c757d;color:white;"':'' } value="all" data-type="전체" onclick="changeDeal2(this);" style="width:130px;">전체</button>
 			<button type="button" class="btn btn-secondary first" value="J" data-type="전세"  ${dealType eq 'J'?'style="background:#6c757d;color:white;"':'' }  onclick="changeDeal2(this);">전세</button>
 			<button type="button" class="btn btn-secondary first" value="O" data-type="월세"  ${dealType eq 'O'?'style="background:#6c757d;color:white;"':'' }  onclick="changeDeal2(this);">월세</button>
@@ -191,7 +187,7 @@
 					  <input type="text" class="js-range-slider2" name="range2" value="" />
 					</div>
 					<br />
-					<input type="checkbox" onChange="submit();" value="maintenanceCost" <%=options.contains("maintenanceCost")?"checked":"" %> name="option" id="maintenanceCost" style="width:20px;height: 20px;margin-left:10px;" />
+					<input type="checkbox" onchange="checkOption(this)" value="maintenanceCost" <%=options.contains("maintenanceCost")?"checked":"" %> name="option" id="maintenanceCost" style="width:20px;height: 20px;margin-left:10px;" />
 					<label for="maintenanceCost">관리비 포함하여 찾기</label>
 				<hr />
 				<c:if test="${estateType eq 'O' }">
@@ -199,13 +195,13 @@
 					<p class="filterTitle button" style="margin-bottom:4px;">전체</p>
 					<table id="areaTbl">
 						<tr>
-							<td <%=structure.equals("all")?"style='background:#6c757d;'":"" %> ><button type="button" data-type="전체"<%=structure.equals("all")?"style='background:#6c757d;color:wthie;'":"" %> class="btn btn-secondary second" value="all" onclick="changeARea(this);">전체</button></td>
-							<td <%=structure.equals("open")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second"  data-type="오픈형(방 1)" value="open" <%=structure.equals("open")?"style='background:#6c757d;color:wthie;'":"" %>  onclick="changeARea(this);">오픈형(방 1)</button></td>
+							<td <%=structure.equals("all")?"style='background:#6c757d;'":"" %> ><button type="button" data-type="전체"<%=structure.equals("all")?"style='background:#6c757d;color:wthie;width:150px;'":"" %> class="btn btn-secondary second" value="all" onclick="changeARea(this);">전체</button></td>
+							<td <%=structure.equals("오픈형(방1)")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second"  data-type="오픈형(방 1)" value="오픈형(방1)" <%=structure.equals("오픈형(방1)")?"style='background:#6c757d;color:wthie;width:150px;'":"" %>  onclick="changeARea(this);">오픈형(방 1)</button></td>
 						</tr>
 						
 						<tr>
-							<td  <%=structure.equals("separation")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형(방 1,거실 1)" value="separation" <%=structure.equals("separation")?"style='background:#6c757d;color:wthie;'":"" %> onclick="changeARea(this);">분리형(방 1,거실 1)</button></td>
-							<td <%=structure.equals("splitLevel")?"style='background:#6c757d;'":"" %>><button type="button" class="btn btn-secondary second" data-type="복층" value="splitLevel" <%=structure.equals("splitLevel")?"style='background:#6c757d;color:wthie;'":"" %> onclick="changeARea(this);">복층</button></td>
+							<td  <%=structure.equals("분리형(방1,거실1)")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형(방 1,거실 1)" value="분리형(방1,거실1)" <%=structure.equals("분리형(방1,거실1)")?"style='background:#6c757d;color:wthie;width:150px;'":"" %> onclick="changeARea(this);">분리형(방 1,거실 1)</button></td>
+							<td <%=structure.equals("복층형")?"style='background:#6c757d;'":"" %>><button type="button" class="btn btn-secondary second" data-type="복층형" value="복층형" <%=structure.equals("복층형")?"style='background:#6c757d;color:wthie;width:150px;'":"" %> onclick="changeARea(this);">복층형</button></td>
 						</tr>
 					</table>
 					<hr />
@@ -213,8 +209,8 @@
 					<p class="filterSubTitle" style="margin:0;">층 수 옵션</p>
 					<p class="filterTitle select" style="margin-bottom:4px; ">전체</p>
 					<button type="button" class="btn btn-secondary third" ${topOption eq 'all'?'style="background:#6c757d;color:white;width:130px;"':'' } value="all" data-type="전체"  onclick="changeTopOption(this);">전체</button>
-					<button type="button" class="btn btn-secondary third" ${topOption eq 'ground'?'style="background:#6c757d;color:white;width:130px;"':'' } value="ground" data-type="지상층" onclick="changeTopOption(this);">지상층</button>
-					<button type="button" class="btn btn-secondary third"  ${topOption eq 'roofTop'?'style="background:#6c757d;color:white;width:130px;"':'' } value="roofTop" data-type="반지하, 옥탑" onclick="changeTopOption(this);">반지하, 옥탑</button>
+					<button type="button" class="btn btn-secondary third" ${topOption eq '지상층'?'style="background:#6c757d;color:white;width:130px;"':'' } value="지상층" data-type="지상층" onclick="changeTopOption(this);">지상층</button>
+					<button type="button" class="btn btn-secondary third"  ${topOption eq '반지하,옥탑'?'style="background:#6c757d;color:white;width:130px;"':'' } value="반지하,옥탑" data-type="반지하, 옥탑" onclick="changeTopOption(this);">반지하, 옥탑</button>
 					<hr />
 						</c:if><!--end of 원룸일때 옵션  -->
 						<c:if test="${estateType eq 'P' }">
@@ -223,20 +219,17 @@
 					<table id="areaTbl">
 						<tr>
 							<td <%=structure.equals("all")?"style='background:#6c757d;'":"" %>><button type="button" data-type="전체" class="btn btn-secondary second" <%=structure.equals("all")?"style='background:#6c757d;color:white;'":"" %> value="all" onclick="changeARea(this);">전체</button></td>
-							<td  <%=structure.equals("open")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="오픈형 원룸"  <%=structure.equals("open")?"style='background:#6c757d;color:white;'":"" %> value="open" onclick="changeARea(this);">오픈형 원룸</button></td>
-							<td  <%=structure.equals("separationOneRoom")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형 원룸" value="separationOneRoom"  <%=structure.equals("separationOneRoom")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">분리형 원룸</button></td>
+							<td  <%=structure.equals("오픈형원룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="오픈형원룸"  <%=structure.equals("오픈형원룸")?"style='background:#6c757d;color:white;'":"" %> value="오픈형원룸" onclick="changeARea(this);">오픈형 원룸</button></td>
+							<td  <%=structure.equals("분리형원룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형원룸" value="분리형원룸"  <%=structure.equals("분리형원룸")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">분리형 원룸</button></td>
 						</tr>
 						<tr>
-							<td <%=structure.equals("separation")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형(방 1,거실 1)" value="separation" <%=structure.equals("separation")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">복층형 원룸</button></td>
-							<td <%=structure.equals("2")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="투룸" value="2" <%=structure.equals("2")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">투룸</button></td>
-							<td <%=structure.equals("3")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="쓰리룸+" value="3" <%=structure.equals("3")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">쓰리룸+</button></td>
+							<td <%=structure.equals("복층형원룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="복층형원룸" value="복층형원룸" <%=structure.equals("복층형원룸")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">복층형 원룸</button></td>
+							<td <%=structure.equals("투룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="투룸" value="투룸" <%=structure.equals("투룸")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">투룸</button></td>
+							<td <%=structure.equals("쓰리룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="쓰리룸+" value="쓰리룸+" <%=structure.equals("쓰리룸")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">쓰리룸+</button></td>
 						</tr>
 					</table>
 					<hr />
 				</c:if>
-					<p class="filterSubTitle" style="margin:0;">주차옵션</p>
-					<input type="checkbox" name="option" onChange="submit();"  <%=options.contains("parking")?"checked":"" %> value="parking" id="parking" style="width:20px;height: 20px;margin-left:10px;" />
-					<label for="parking">주차 가능만 보기</label>
 				</c:if><!-- end of 거래유형이 전체 일 때  -->
 				
 				
@@ -254,20 +247,23 @@
 					<table id="areaTbl">
 						<tr>
 							<td <%=structure.equals("all")?"style='background:#6c757d;'":"" %>><button type="button" data-type="전체" class="btn btn-secondary second" <%=structure.equals("all")?"style='background:#6c757d;color:white;'":"" %> value="all" onclick="changeARea(this);">전체</button></td>
-							<td  <%=structure.equals("open")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="오픈형 원룸"  <%=structure.equals("open")?"style='background:#6c757d;color:white;'":"" %> value="open" onclick="changeARea(this);">오픈형 원룸</button></td>
-							<td  <%=structure.equals("separationOneRoom")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형 원룸" value="separationOneRoom"  <%=structure.equals("separationOneRoom")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">분리형 원룸</button></td>
+							<td  <%=structure.equals("오픈형 원룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="오픈형 원룸"  <%=structure.equals("open")?"style='background:#6c757d;color:white;'":"" %> value="open" onclick="changeARea(this);">오픈형 원룸</button></td>
+							<td  <%=structure.equals("분리형 원룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형 원룸" value="separationOneRoom"  <%=structure.equals("separationOneRoom")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">분리형 원룸</button></td>
 						</tr>
 						<tr>
-							<td <%=structure.equals("separation")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형(방 1,거실 1)" value="separation" <%=structure.equals("separation")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">복층형 원룸</button></td>
-							<td <%=structure.equals("2")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="투룸" value="2" <%=structure.equals("2")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">투룸</button></td>
-							<td <%=structure.equals("3")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="쓰리룸+" value="3" <%=structure.equals("3")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">쓰리룸+</button></td>
+							<td <%=structure.equals("분리형(방 1,거실 1)")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형(방 1,거실 1)" value="separation" <%=structure.equals("separation")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">복층형 원룸</button></td>
+							<td <%=structure.equals("투룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="투룸" value="2" <%=structure.equals("2")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">투룸</button></td>
+							<td <%=structure.equals("쓰리룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="쓰리룸+" value="3" <%=structure.equals("3")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">쓰리룸+</button></td>
 						</tr>
 					</table>
 					<hr />
-					<p class="filterSubTitle" style="margin:0;">주차옵션</p>
-					<input type="checkbox" name="option" onChange="submit();"  <%=options.contains("parking")?"checked":"" %> id="parking" value="parking" style="width:20px;height: 20px;margin-left:10px;" />
-					<label for="parking">주차 가능만 보기</label>
 				</c:if><!--end of 거래 유형이 전세일 때  -->
+				
+					<p class="filterSubTitle" style="margin:0;">옵션</p>
+					&nbsp;
+				&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= options.contains("엘레베이터")?"checked":"" %><%} %> /><label for="elevator">엘리베이터</label>
+			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= options.contains("애완동물")?"checked":"" %><%} %> /><label for="animal">반려동물 가능</label>
+			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(option!=null){%><%= options.contains("지하주차장")?"checked":"" %><%} %>  /><label for="parking">주차 가능</label>
 		</c:if><!--원룸 or 오피스텔 끝  -->
 	</div>
 </div>
@@ -278,14 +274,18 @@
 	<form action="${pageContext.request.contextPath }/estate/findOtherTerms" id="estateFrm" method="post" style="visibility: hidden">
 		<input type="hidden" name="estateType" id="estateType" value="${estateType }" />
 		<input type="hidden" name="dealType" id="dealType" value="${dealType }"  />
-		<input type="hidden" name="range_1" id="range_1" value="0"/>
-		<input type="hidden" name="range_2" id="range_2" value="2000000000" />
-		<input type="hidden" name="range_3" id="range_3" value="0" />
-		<input type="hidden" name="range_4" id="range_4" value="3000000" />
+		<input type="hidden" name="topOption" id="topOption" value="${topOption }"  />
+		<input type="hidden" name="range_1" id="range_1" value="${range1 eq '0'?'0':range1 }" />
+		<input type="hidden" name="range_2" id="range_2" value="${range2 eq '0'?'400':range2  }" />
+		<input type="hidden" name="range_3" id="range_3" value="${range3 eq '0'?'0':range3 }" />
+		<input type="hidden" name="range_4" id="range_4" value="${range4 eq '0'?'300':range4 }" />
+		<input type="hidden" name="address" id="address" value="${localName }" />
+		<input type="hidden" name="localName" id="localName" value="${loc }" />
 		<!--구조  --><input type="hidden" name="structure" id="structure" value="${structure }" />
-		<input type="hidden" name="topOption" id="topOption" value="${topOption }" />
 		<input type="checkbox" name="optionResult" id="optionResult1" />
 		<input type="checkbox" name="optionResult" id="optionResult2" />
+		<input type="checkbox" name="optionResult" id="optionResult3" />
+		<input type="checkbox" name="optionResult" id="optionResult4" />
 	</form>
 
 <script>
@@ -317,72 +317,17 @@ function viewFilter(){
 }
 //리셋
 function filterReset(){
-	//거래 유형(매매,전,월세)
-	$('#dealType').val('M');
-	for(var i=0;i<$('div#search3 .first').length;i++){
-		if(i==0){
-			$('div#search3 .first')[i].dataset.value="checked";
-			$('div#search3 .first')[i].style.background='#6c757d';
-			$('div#search3 .first')[i].style.color='white';
-			$('.select').html($('div#search3 .first')[i].dataset.type);
-		}else{
-			$('div#search3 .first')[i].dataset.value=null;
-			$('div#search3 .first')[i].style.background='white';
-			$('div#search3 .first')[i].style.color='black';
-		}
-		
-	}
-	
-	
-	
-	//면적
-	for(var i=0;i<$('div#search3 .second').length;i++){
-		if($('div#search3 .second')[i].value=='all'){
-			$('div#search3 .second')[i].dataset.value='checked';
-			$('div#search3 .second')[i].style.background='#6c757d';
-			$('div#search3 .second')[i].style.color='white';
-			$('div#search3 .second')[i].parentNode.style.background='#6c757d';
-			}else{
-		$('div#search3 .second')[i].dataset.value=null;
-		$('div#search3 .second')[i].style.background='white';
-		$('div#search3 .second')[i].style.color='black';
-		$('div#search3 .second')[i].parentNode.style.background='white';
-	}}
+	location.href="${pageContext.request.contextPath}/estate/filterReset?localName="+$('#localName').val()+"&estateType=${estateType}";
 }
 //매매/전세 셀렉트 박스 변경시 필터의 거래유형도 변경.
 function changeDeal(obj){
 	var value=obj.value;
 	$('#estateFrm #dealType').val(value);
-	$('div#search3 .first').css('color','black;');
-	for(var i=0;i<$('div#search3 .first').length;i++){
- 		if(value==$('div#search3 .first')[i].value){
- 			$('div#search3 .first')[i].style.background="#6c757d";
- 			$('div#search3 .first')[i].style.color="white";
- 			$('.select').html($('div#search3 .first')[i].dataset.type);
- 			
-		}else{
-			$('div#search3 .first')[i].style.background="white";
-			$('div#search3 .first')[i].style.color="black";
-		}
-	}	
 	$('#estateFrm').submit();
 }
 function changeTopOption(obj){
 	var value=obj.value;
 	$('#estateFrm #topOption').val(value);
-	
- 	for(var i=0;i<$('div#search3 .third').length;i++){
-		if($('div#search3 .third')[i].value!=obj.value){
-			$('div#search3 .third')[i].style.background="white";
-			$('div#search3 .third')[i].style.color="black";
-		}else{
-		$('#dealType')[0].value=value;
-		
-		$('.select').html($('div#search3 .third')[i].dataset.type);
-		obj.style.background="#6c757d";
-		obj.style.color="white";
-		}
-	}  
 	$('#estateFrm').submit();
 }
 //버튼 클릭시 셀렉트 박스 값도 바뀌게 하는 함수
@@ -391,28 +336,16 @@ function changeDeal2(obj){
 	//css 제어
 	var value=obj.value;
 	$('#estateFrm #dealType').val(value);
-	
- 	for(var i=0;i<$('div#search3 .first').length;i++){
-		if($('div#search3 .first')[i].value!=obj.value){
-			$('div#search3 .first')[i].style.background="white";
-			$('div#search3 .first')[i].style.color="black";
-		}else{
-		$('#dealType')[0].value=value;
-		
-		$('.select').html($('div#search3 .first')[i].dataset.type);
-		obj.style.background="#6c757d";
-		obj.style.color="white";
-	}
-	} 
- 	console.log($('input[name=optionResult]').val());
  	$('#estateFrm').submit();
 	
 }
-function submit(){
+function checkOption(obj){
 	for(var i=0;i<$('input[name=option]').length;i++){
 		if($('input[name=option]')[i].checked==true){
-			$('#optionResult'+(i+1)).val($('input[name=option]')[i].value);
-			$('input[name=optionResult]')[i].checked=true;
+			$('#estateFrm input[name=optionResult]')[i].value=$('input[name=option]')[i].value;
+			$('#estateFrm input[name=optionResult]')[i].checked=true;
+		}else {
+			$('#estateFrm input[name=optionResult]')[i].value='0';
 		}
 	}
 	$('#estateFrm').submit();
@@ -449,7 +382,7 @@ function closeSearch3(){
 //default 지도 생성
 var mapContainer=document.getElementById('map'),
 mapOption={
-	center:new daum.maps.LatLng(37.566826, 126.9786567),
+	center:new daum.maps.LatLng${loc ne null?loc:'(37.566826, 126.9786567)'},
 	level:5
 	}
 var map=new daum.maps.Map(mapContainer,mapOption);
@@ -493,8 +426,10 @@ ps.keywordSearch(loc, placesSearchCB2); <% }%> --%>
 kakao.maps.event.addListener(map, 'dragend', function() {     
 	//법정동 상세주소 얻어오기
 	searchDetailAddrFromCoords(map.getCenter(),function(result,status){
-		console.log(result[0].address.address_name);
+		$('#estateFrm #localName').val(map.getCenter());		
 		address=(result[0].address.address_name).substring(0,8);
+		$('#estateFrm #address').val(address);
+		$('#estateFrm').submit();
 	});
     
    //address에 구단위 검색용 값이 들어온 상태-확인 후 지울것
@@ -632,8 +567,8 @@ function sale(){
 	    grid: true,
 	    min: 0,
 	    max: 200,
-	    from: ${range1 /10000000},
-	    to: 200,
+	    from: ${range1 /1000},
+	    to: ${range2 ne 0?range2:200},
 	    onChange:function(data){
 	    	var toValue=data.to;
 	    	var fromValue=data.from;
@@ -733,8 +668,8 @@ function deposit(){
 	    grid: true,
 	    min: 0,
 	    max: 100,
-	    from: 0,
-	    to: 100,
+	    from: ${range1/1000},
+	    to: ${range2 ne '0'?range2:100},
 	    onChange:function(data){
 	    	var toValue=data.to;
 	    	var fromValue=data.from;
@@ -833,8 +768,8 @@ function monthlyLent(){
 	    grid: true,
 	    min: 0,
 	    max: 300,
-	    from: 0,
-	    to: 300,
+	    from: ${range3},
+	    to: ${range4 ne '0'?range2:300},
 	    step:5,
 	    onChange:function(data){
 	    	var toValue=data.to;
