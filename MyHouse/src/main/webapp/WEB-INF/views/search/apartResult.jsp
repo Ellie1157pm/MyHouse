@@ -2,171 +2,221 @@
 <%@page import="java.util.Arrays"%>
 <%@page import="com.kh.myhouse.estate.model.vo.Estate"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ page import="java.util.List" %>
+<%@ page import="java.util.List"%>
 <%
 	//스크립트 단에서 사용할 것이므로 스크립틀릿 필요함. 
-	String keyword=(String)request.getAttribute("searchKeyword"); //입력한 검색어
-    List list = (List)request.getAttribute("list");  //마커를 찍기위한 아파트 리스트
-    String structure=(String)request.getAttribute("structure");
-    String[] options=(String[])request.getAttribute("option");
-    List<String>option=new ArrayList<>();
-    if(options!=null){
-    option=Arrays.asList(options);    	
-    }
-    String msg=(String)request.getAttribute("msg");
-    
+	String keyword = (String) request.getAttribute("searchKeyword"); //입력한 검색어
+	List list = (List) request.getAttribute("list"); //마커를 찍기위한 아파트 리스트
+	String structure = (String) request.getAttribute("structure");
+	String[] options = (String[]) request.getAttribute("option");
+	List<String> option = new ArrayList<>();
+	if (options != null) {
+		option = Arrays.asList(options);
+	}
+	String msg = (String) request.getAttribute("msg");
 %>
 <style>
 </style>
-<jsp:include page="/WEB-INF/views/common/header.jsp"/>
-<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/map/map.css" />
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath }/resources/css/map/map.css" />
 <!--Range관련  -->
 <!--Plugin CSS file with desired skin-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/css/ion.rangeSlider.min.css"/>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/css/ion.rangeSlider.min.css" />
 <!--jQuery-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <!--Plugin JavaScript file-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/js/ion.rangeSlider.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/js/ion.rangeSlider.min.js"></script>
 
 
-<div id="map">
-
-</div>
+<div id="map"></div>
 <div id="sidebar">
-		<!--이미지 넣을 div  -->
-		<div id="imgBox">
-			
-		</div>
-		<!--스크롤시 따라다니는 집이름,버튼 div  -->
-		<div id="floating">
-		
-		</div>
-		<!--아파트상세정보 div  -->
-		<div id="houseDetail">
-		 		
-		</div>
-		<!--아파트 위치 로드뷰위에 표시될 div  -->
-		<div id="location">
-		
-		</div>
-		<!--로드뷰 div  -->
-		<div id="roadview">
-					
-		</div>
-				
+	<!--이미지 넣을 div  -->
+	<div id="imgBox"></div>
+	<!--스크롤시 따라다니는 집이름,버튼 div  -->
+	<div id="floating"></div>
+	<!--아파트상세정보 div  -->
+	<div id="houseDetail"></div>
+	<!--아파트 위치 로드뷰위에 표시될 div  -->
+	<div id="location"></div>
+	<!--로드뷰 div  -->
+	<div id="roadview"></div>
+
 </div>
 <div id="searchArea">
 	<div id="search1">
 		<input type="search" name="searchKeyword" id="#searhBar" />
-		<button ><img src="${pageContext.request.contextPath }/resources/images/search/searchbutton.png" alt="" /></button>
+		<button>
+			<img
+				src="${pageContext.request.contextPath }/resources/images/search/searchbutton.png"
+				alt="" />
+		</button>
 	</div>
 	<hr />
 	<div id="search2">
 		<select name="dealType" id="dealType" onchange="changeDeal(this);">
-			<option value="M" ${dealType eq 'M'?'selected':'' } >매매</option>
+			<option value="M" ${dealType eq 'M'?'selected':'' }>매매</option>
 			<option value="J" ${dealType eq 'J'?'selected':'' }>전세</option>
 			<option value="O" ${dealType eq 'O'?'selected':'' }>월세</option>
 		</select>
 		<div id="filter" onclick="viewFilter();">
-		<input type="button" readonly value="검색 조건을 설정해주세요" />
-		<img src="${pageContext.request.contextPath }/resources/images/search/filter.svg" alt="" />
+			<input type="button" readonly value="검색 조건을 설정해주세요" /> <img
+				src="${pageContext.request.contextPath }/resources/images/search/filter.svg"
+				alt="" />
 		</div>
 	</div>
 	<hr />
 	<div id="search3">
-		<img src="${pageContext.request.contextPath }/resources/images/search/close.svg" alt="" onclick="closeSearch3();"/>
-		<span id="fil">필터</span>
-		<span onclick="filterReset();" id="reset">모두 초기화</span>
+		<img
+			src="${pageContext.request.contextPath }/resources/images/search/close.svg"
+			alt="" onclick="closeSearch3();" /> <span id="fil">필터</span> <span
+			onclick="filterReset();" id="reset">모두 초기화</span>
 		<hr />
-		<p class="filterSubTitle" style="margin:0;">거래유형</p>
-		<p class="filterTitle select" style="margin-bottom:4px;">${dealType eq 'M'?'매매':(dealType eq 'J'?'전세':(dealType eq 'O'?'월세':''))}</p>
-		<button type="button" class="btn btn-secondary first" value="M" ${dealType eq 'M'?'style="background:#6c757d;color:white;"':'' } data-type="매매"  onclick="changeDeal2(this);" >매매</button>
-		<button type="button" class="btn btn-secondary first" value="J" ${dealType eq 'J'?'style="background:#6c757d;color:white;"':'' }data-type="전세" onclick="changeDeal2(this);">전세</button>
-		<button type="button" class="btn btn-secondary first" value="O" ${dealType eq 'O'?'style="background:#6c757d;color:white;"':'' }data-type="월세" onclick="changeDeal2(this);">월세</button>
+		<p class="filterSubTitle" style="margin: 0;">거래유형</p>
+		<p class="filterTitle select" style="margin-bottom: 4px;">${dealType eq 'M'?'매매':(dealType eq 'J'?'전세':(dealType eq 'O'?'월세':''))}</p>
+		<button type="button" class="btn btn-secondary first" value="M"
+			${dealType eq 'M'?'style="background:#6c757d;color:white;"':'' }
+			data-type="매매" onclick="changeDeal2(this);">매매</button>
+		<button type="button" class="btn btn-secondary first" value="J"
+			${dealType eq 'J'?'style="background:#6c757d;color:white;"':'' }
+			data-type="전세" onclick="changeDeal2(this);">전세</button>
+		<button type="button" class="btn btn-secondary first" value="O"
+			${dealType eq 'O'?'style="background:#6c757d;color:white;"':'' }
+			data-type="월세" onclick="changeDeal2(this);">월세</button>
 		<hr />
-		
-		<p class="filterSubTitle" style="margin:0;">면적(공급면적)</p>
-		<p class="filterTitle button" style="margin-bottom:4px;">${structure eq 'all'?'전체':(structure eq '1'?'10평 이하':(structure eq '10'?'10평대':(structure eq '20'?'20평대':(structure eq '30'?'30평대':(structure eq '40'?'40평대':(structure eq '50'?'50평대':(structure eq '60'?'60평대 이상':'')))))))}</p>
+
+		<p class="filterSubTitle" style="margin: 0;">면적(공급면적)</p>
+		<p class="filterTitle button" style="margin-bottom: 4px;">${structure eq 'all'?'전체':(structure eq '1'?'10평 이하':(structure eq '10'?'10평대':(structure eq '20'?'20평대':(structure eq '30'?'30평대':(structure eq '40'?'40평대':(structure eq '50'?'50평대':(structure eq '60'?'60평대 이상':'')))))))}</p>
 		<table id="areaTbl">
 			<tr>
-				<td  ${structure eq 'all'?'style="background:#6c757d;"':''}><button type="button" data-type="전체" class="btn btn-secondary second"  ${structure eq 'all'?'style="background:#6c757d;color:white;"':''} value="all" onclick="changeARea(this);">전체</button></td>
-				<td  ${structure eq '1'?'style="background:#6c757d;"':''}><button type="button" class="btn btn-secondary second" data-type="10평 이하"  ${structure eq '1'?'style="background:#6c757d;color:white;"':''} value="1" onclick="changeARea(this);" >10평이하</button></td>
-				<td  ${structure eq '10'?'style="background:#6c757d;"':''}><button type="button" class="btn btn-secondary second" data-type="10평대" ${structure eq '10'?'style="background:#6c757d;color:white;"':''} value="10" onclick="changeARea(this);">10평대</button></td>
-				<td  ${structure eq '20'?'style="background:#6c757d;"':''}><button type="button" class="btn btn-secondary second" data-type="20평대" ${structure eq '20'?'style="background:#6c757d;color:white;"':''} value="20" onclick="changeARea(this);">20평대</button></td>
+				<td ${structure eq 'all'?'style="background:#6c757d;"':''}><button
+						type="button" data-type="전체" class="btn btn-secondary second"
+						${structure eq 'all'?'style="background:#6c757d;color:white;"':''}
+						value="all" onclick="changeARea(this);">전체</button></td>
+				<td ${structure eq '1'?'style="background:#6c757d;"':''}><button
+						type="button" class="btn btn-secondary second" data-type="10평 이하"
+						${structure eq '1'?'style="background:#6c757d;color:white;"':''}
+						value="1" onclick="changeARea(this);">10평이하</button></td>
+				<td ${structure eq '10'?'style="background:#6c757d;"':''}><button
+						type="button" class="btn btn-secondary second" data-type="10평대"
+						${structure eq '10'?'style="background:#6c757d;color:white;"':''}
+						value="10" onclick="changeARea(this);">10평대</button></td>
+				<td ${structure eq '20'?'style="background:#6c757d;"':''}><button
+						type="button" class="btn btn-secondary second" data-type="20평대"
+						${structure eq '20'?'style="background:#6c757d;color:white;"':''}
+						value="20" onclick="changeARea(this);">20평대</button></td>
 			</tr>
 			<tr>
-				<td  ${structure eq '30'?'style="background:#6c757d;"':''}><button type="button" class="btn btn-secondary second" value="30" data-type="30평대" ${structure eq '30'?'style="background:#6c757d;color:white;"':''} onclick="changeARea(this);">30평대</button></td>
-				<td  ${structure eq '40'?'style="background:#6c757d;"':''}><button type="button" class="btn btn-secondary second" value="40" data-type="40평대" ${structure eq '40'?'style="background:#6c757d;color:white;"':''}  onclick="changeARea(this);">40평대</button></td>
-				<td  ${structure eq '50'?'style="background:#6c757d;"':''}><button type="button" class="btn btn-secondary second" value="50" data-type="50평대" ${structure eq '50'?'style="background:#6c757d;color:white;"':''} onclick="changeARea(this);">50평대</button></td>
-				<td  ${structure eq '60'?'style="background:#6c757d;"':''}><button type="button" class="btn btn-secondary second" value="60" data-type="60평 이상" ${structure eq '60'?'style="background:#6c757d;color:white;"':''} onclick="changeARea(this);">60평 이상</button></td>
+				<td ${structure eq '30'?'style="background:#6c757d;"':''}><button
+						type="button" class="btn btn-secondary second" value="30"
+						data-type="30평대"
+						${structure eq '30'?'style="background:#6c757d;color:white;"':''}
+						onclick="changeARea(this);">30평대</button></td>
+				<td ${structure eq '40'?'style="background:#6c757d;"':''}><button
+						type="button" class="btn btn-secondary second" value="40"
+						data-type="40평대"
+						${structure eq '40'?'style="background:#6c757d;color:white;"':''}
+						onclick="changeARea(this);">40평대</button></td>
+				<td ${structure eq '50'?'style="background:#6c757d;"':''}><button
+						type="button" class="btn btn-secondary second" value="50"
+						data-type="50평대"
+						${structure eq '50'?'style="background:#6c757d;color:white;"':''}
+						onclick="changeARea(this);">50평대</button></td>
+				<td ${structure eq '60'?'style="background:#6c757d;"':''}><button
+						type="button" class="btn btn-secondary second" value="60"
+						data-type="60평 이상"
+						${structure eq '60'?'style="background:#6c757d;color:white;"':''}
+						onclick="changeARea(this);">60평 이상</button></td>
 
 			</tr>
 		</table>
 		<hr />
 		<!-- 전세 -->
 		<c:if test="${dealType eq 'M' }">
-			<p class="filterSubTitle" style="margin:0;">매매</p>
-			<p class="filterTitle button" style="margin-bottom:4px;">전체</p>
+			<p class="filterSubTitle" style="margin: 0;">매매</p>
+			<p class="filterTitle button" style="margin-bottom: 4px;">전체</p>
 			<!--range UI놓을 곳  -->
 			<div id="slider-range">
-			  <input type="text" class="js-range-slider" name="my_range" value="" />
+				<input type="text" class="js-range-slider" name="my_range" value="" />
 			</div>
 		</c:if>
 		<c:if test="${dealType eq 'J' }">
-			<p class="filterSubTitle" style="margin:0;">전세</p>
-			<p class="filterTitle button" style="margin-bottom:4px;">전체</p>
+			<p class="filterSubTitle" style="margin: 0;">전세</p>
+			<p class="filterTitle button" style="margin-bottom: 4px;">전체</p>
 			<!--range UI놓을 곳  -->
 			<div id="slider-range">
-			  <input type="text" class="js-range-slider2" name="my_range" value="" />
+				<input type="text" class="js-range-slider2" name="my_range" value="" />
 			</div>
 		</c:if>
 		<c:if test="${dealType eq 'O' }">
-			<p class="filterSubTitle" style="margin:0;">보증금</p>
-			<p class="filterTitle button" style="margin-bottom:4px;">전체</p>
+			<p class="filterSubTitle" style="margin: 0;">보증금</p>
+			<p class="filterTitle button" style="margin-bottom: 4px;">전체</p>
 			<!--보증금 -->
 			<div id="slider-range">
-			  <input type="text" class="js-range-slider2" name="my_range" value="" />
+				<input type="text" class="js-range-slider2" name="my_range" value="" />
 			</div>
 			<!--월세  -->
-			<p class="filterSubTitle" style="margin:0;">월세</p>
-			<p class="filterTitle button" style="margin-bottom:4px;">전체</p>
+			<p class="filterSubTitle" style="margin: 0;">월세</p>
+			<p class="filterTitle button" style="margin-bottom: 4px;">전체</p>
 			<div id="slider-range">
-			  <input type="text" class="js-range-slider3" name="my_range" value="" />
+				<input type="text" class="js-range-slider3" name="my_range" value="" />
 			</div>
 		</c:if>
-		
-			<input type="checkbox" name="option" value="elevator" id="elevator" onchange="checkOption(this)"  <%if(option!=null){%><%= option.contains("elevator")?"checked":"" %><%} %> /><label for="elevator">엘리베이터</label>
-			<input type="checkbox" name="option" value="animal" id="animal" onchange="checkOption(this)" <%if(option!=null){%><%= option.contains("animal")?"checked":"" %><%} %> /><label for="animal">반려동물 가능</label>
-			<input type="checkbox" name="option" value="underparking" id="parking" onchange="checkOption(this)"<%if(option!=null){%><%= option.contains("underparking")?"checked":"" %><%} %>  /><label for="parking">주차 가능</label>
+
+		<input type="checkbox" name="option" value="elevator" id="elevator"
+			onchange="checkOption(this)" <%if (option != null) {%>
+			<%=option.contains("elevator") ? "checked" : ""%> <%}%> /><label
+			for="elevator">엘리베이터</label> <input type="checkbox" name="option"
+			value="animal" id="animal" onchange="checkOption(this)"
+			<%if (option != null) {%> <%=option.contains("animal") ? "checked" : ""%>
+			<%}%> /><label for="animal">반려동물 가능</label> <input type="checkbox"
+			name="option" value="underparking" id="parking"
+			onchange="checkOption(this)" <%if (option != null) {%>
+			<%=option.contains("underparking") ? "checked" : ""%> <%}%> /><label
+			for="parking">주차 가능</label>
 	</div>
-	
+
 </div>
 
-	<form id="estateFrm" action="${pageContext.request.contextPath }/estate/findApartTerms" method="post" style="display: none;" >
-		<input type="hidden" name="estateType" id="estateType" value="A"  />
-		<input type="hidden" name="dealType" id="dealType" value="${dealType }" />
-		<input type="hidden" name="structure" id="structure" value="${structure }" />
-		<input type="hidden" name="range_1" id="range_1" value="${range1 eq '0'?'0':range1 }" />
-		<input type="hidden" name="range_2" id="range_2" value="${range2 eq '0'?'400':range2  }" />
-		<input type="hidden" name="range_3" id="range_3" value="${range3 eq '0'?'0':range3 }" />
-		<input type="hidden" name="range_4" id="range_4" value="${range4 eq '0'?'300':range4 }" />
-		<input type="hidden" name="address" id="address" value="${localName }" />
-		<input type="hidden" name="localName" id="localName" value="${localName }" />
-		
-		<div>
-			<input type="checkbox" name="optionResult" id="optionResult1" value="<%=option!=null&&option.contains("underparking")?"underparking":"" %>" <%=option.contains("underparking")?"checked":"" %> />
-			<input type="checkbox" name="optionResult" id="optionResult2" value="<%=option!=null&&option.contains("animal")?"animal":"" %>" <%=option.contains("animal")?"checked":"" %> />
-			<input type="checkbox" name="optionResult" id="optionResult3" value="<%=option!=null&&option.contains("elevator")?"elevator":"" %>"  <%=option.contains("elevator")?"checked":"" %>/>
-		</div>
-	</form>
+<form id="estateFrm"
+	action="${pageContext.request.contextPath }/estate/findApartTerms"
+	method="post" style="display: none;">
+	<input type="hidden" name="estateType" id="estateType" value="A" /> <input
+		type="hidden" name="dealType" id="dealType" value="${dealType }" /> <input
+		type="hidden" name="structure" id="structure" value="${structure }" />
+	<input type="hidden" name="range_1" id="range_1"
+		value="${range1 eq '0'?'0':range1 }" /> <input type="hidden"
+		name="range_2" id="range_2" value="${range2 eq '0'?'400':range2  }" />
+	<input type="hidden" name="range_3" id="range_3"
+		value="${range3 eq '0'?'0':range3 }" /> <input type="hidden"
+		name="range_4" id="range_4" value="${range4 eq '0'?'300':range4 }" />
+	<input type="hidden" name="address" id="address" value="${localName }" />
+	<input type="hidden" name="localName" id="localName"
+		value="${localName }" />
+
+	<div>
+		<input type="checkbox" name="optionResult" id="optionResult1"
+			value="<%=option != null && option.contains("underparking") ? "underparking" : ""%>"
+			<%=option.contains("underparking") ? "checked" : ""%> /> <input
+			type="checkbox" name="optionResult" id="optionResult2"
+			value="<%=option != null && option.contains("animal") ? "animal" : ""%>"
+			<%=option.contains("animal") ? "checked" : ""%> /> <input
+			type="checkbox" name="optionResult" id="optionResult3"
+			value="<%=option != null && option.contains("elevator") ? "elevator" : ""%>"
+			<%=option.contains("elevator") ? "checked" : ""%> />
+	</div>
+</form>
 
 
 <script>
-<%if(msg!=null){%>
+<%if (msg != null) {%>
 <%=msg%>
 <%}%>
 
@@ -309,26 +359,20 @@ var map=new daum.maps.Map(mapContainer,mapOption);
 //장소 검색 객체를 생성
 var ps = new daum.maps.services.Places();
 //검색 장소를 기준으로 지도 재조정.
-<% if(keyword!=null){%>
+<%if (keyword != null) {%>
 var gap='<%=keyword%>';
 ps.keywordSearch(gap, placesSearchCB); 
 <%}%>
 //이건 아파트 리스트(주소던 아파트 이름이던 알아서 마커 찍고 클러스터링 해줌)
-<%if(list!=null){for(int i=0; i<list.size(); i++) {%>
+<%if (list != null) {
+				for (int i = 0; i < list.size(); i++) {%>
 var loc ="<%=list.get(i)%>";
 console.log(loc);
 ps.keywordSearch(loc, placesSearchCB2);
-<%}}%>
-/* for(var i in output){
-	loc = output[i];
-	 console.log(loc);
-	 ps.keywordSearch(loc, placesSearchCB2);
-} */
- <%-- <% for(int i=0;i<list.size();i++){ %>
-var loc =new Array();   
+<%}
+			}%>
+
  
- console.log(loc);
-ps.keywordSearch(loc, placesSearchCB2); <% }%> --%> 
 //사용자가 지도상에서 이동시 해당 매물 뿌려주는 부분
  //1.좌표=>주소 변환 객체 생성
  var geocoder = new kakao.maps.services.Geocoder();
@@ -357,14 +401,15 @@ function searchDetailAddrFromCoords(coords, callback) {
 }
 //지도에 마커-클러스터링 하는 함수
 function displayMarker(place) {
+	console.log('place@@@@@@+=='+place)
 	var markerPosition  = new kakao.maps.LatLng(place.y, place.x); 
         // 데이터에서 좌표 값을 가지고 마커를 표시합니다
-        
-        var markers = $(place).map(function(markerPosition) {
+
+         var markers = $(place).map(function(markerPosition) {
             return new kakao.maps.Marker({
                 position : new kakao.maps.LatLng(place.y, place.x)
           
-            });
+            }); 
         });       
         
         //인포 윈도우 객체 생성
@@ -390,17 +435,19 @@ function displayMarker(place) {
             // 마커 위에 인포윈도우를 표시합니다
             infowindow.open(map, markers[0]);
         
+        });
      
      // 클러스터러에 마커들을 추가합니다
         clusterer.addMarkers(markers); 
-        });
 }
 /////////////////////////////////////////////////////////////////////////////
 //콜백함수--------------------------------------------------------------------
 //키워드 검색 완료 시 호출되는 콜백함수
 function placesSearchCB (data, status, pagination) {
   if (status === daum.maps.services.Status.OK) {
-	
+	console.log("CB@@@@@의data ==="+data);
+	console.log("CB@@@@@의status ==="+status);
+	console.log("CB@@@@@의pagination ==="+pagination);
       // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
       // LatLngBounds 객체에 좌표를 추가합니다
       var bounds = new daum.maps.LatLngBounds();
@@ -431,15 +478,20 @@ function placesSearchCB (data, status, pagination) {
 //주소로 좌표를 검색하고 마커찍기
 function placesSearchCB2 (data, status, pagination) {
     if (status === daum.maps.services.Status.OK) {
-    	
+    	console.log("data@@@@@@="+data);
+    	console.log("status@@@@@@="+status);
+    	console.log("pagination@@@@@@="+pagination);
+
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
         // LatLngBounds 객체에 좌표를 추가합니다
        // var bounds = new daum.maps.LatLngBounds();
+
         for (var i=0; i<1; i++) {
         	//좌표찍는 메소드
             displayMarker(data[0]);    
             //bounds.extend(new daum.maps.LatLng(data[i].y, data[i].x));
         }       
+
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
         //map.setBounds(bounds);
     } 
@@ -730,4 +782,4 @@ function getEstate(cPage,roadAddressName){
 
 </script>
 
-<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+<jsp:include page="/WEB-INF/views/common/footer.jsp" />

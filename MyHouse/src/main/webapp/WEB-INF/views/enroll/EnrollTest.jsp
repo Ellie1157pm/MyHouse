@@ -96,7 +96,7 @@ $(document).ready(function() {
 }); 
 //2019년07월09일(화) 수정한 부분
 </script>
-<form action="${pageContext.request.contextPath}/search/EnrollTestEnd.do" method="post" onsubmit="return validate();"
+<form action="${pageContext.request.contextPath}/estate/EnrollTestEnd.do" method="post" onsubmit="return validate();"
 enctype="multipart/form-data">
 	<table>
 		<tr style="display:none;">
@@ -195,7 +195,7 @@ enctype="multipart/form-data">
 		<tr>
 			<th>주변환경</th>
 			<td><input type="text" name="estatecontent" id="estatecontent"
-				placeholder="주변환경에 대해 적어주세요" /></td>
+				placeholder="주변환경에 대해 적어주세요" value="" /></td>
 		</tr>
 		<tr >
 			<th>아파트옵션</th>
@@ -231,6 +231,7 @@ enctype="multipart/form-data">
 			<label for="one2"  >분리형(1방,거실1)</label>
 				<input type="radio" name="construction" id="one3"  value="복층형" />
 			<label for="one3">복층형</label>
+			<input type="hidden" name="construction" id="consnull"  value="" checked/>
 			</td>
 		</tr>
 		
@@ -241,6 +242,7 @@ enctype="multipart/form-data">
 			<label for="flop1">지상층</label> 
 			<input type="radio" name="flooropt" id="flop2"  value="반지하,옥탑" />
 			<label for="flop2"  >반지하,옥탑</label>
+			<input type="hidden" name="flooropt" id="flopnull"  value="" checked/>
 			
 			</td>
 		</tr>
@@ -264,7 +266,9 @@ enctype="multipart/form-data">
 
 		<tr>
 			<th>인근전철역</th>
-			<td><input type='text' name='SubwayStation' placeholder="수유역"></td>
+			<td><input type='text' name='SubwayStation' placeholder="수유역" value="" ></td>
+			
+			
 		</tr>
 
 		<tr>

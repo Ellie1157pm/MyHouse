@@ -101,7 +101,7 @@
 				</div>
 				<div id="login-div">
 					<button type="button" class="btn btn-primary"
-						onclick="location.href='${pageContext.request.contextPath }/search/EnrollTest.do'">매물등록</button>
+						onclick="location.href='${pageContext.request.contextPath }/estate/EnrollTest.do'">매물등록</button>
 					<!-- 로그인 분기처리 -->
 					<c:if test="${memberLoggedIn == null}">
 						<button type="button" class="btn btn-primary" data-toggle="modal"
