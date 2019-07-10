@@ -169,7 +169,6 @@
 <%if(msg!=null){%>
 <%=msg%>
 <%}%>
-
 var address="";
 $(function(){
 	
@@ -191,7 +190,6 @@ $(function(){
 		deposit();
 	}
 });
-
 //옵션 체크시에 실행
 function checkOption(obj){
 	for(var i=0;i<$('input[name=option]').length;i++){
@@ -204,14 +202,10 @@ function checkOption(obj){
 	}
 	$('#estateFrm').submit();
 }
-
-
-
 function viewFilter(){
 	$('#search3').css('display','block');
 	$('#searchArea').css('height','600px');
 }
-
 //매매/전세 셀렉트 박스 변경시 필터의 거래유형도 변경.
 function changeDeal(obj){
 	var value=obj.value;
@@ -281,9 +275,6 @@ function closeSearch3(){
 	$('#search3').css('display','none');
 	$('#searchArea').css('height','145px');
 }
-
-
-
 //지도 관련
 //default 지도 생성
 var mapContainer=document.getElementById('map'),
@@ -292,7 +283,6 @@ mapOption={
 	level:5
 	};
 var map=new daum.maps.Map(mapContainer,mapOption);
-
 /////////////////////
 //클러스터링 
  var clusterer = new kakao.maps.MarkerClusterer({
@@ -328,7 +318,6 @@ ps.keywordSearch(loc, placesSearchCB2); <% }%> --%>
  //1.좌표=>주소 변환 객체 생성
  var geocoder = new kakao.maps.services.Geocoder();
 //주소 받아올 객체
-
 //사용자가 지도 위치를 옮기면(중심 좌표가 변경되면)
 kakao.maps.event.addListener(map, 'dragend', function() {     
 	//법정동 상세주소 얻어오기
@@ -384,11 +373,9 @@ function displayMarker(place) {
             // 마커 위에 인포윈도우를 표시합니다
             infowindow.open(map, markers[0]);
         
-
         });
         clusterer.addMarkers(markers); 
 }
-
 /////////////////////////////////////////////////////////////////////////////
 //콜백함수--------------------------------------------------------------------
 //키워드 검색 완료 시 호출되는 콜백함수
@@ -438,8 +425,6 @@ function placesSearchCB2 (data, status, pagination) {
         //map.setBounds(bounds);
     } 
 }
-
-
 //////////////////////////////////////////range관련/////////
 function sale(){
 	$( ".js-range-slider" ).ionRangeSlider({
@@ -678,7 +663,6 @@ function monthlyLent(){
     }
 	});//end of 월세
 } 
-
 function showEstate(no,addressName,roadAddressName){
     var param = {};
     param.estateNo = no;
@@ -729,13 +713,8 @@ function getEstate(cPage,roadAddressName){
 //리셋
 function filterReset(){
 	//거래 유형(매매,면적 전체,매매가 전체)
-
 	location.href="${pageContext.request.contextPath}/estate/filterReset?localName="+$('#localName').val()+"&estateType=${estateType}";
 }
-
-
-
-
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

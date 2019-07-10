@@ -1,5 +1,8 @@
 package com.kh.myhouse.common.util;
 
+import com.kh.myhouse.member.controller.MemberController;
+import com.kh.myhouse.member.model.vo.Member;
+
 public class Utils {
 
 	public static String getPageBar(int totalContents,
@@ -71,7 +74,7 @@ public class Utils {
 		//paging함수
 		pageBar += "<script>";
 		pageBar += "function paging(cPage){";
-		pageBar += "	location.href='"+url+"?cPage='+cPage;";	
+		pageBar += "	location.href='"+url+"&cPage='+cPage;";	
 		pageBar += "}";
 		pageBar += "</script>";
 		

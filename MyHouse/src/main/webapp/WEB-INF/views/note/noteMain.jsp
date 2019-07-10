@@ -14,17 +14,14 @@ div.noteMain{
 }
 </style>
 <script>
-/* $(function(){
-		alert($(".contents").val().length);
-}); */
-
-
 $(function(){
 	$("td.td-primary").on("click", function(){
+		console.log("내용출력");		
 		var param = {
 				noteNo : $(this).attr("id")
 		}
 		console.log($(this).attr("id"));
+		
 		//모달에 내용찍기
 		$.ajax({
 			url: "${pageContext.request.contextPath}/note/noteCon.do",
@@ -35,16 +32,17 @@ $(function(){
 				$(".note-contents").html(data[0]);
 			}
 		});
-		
-		//열람여부
-		location.href = "${pageContext.request.contextPath}/note/noteYN";
+		console.log("읽기완료");
 	});
+	
 });
-/* function noteOpen(){
+function noteOpen(){
+	console.log("쪽지함출력");
 	$(".notebox").css("visibility","visible");	
-} */
+}
 
 function noteDel(){
+	console.log("삭제준비");
 	var list = new Array();
 
 	var bool = confirm("정말로 삭제하시겠습니까?");
@@ -52,15 +50,13 @@ function noteDel(){
 	$("input[type=checkbox]:checked").each(function(){
 		list.push($(this).val());
 	});
-	alert(list+"번 을 삭제합니다");
+	alert(list+"번을 삭제합니다");
 	if(bool){
 		location.href = "${pageContext.request.contextPath}/note/noteDelete.do?list="+list;
 		return true;
 	}
-	
-	
+		
 }
-
 </script>
 <div class="noteMain">
 	<div class="btn-group" role="group" aria-label="Basic example">
@@ -68,14 +64,14 @@ function noteDel(){
 	  <button type="button" class="btn btn-secondary">찜한매물</button>
 	  <button type="button" class="btn btn-secondary">관심매물</button>
 	  <button type="button" class="btn btn-secondary">내놓은매물</button>
-	  <button type="button" id="notePage" class="btn btn-secondary" onclick="noteOpen()">쪽지함</button>
+	  <button type="button" id="notePage" class="btn btn-secondary" onclick="noteOpen();">쪽지함</button>
 	</div>
 	<div class="notebox">
 		<div class="not-sub">
 			<span class="noteBOX">받은 쪽지함</span>
 			<span class="note1">안읽은쪽지 ${noReadContents }통</span>
 			<span class="note1">전체쪽지 ${totalContents }통</span>
-			<button type="button" id="deleteBtn" class="btn btn-primary" onclick="noteDel()">삭제하기</button>
+			<button type="button" id="deleteBtn" class="btn btn-primary" onclick="noteDel();">삭제하기</button>
 		</div>
 		<div class="table-note-div">
 			<table id="tbl-note" class="table-note-class">
