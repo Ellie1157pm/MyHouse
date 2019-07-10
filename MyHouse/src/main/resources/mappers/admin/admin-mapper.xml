@@ -39,4 +39,47 @@
 	from news
 	order by news_date desc
 	</select>
+	
+	<select id="selectAllNotice" resultType="map">
+	select *
+	from notice
+	order by written_date desc
+	</select>
+	
+	<insert id="insertNotice">
+	insert into notice
+	values(
+		seq_notice_no.nextval,
+		#{noticeTitle},
+		#{noticeContent},
+		default
+	)
+	</insert>
+	
+	<select id="newsTotalPage" resultType="_int">
+	select count(*) cnt
+	from news
+	</select>
+	
+	<select id="noticeTotalPage" resultType="_int">
+	select count(*) cnt
+	from notice
+	</select>
+	
+	<select id="memberTotalPage" resultType="_int">
+	select count(*) cnt
+	from member
+	where status='U'
+	</select>
+	
+	<select id="realtorTotalPage" resultType="_int">
+	select count(*) cnt
+	from member
+	where status='B'
+	</select>
+	
+	<select id="reportTotalPage" resultType="_int">
+	select count(*) cnt
+	from report_estate
+	</select>
 </mapper>

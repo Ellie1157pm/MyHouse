@@ -18,10 +18,65 @@ span#txtLength {
 $(function(){
 	$("textarea.noticeContent").keyup(function() {
 		var content = $(this).val();
-		console.log("txtarea.val()="+content);
 		$("#txtLength").html(content.length+'자');
 	});
 });
+
+function goBack() {
+	location.href='${pageContext.request.contextPath}/admin/listView?item=member';
+}
+
+function noticeSubmit() {
+	var bool = validate();
+	console.log('bool='+bool);
+	if(bool) {
+		var title = $("input.noticeTitle").val();
+		var content = $("textarea.noticeContent").val(); 
+		
+		$.ajax({
+			url: "${pageContext.request.contextPath}/admin/noticeFormEnd",
+			type: "POST", 
+			data: JSON.stringify({noticeTitle : title,
+				   noticeContent : content}),
+			contentType: "application/json; charset=UTF-8",
+			success: function(data) {
+				alert(data.msg);
+				if(data.result == "1") {
+					location.href = '${pageContext.request.contextPath}/admin/board?item=news';
+				}
+				else {
+					$("#noticeForm")[0].reset();
+				}		
+			},
+			error: function(jqxhr, textStatus, errorThrown) {
+				console.log("ajax처리실패: "+jqxhr.status);
+				console.log(jqxhr);
+    			console.log(textStatus);
+    			console.log(errorThrown);
+			}
+		});
+	}
+}
+
+function validate() {
+	var title = $("input.noticeTitle").val();
+	var content = $("textarea.noticeContent").val();
+	
+	console.log("title="+title);
+	console.log("content="+content);
+	
+	if(title.length == 0) {
+		alert('제목을 입력해주세요.');
+		return false;
+	}
+	else {
+		if(content.length == 0) {
+			alert('내용을 입력해주세요.');
+			return false;
+		}
+	}
+	return true;
+}
 </script>
 <div id="back-container">
 	<div id="info-container">
@@ -31,10 +86,10 @@ $(function(){
 			<h3 style="font-weight: bold; margin: 0px auto 30px auto;
 					   background-color: gray; color: white;
 					   padding: 10px; width: 250px;">공지사항 작성</h3>
-			<form style="width: 400px; margin: auto; text-align: left;">
+			<form style="width: 400px; margin: auto; text-align: left;" id="noticeForm">
 			  <div class="form-group">
 			    <label for="exampleFormControlInput1">&nbsp;&nbsp;제목</label>
-			    <input type="text" class="form-control" id="exampleFormControlInput1" 
+			    <input type="text" class="form-control noticeTitle" id="exampleFormControlInput1" 
 			    	   placeholder="제목을 입력해주세요." required>
 			  </div>
 			  <div class="form-group">
@@ -46,12 +101,12 @@ $(function(){
 			    		  maxlength="1000" required></textarea>
 			  </div>
 			  <div id="btn-group" style="text-align: center; margin-top: 30px;">
-				  <a href="#" class="btn btn-secondary btn-lg active" 
-				  	 role="button" aria-pressed="true"
-				  	 style="font-size: 14px;">취소</a>
-				  <a href="#" class="btn btn-primary btn-lg active" 
-				  	 role="button" aria-pressed="true"
-				  	 style="font-size: 14px;">등록</a>
+				  <button type="button" class="btn btn-secondary"
+				  		  style="font-size: 14px;"
+				  		  onclick="goBack();">취소</button>
+				  <button type="button" class="btn btn-primary"
+				  		  style="font-size: 14px;"
+				  		  onclick="noticeSubmit();">등록</button>
 			  </div>
 			</form>
 		</div>

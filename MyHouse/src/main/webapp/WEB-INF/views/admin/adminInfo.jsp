@@ -20,16 +20,19 @@ $(function() {
 		$("button#statics").css("opacity", 0.6);
 		
 	$("#memberList").click(function() {
-		location.href = "${pageContext.request.contextPath}/admin/listView?item=member";
+		location.href = "${pageContext.request.contextPath}/admin/list?item=member";
 	});
 	$("#realtorList").click(function() {
-		location.href = "${pageContext.request.contextPath}/admin/listView?item=realtor";
+		location.href = "${pageContext.request.contextPath}/admin/list?item=realtor";
 	});
 	$("#reportList").click(function() {
-		location.href = "${pageContext.request.contextPath}/admin/listView?item=report";
+		location.href = "${pageContext.request.contextPath}/admin/list?item=report";
 	});
 	$("#statics").click(function() {
-		location.href = "${pageContext.request.contextPath}/admin/listView?item=statistics";
+		location.href = "${pageContext.request.contextPath}/admin/list?item=statistics";
+	});
+	$("#noticeForm").click(function() {
+		location.href = "${pageContext.request.contextPath}/admin/noticeForm";
 	});
 	$('#reportModal').on('show.bs.modal', function (event) {
 		  var button = $(event.relatedTarget) // Button that triggered the modal
@@ -72,6 +75,9 @@ $(function() {
 			<jsp:include page="/WEB-INF/views/admin/adminList.jsp"/>
 			<jsp:include page="/WEB-INF/views/admin/adminStatistics.jsp"/>
 		</div>
+	</div>
+	<div class="pageBar-container">
+		${pageBar}
 	</div>
 </div>
 <jsp:include page="/WEB-INF/views/admin/adminReportModal.jsp"/>
