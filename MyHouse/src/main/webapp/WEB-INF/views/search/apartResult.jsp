@@ -288,7 +288,7 @@ function closeSearch3(){
 //default 지도 생성
 var mapContainer=document.getElementById('map'),
 mapOption={
-	center:new daum.maps.LatLng${loc},
+	center:new daum.maps.LatLng${loc ne null?loc:'(37.566826, 126.9786567)'},
 	level:5
 	};
 var map=new daum.maps.Map(mapContainer,mapOption);

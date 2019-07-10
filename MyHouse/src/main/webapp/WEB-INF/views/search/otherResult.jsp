@@ -280,7 +280,7 @@
 		<input type="hidden" name="range_3" id="range_3" value="${range3 eq '0'?'0':range3 }" />
 		<input type="hidden" name="range_4" id="range_4" value="${range4 eq '0'?'300':range4 }" />
 		<input type="hidden" name="address" id="address" value="${localName }" />
-		<input type="hidden" name="localName" id="localName" value="${localName }" />
+		<input type="hidden" name="localName" id="localName" value="${loc }" />
 		<!--구조  --><input type="hidden" name="structure" id="structure" value="${structure }" />
 		<input type="checkbox" name="optionResult" id="optionResult1" />
 		<input type="checkbox" name="optionResult" id="optionResult2" />
@@ -382,7 +382,7 @@ function closeSearch3(){
 //default 지도 생성
 var mapContainer=document.getElementById('map'),
 mapOption={
-	center:new daum.maps.LatLng${loc},
+	center:new daum.maps.LatLng${loc ne null?loc:'(37.566826, 126.9786567)'},
 	level:5
 	}
 var map=new daum.maps.Map(mapContainer,mapOption);
