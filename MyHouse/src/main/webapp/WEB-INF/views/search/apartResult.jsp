@@ -173,7 +173,7 @@
 var address="";
 $(function(){
 	
-
+	cPage=1;
 	
 	//range바 놓기
 	if('${dealType}'=='M'){
@@ -310,7 +310,7 @@ ps.keywordSearch(gap, placesSearchCB);
 <%}%>
 //이건 아파트 리스트(주소던 아파트 이름이던 알아서 마커 찍고 클러스터링 해줌)
 <%if(list!=null){for(int i=0; i<list.size(); i++) {%>
-var loc ="<%=list.get(i)%>";
+var loc = "<%=list.get(i)%>";
 console.log(loc);
 ps.keywordSearch(loc, placesSearchCB2);
 <%}}%>
@@ -384,11 +384,11 @@ function displayMarker(place) {
             // 마커 위에 인포윈도우를 표시합니다
             infowindow.open(map, markers[0]);
         
-     
-     // 클러스터러에 마커들을 추가합니다
+
         });
         clusterer.addMarkers(markers); 
 }
+
 /////////////////////////////////////////////////////////////////////////////
 //콜백함수--------------------------------------------------------------------
 //키워드 검색 완료 시 호출되는 콜백함수
@@ -711,6 +711,14 @@ function getEstate(cPage,roadAddressName){
        type:"post",
        dataType:"json",
        success:function(data){
+    	   console.log(data[0].attachList[0].renamedFileName);
+    	   console.log("${pageContext.request.contextPath}");
+    	  var html="";
+          for(var i=0; i<data.length; i++){
+        	 html+="<div><img src='${pageContext.request.contextPath}/resources/upload/+'"+data[i].attachList[0].renamedFileName+"'></div>"  
+        	   console.log(data[i]); 
+        	 $("#sidebar").append(html);
+          }
            
        },
        error:function(jqxhr,text,errorThrown){
