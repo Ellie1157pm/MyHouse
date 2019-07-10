@@ -55,6 +55,11 @@ public class EstateController {
 		String searchKeyword=request.getParameter("searchKeyword");
 		System.out.println("검색어 : "+searchKeyword);
 
+		String loc=request.getParameter("coords");
+		System.out.println("좌표 : "+loc);
+		if(loc.trim().length()==0||loc==null) {
+			loc="(37.566826, 126.9786567)";
+		}
 		/*중요*/
 		//법정동 명이 아닌 지하철 역이나 아파트 이름으로 검색했을 때를 대비한 주소.
 		//이 주소로 region 테이블에서 법정동 코드를 받아 substring(0,5) 한 뒤, 해당 코드로  그 지역의 매물을 찾아오면 됨.
@@ -96,7 +101,7 @@ public class EstateController {
 			mav.addObject("dealType","M");
 			mav.addObject("structure","all");
 			mav.addObject("localName",localName);
-			mav.addObject("loc","(37.566826, 126.9786567)");
+			mav.addObject("loc",loc);
 			
 			//null처리를 위한 문자배열
 			String[] arr= {"0"};
@@ -115,7 +120,8 @@ public class EstateController {
 			mav.addObject("option",arr);
 			mav.addObject("structure","all");
 			mav.addObject("localName",localName);
-			mav.addObject("loc","(37.566826, 126.9786567)");
+			mav.addObject("loc","("+loc+")");
+			//mav.addObject("loc","(37.566826, 126.9786567)");
 			mav.setViewName("/search/otherResult");
 		}
 
@@ -350,7 +356,6 @@ public class EstateController {
 		 
 		//view단 처리
 		mav.addObject("dealType",dealType);
-		System.out.println(list.isEmpty());
 		mav.addObject("loc",localName);
 		mav.addObject("estateType",estateType);
 		mav.addObject("range1",range1);
