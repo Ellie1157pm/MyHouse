@@ -57,7 +57,7 @@ public class EstateController {
 
 		String loc=request.getParameter("coords");
 		System.out.println("좌표 : "+loc);
-		if(loc.trim().length()==0||loc==null) {
+		if(loc==null||loc.trim().length()==0) {
 			loc="(37.566826, 126.9786567)";
 		}
 		/*중요*/
@@ -120,8 +120,7 @@ public class EstateController {
 			mav.addObject("option",arr);
 			mav.addObject("structure","all");
 			mav.addObject("localName",localName);
-			mav.addObject("loc","("+loc+")");
-			//mav.addObject("loc","(37.566826, 126.9786567)");
+			mav.addObject("loc",loc);
 			mav.setViewName("/search/otherResult");
 		}
 
@@ -282,6 +281,7 @@ public class EstateController {
 		String structure=req.getParameter("structure");	//all인 경우와 아닌 경우로 나눠서 list에 넣어야할듯.
 		String[] option=req.getParameterValues("optionResult");
 		String address=req.getParameter("address");	
+		//좌표
 		String localName=req.getParameter("localName");	
 		System.out.println("좌표"+localName);
 		//nullPointException 방지
@@ -373,12 +373,13 @@ public class EstateController {
 	
 	@RequestMapping("/filterReset")
 	public ModelAndView resetFilter(ModelAndView mav,@RequestParam String localName,@RequestParam String estateType) {
-
+		String loc="(37.566826, 126.9786567)";
 		mav.addObject("estateType",estateType);
 		mav.addObject("dealType","M");
 		mav.addObject("structure","all");
 		mav.addObject("localName",localName);
 		mav.addObject("msg","viewFilter();");
+		mav.addObject("loc",loc);
 		mav.addObject("range1","0");
 		mav.addObject("range2","400");
 		mav.addObject("range3","0");

@@ -108,7 +108,7 @@
 		<!--보증금  -->
 		<c:if test="${dealType eq 'J'}">
 		<p class="filterSubTitle" style="margin:0;">전세금</p>
-		<p class="filterTitle range" style="margin-bottom:4px;">전체</p>
+		<p class="filterTitle range3" style="margin-bottom:4px;">전체</p>
 			<!--range UI놓을 곳  -->
 			<div id="slider-range">
 			  <input type="text" class="js-range-slider3" name="range2" value="" />
@@ -129,7 +129,7 @@
 
 		<c:if test="${dealType eq 'O' }">
 		<p class="filterSubTitle" style="margin:0;">보증금</p>
-		<p class="filterTitle range" style="margin-bottom:4px;">전체</p>
+		<p class="filterTitle range3" style="margin-bottom:4px;">전체</p>
 			<!--range UI놓을 곳  -->
 			<div id="slider-range">
 			  <input type="text" class="js-range-slider3" name="range3" value="" />
@@ -137,7 +137,7 @@
 		<hr />
 		<!--월세  -->
 		<p class="filterSubTitle" style="margin:0;">월세</p>
-		<p class="filterTitle range" style="margin-bottom:4px;">전체</p>
+		<p class="filterTitle range2" style="margin-bottom:4px;">전체</p>
 			<!--range UI놓을 곳  -->
 			<div id="slider-range">
 			  <input type="text" class="js-range-slider2" name="range2" value="" />
@@ -157,9 +157,9 @@
 		</c:if>
 		<p class="filterSubTitle" style="margin:0;">옵션</p>
 		&nbsp;
-			&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= options.contains("엘레베이터")?"checked":"" %><%} %> /><label for="elevator">엘리베이터</label>
-			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= options.contains("애완동물")?"checked":"" %><%} %> /><label for="animal">반려동물 가능</label>
-			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(option!=null){%><%= options.contains("지하주차장")?"checked":"" %><%} %>  /><label for="parking">주차 가능</label>
+			&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= options.contains("엘레베이터")?"checked":"" %><%} %> /><label for="엘레베이터">엘리베이터</label>
+			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= options.contains("애완동물")?"checked":"" %><%} %> /><label for="애완동물">반려동물 가능</label>
+			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(option!=null){%><%= options.contains("지하주차장")?"checked":"" %><%} %>  /><label for="지하주차장">주차 가능</label>
 		</c:if> <!-- end of 빌라 -->
 		
 		
@@ -174,14 +174,14 @@
 			<!--거래 유형이 전체일 때  -->
 			<c:if test="${dealType eq 'all' or dealType eq 'O' }">
 				<p class="filterSubTitle" style="margin:0;">보증금</p>
-				<p class="filterTitle range" style="margin-bottom:4px;">전체</p>
+				<p class="filterTitle range3" style="margin-bottom:4px;">전체</p>
 					<!--range UI놓을 곳  -->
 					<div id="slider-range">
 					  <input type="text" class="js-range-slider3" name="range2" value="" />
 					</div>
 				<hr />
 				<p class="filterSubTitle" style="margin:0;">월세</p>
-				<p class="filterTitle range" style="margin-bottom:4px;">전체</p>
+				<p class="filterTitle range2" style="margin-bottom:4px;">전체</p>
 					<!--range UI놓을 곳  -->
 					<div id="slider-range">
 					  <input type="text" class="js-range-slider2" name="range2" value="" />
@@ -236,7 +236,7 @@
 					<!--거래 유형이 전세일 때  -->
 				<c:if test="${dealType eq 'J' }">
 					<p class="filterSubTitle" style="margin:0;">전세금</p>
-					<p class="filterTitle range" style="margin-bottom:4px;">전체</p>
+					<p class="filterTitle range3" style="margin-bottom:4px;">전체</p>
 						<!--range UI놓을 곳  -->
 						<div id="slider-range">
 						  <input type="text" class="js-range-slider3" name="range2" value="" />
@@ -261,9 +261,9 @@
 				
 					<p class="filterSubTitle" style="margin:0;">옵션</p>
 					&nbsp;
-				&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= options.contains("엘레베이터")?"checked":"" %><%} %> /><label for="elevator">엘리베이터</label>
-			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= options.contains("애완동물")?"checked":"" %><%} %> /><label for="animal">반려동물 가능</label>
-			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(option!=null){%><%= options.contains("지하주차장")?"checked":"" %><%} %>  /><label for="parking">주차 가능</label>
+				&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= options.contains("엘레베이터")?"checked":"" %><%} %> /><label for="엘레베이터">엘리베이터</label>
+			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= options.contains("애완동물")?"checked":"" %><%} %> /><label for="애완동물">반려동물 가능</label>
+			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(option!=null){%><%= options.contains("지하주차장")?"checked":"" %><%} %>  /><label for="지하주차장">주차 가능</label>
 		</c:if><!--원룸 or 오피스텔 끝  -->
 	</div>
 </div>
@@ -674,79 +674,79 @@ function deposit(){
 	    	var toValue=data.to;
 	    	var fromValue=data.from;
 	    	if(fromValue==0&&toValue==100){
-	    		$('.range').html("전체");
+	    		$('.range3').html("전체");
 	    	}
 	    	if(fromValue<10&&fromValue!=0){
 	    		if(toValue==200){
-	    			$('.range').html(fromValue+"000만원 부터");
+	    			$('.range3').html(fromValue+"000만원 부터");
 	    		}else{
 	    			if(toValue<10){
-	    			$('.range').html(fromValue+"000 ~"+toValue+"000만원" );
+	    			$('.range3').html(fromValue+"000 ~"+toValue+"000만원" );
 	    			}else if(toValue>10 &&toValue<100 &&toValue.toString().substring(1,2)!=0){
-	    				$('.range').html(fromValue+"000 ~ "+toValue.toString().substring(0,1)+"억"+toValue.toString().substring(1,2)+"000");
+	    				$('.range3').html(fromValue+"000 ~ "+toValue.toString().substring(0,1)+"억"+toValue.toString().substring(1,2)+"000");
 	    			}else if(toValue>10&&toValue<100 &&toValue.toString().substring(1,2)==0){
-	    				$('.range').html(fromValue+"000 ~ "+toValue.toString().substring(0,1)+"억");
+	    				$('.range3').html(fromValue+"000 ~ "+toValue.toString().substring(0,1)+"억");
 	    			}else if(toValue>99&&toValue.toString().substring(2,3)!=0){
-	    				$('.range').html(fromValue+"000 ~ "+toValue.toString().substring(0,2)+"억"+toValue.toString().substring(2,3)+"000");    				
+	    				$('.range3').html(fromValue+"000 ~ "+toValue.toString().substring(0,2)+"억"+toValue.toString().substring(2,3)+"000");    				
 	    			}else {
-	    				$('.range').html(fromValue+"000 ~ "+toValue.toString().substring(0,2)+"억");
+	    				$('.range3').html(fromValue+"000 ~ "+toValue.toString().substring(0,2)+"억");
 	    			}
 	    		}
 	    	}else if(fromValue>10&&fromValue<100 &&fromValue.toString().substring(1,2)!=0) {
 	    			if(toValue>10 &&toValue<100 &&toValue.toString().substring(1,2)!=0){
-	    				$('.range').html(fromValue.toString().substring(0,1)+"억"+fromValue.toString().substring(1,2)+"000 ~"+ toValue.toString().substring(0,1)+"억"+toValue.toString().substring(1,2)+"000" );
+	    				$('.range3').html(fromValue.toString().substring(0,1)+"억"+fromValue.toString().substring(1,2)+"000 ~"+ toValue.toString().substring(0,1)+"억"+toValue.toString().substring(1,2)+"000" );
 	    			}else if(toValue>10&&toValue<100 &&toValue.toString().substring(1,2)==0){
-	    				$('.range').html(fromValue.toString().substring(0,1)+"억"+fromValue.toString().substring(1,2)+"000 ~"+toValue.toString().substring(0,1)+"억 ");
+	    				$('.range3').html(fromValue.toString().substring(0,1)+"억"+fromValue.toString().substring(1,2)+"000 ~"+toValue.toString().substring(0,1)+"억 ");
 	    			}else if(toValue>99&&toValue.toString().substring(2,3)!=0){
-	    				$('.range').html(fromValue.toString().substring(0,1)+"억"+fromValue.toString().substring(1,2)+"000 ~"+toValue.toString().substring(0,2)+"억"+toValue.toString().substring(2,3)+"000");    				
+	    				$('.range3').html(fromValue.toString().substring(0,1)+"억"+fromValue.toString().substring(1,2)+"000 ~"+toValue.toString().substring(0,2)+"억"+toValue.toString().substring(2,3)+"000");    				
 	    			}else {
-	    				$('.range').html(fromValue.toString().substring(0,1)+"억"+fromValue.toString().substring(1,2)+"000 ~"+toValue.toString().substring(0,2)+"억");
+	    				$('.range3').html(fromValue.toString().substring(0,1)+"억"+fromValue.toString().substring(1,2)+"000 ~"+toValue.toString().substring(0,2)+"억");
 	    			}
 	    	}else if(fromValue>10&&fromValue<100 &&fromValue.toString().substring(1,2)==0){
 	    		if(toValue>10 &&toValue<100 &&toValue.toString().substring(1,2)!=0){
-					$('.range').html(fromValue.toString().substring(0,1)+"억 ~"+ toValue.toString().substring(0,1)+"억"+toValue.toString().substring(1,2)+"000" );
+					$('.range3').html(fromValue.toString().substring(0,1)+"억 ~"+ toValue.toString().substring(0,1)+"억"+toValue.toString().substring(1,2)+"000" );
 				}else if(toValue>10&&toValue<100 &&toValue.toString().substring(1,2)==0){
-					$('.range').html(fromValue.toString().substring(0,1)+"억 ~"+toValue.toString().substring(0,1)+"억 ");
+					$('.range3').html(fromValue.toString().substring(0,1)+"억 ~"+toValue.toString().substring(0,1)+"억 ");
 				}else if(toValue>99&&toValue.toString().substring(2,3)!=0){
-					$('.range').html(fromValue.toString().substring(0,1)+"억 ~"+toValue.toString().substring(0,2)+"억"+toValue.toString().substring(2,3)+"000");    				
+					$('.range3').html(fromValue.toString().substring(0,1)+"억 ~"+toValue.toString().substring(0,2)+"억"+toValue.toString().substring(2,3)+"000");    				
 				}else {
-					$('.range').html(fromValue.toString().substring(0,1)+"억~"+toValue.toString().substring(0,2)+"억");
+					$('.range3').html(fromValue.toString().substring(0,1)+"억~"+toValue.toString().substring(0,2)+"억");
 				}
 	    	}
 	    	
 	    	else if(fromValue==0){
 	    		//10억 단위부터 시작
 	    		if(toValue>10 &&toValue<100 &&toValue.toString().substring(1,2)!=0){
-					$('.range').html("~"+ toValue.toString().substring(0,1)+"억"+toValue.toString().substring(1,2)+"000" );
+					$('.range3').html("~"+ toValue.toString().substring(0,1)+"억"+toValue.toString().substring(1,2)+"000" );
 				}else if(toValue>10&&toValue<100 &&toValue.toString().substring(1,2)==0){
-					$('.range').html("~"+toValue.toString().substring(0,1)+"억 ");
+					$('.range3').html("~"+toValue.toString().substring(0,1)+"억 ");
 				}else if(toValue>99&&toValue.toString().substring(2,3)!=0){
-					$('.range').html("~"+toValue.toString().substring(0,2)+"억"+toValue.toString().substring(2,3)+"000 ");    				
+					$('.range3').html("~"+toValue.toString().substring(0,2)+"억"+toValue.toString().substring(2,3)+"000 ");    				
 				}else {
-					$('.range').html("~"+toValue.toString().substring(0,2)+"억");
+					$('.range3').html("~"+toValue.toString().substring(0,2)+"억");
 				}
 	    		}
 	    	else{
 	    		if(fromValue.toString().substring(2,3)!=0){
 	    		//10억 단위부터 시작
 	    		if(toValue>10 &&toValue<100 &&toValue.toString().substring(1,2)!=0){
-					$('.range').html(fromValue.toString().substring(0,2)+"억"+fromValue.toString().substring(2,3)+"000 ~"+ toValue.toString().substring(0,1)+"억"+toValue.toString().substring(1,2)+"000" );
+					$('.range3').html(fromValue.toString().substring(0,2)+"억"+fromValue.toString().substring(2,3)+"000 ~"+ toValue.toString().substring(0,1)+"억"+toValue.toString().substring(1,2)+"000" );
 				}else if(toValue>10&&toValue<100 &&toValue.toString().substring(1,2)==0){
-					$('.range').html(fromValue.toString().substring(0,2)+"억"+fromValue.toString().substring(2,3)+"000 ~"+toValue.toString().substring(0,1)+"억 ");
+					$('.range3').html(fromValue.toString().substring(0,2)+"억"+fromValue.toString().substring(2,3)+"000 ~"+toValue.toString().substring(0,1)+"억 ");
 				}else if(toValue>99&&toValue.toString().substring(2,3)!=0){
-					$('.range').html(fromValue.toString().substring(0,2)+"억"+fromValue.toString().substring(2,3)+"000 ~"+toValue.toString().substring(0,2)+"억"+toValue.toString().substring(2,3)+"000 ");    				
+					$('.range3').html(fromValue.toString().substring(0,2)+"억"+fromValue.toString().substring(2,3)+"000 ~"+toValue.toString().substring(0,2)+"억"+toValue.toString().substring(2,3)+"000 ");    				
 				}else {
-					$('.range').html(fromValue.toString().substring(0,2)+"억"+fromValue.toString().substring(2,3)+"000 ~"+toValue.toString().substring(0,2)+"억");
+					$('.range3').html(fromValue.toString().substring(0,2)+"억"+fromValue.toString().substring(2,3)+"000 ~"+toValue.toString().substring(0,2)+"억");
 				}
 	    		}else{
 	    			if(toValue>10 &&toValue<100 &&toValue.toString().substring(1,2)!=0){
-	    				$('.range').html(fromValue.toString().substring(0,2)+"억 ~"+ toValue.toString().substring(0,1)+"억"+toValue.toString().substring(1,2)+"000" );
+	    				$('.range3').html(fromValue.toString().substring(0,2)+"억 ~"+ toValue.toString().substring(0,1)+"억"+toValue.toString().substring(1,2)+"000" );
 	    			}else if(toValue>10&&toValue<100 &&toValue.toString().substring(1,2)==0){
-	    				$('.range').html(fromValue.toString().substring(0,2)+"억 ~"+toValue.toString().substring(0,1)+"억 ");
+	    				$('.range3').html(fromValue.toString().substring(0,2)+"억 ~"+toValue.toString().substring(0,1)+"억 ");
 	    			}else if(toValue>99&&toValue.toString().substring(2,3)!=0){
-	    				$('.range').html(fromValue.toString().substring(0,2)+"억 ~"+toValue.toString().substring(0,2)+"억"+toValue.toString().substring(2,3)+"000 ");    				
+	    				$('.range3').html(fromValue.toString().substring(0,2)+"억 ~"+toValue.toString().substring(0,2)+"억"+toValue.toString().substring(2,3)+"000 ");    				
 	    			}else {
-	    				$('.range').html(fromValue.toString().substring(0,2)+"억 ~"+toValue.toString().substring(0,2)+"억");
+	    				$('.range3').html(fromValue.toString().substring(0,2)+"억 ~"+toValue.toString().substring(0,2)+"억");
 	    			}
 	    		}
 	    	}	
