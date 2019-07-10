@@ -175,7 +175,7 @@ public class EstateDAOImpl implements EstateDAO{
 
 	@Override
 	public List<String> selectEstateListSelectStructureNotOpionNotFloorOptionMontlyFee(Map<String, Object> map) {
-		return sqlSession.selectList("estate.selectEstateListSelectStructureNotOpionNotFloorOption",map);
+		return sqlSession.selectList("estate.selectEstateListSelectStructureNotOpionNotFloorOptionMontlyFee",map);
 	}
 
 

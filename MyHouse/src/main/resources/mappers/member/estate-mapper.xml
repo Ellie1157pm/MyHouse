@@ -89,6 +89,8 @@
 		select legal_dong from region where legal_dong like '%'||#{address}||'%' and rownum=1
 	</select>
 	
+
+	
 	<select id="selectApartListForAllNotOption" resultType="string">
 		select address from estate 
 		where estate_type=#{estateType} and transaction_type=#{dealType} 
@@ -155,7 +157,16 @@
 	</select>
 	
 	<select id="selectEstateListSelectStructureNotOption" resultType="string">
-		select e.address from estate e left join e.estate_no=o.estate_no 
+		select e.address from estate e left join tbl_option o on e.estate_no=o.estate_no 
+		where e.estate_type= #{estateType} 
+		and e.transaction_type= #{dealType} 
+		and e.region_code = #{region_code}
+		and e.estate_price between #{range1} and #{range2} 
+		and construction=#{structure}
+	</select>
+	
+	<select id="selectEstateListSelectStructureNotOpionNotFloorOptionMontlyFee" resultType="string">
+		select e.address from estate e left join tbl_option o on e.estate_no=o.estate_no 
 		where e.estate_type= #{estateType} 
 		and e.transaction_type= #{dealType} 
 		and e.region_code = #{region_code}
@@ -164,7 +175,7 @@
 	</select>
 	
 	<select id="selectEstateListSelectStructureNotOptoin" resultType="string">
-		select e.address from estate e left join e.estate_no=o.estate_no 
+		select e.address from estate e left join tbl_option o on e.estate_no=o.estate_no 
 		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code =#{region_code}
 		and e.estate_price between #{range1} and #{range2} and o.construction=#{structure} 
 		and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
@@ -175,21 +186,21 @@
 	</select>
 	
 	<select id="selectEstateListForAllNotOptionSelectFloorOptionForMontlyFee" resultType="string">
-		select e.address from estate e left join e.estate_no=o.estate_no 
+		select e.address from estate e left join tbl_option o on e.estate_no=o.estate_no 
 		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code =#{region_code}
 		and e.estate_price between #{range3} and #{range4} and e.deposit between #{range1} and #{range2}
 		and o.flooroption=#{topOption}  
 	</select>
 	
 	<select id="selectEstateListForAllSelectOptionNotFloorOpionForMontlyFee" resultType="string">
-		select e.address from estate e left join e.estate_no=o.estate_no 
+		select e.address from estate e left join tbl_option o on e.estate_no=o.estate_no 
 		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code =#{region_code}
 		and e.estate_price between #{range3} and #{range4} and e.deposit between #{range1} and #{range2}
 		and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
 	</select>
 	
 	<select id="selectEstateListForAllSelectOptionSelectFloorOptionMontlyFee" resultType="string">
-		select e.address from estate e left join e.estate_no=o.estate_no 
+		select e.address from estate e left join tbl_option o on e.estate_no=o.estate_no 
 		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code =#{region_code}
 		and e.estate_price between #{range3} and #{range4} and e.deposit between #{range1} and #{range2}
 		and o.flooroption=#{topOption} and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
@@ -198,21 +209,21 @@
 
 	
 	<select id="selectEstateListSelectStructureNotOpionSelectFloorOptionMontlyFee" resultType="string">
-		select e.address from estate e left join e.estate_no=o.estate_no 
+		select e.address from estate e left join tbl_option o  on e.estate_no=o.estate_no 
 		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code =#{region_code}
 		and e.estate_price between #{range3} and #{range4} and e.deposit between #{range1} and #{range2}
 		and o.construction =#{structure} and o.flooroption=#{topOption}
 	</select>
 	
 	<select id="selectEstateListSelectStructureSelectOptionNotFloorOptionMontlyFee" resultType="string">
-		select e.address from estate e left join e.estate_no=o.estate_no 
+		select e.address from estate e left join tbl_option o  on e.estate_no=o.estate_no 
 		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code =#{region_code}
 		and e.estate_price between #{range3} and #{range4} and e.deposit between #{range1} and #{range2}
 		and o.construction =#{structure}  and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
 	</select>
 	
 	<select id="selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee" resultType="string">
-		select e.address from estate e left join e.estate_no=o.estate_no 
+		select e.address from estate e left join tbl_option o on e.estate_no=o.estate_no 
 		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code =#{region_code}
 		and e.estate_price between #{range3} and #{range4} and e.deposit between #{range1} and #{range2}
 		and o.construction =#{structure}  and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
