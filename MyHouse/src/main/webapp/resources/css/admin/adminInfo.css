@@ -10,8 +10,7 @@ div#back-container {
 
 /* 정보창 */
 div#info-container {
-    width: auto;
-    max-width: 800px;
+    width: 800px;
     height: 600px;
     margin: auto;
     padding: 0px;
@@ -42,4 +41,36 @@ nav#pageBar {
 /* button */
 div#button-container button {
 	font-size: 16px;	
+}
+
+/* pageBar */
+div.pageBar-container {
+	 text-align: center;
+	 position: relative;
+	 top: -76px;
+}
+
+/* a link design */
+/* 방문 전 링크 상태이다. */
+a.none-underline:link {
+	color: black;
+	text-decoration: none;
+}
+
+/* 방문 후 링크 상태이다. */
+a.none-underline:visited {
+	color: gray;
+	text-decoration: none;
+}
+
+/* 마우스 오버 했을 때 링크 상태이다. */
+a.none-underline:hover {
+	color: lightgray;
+	text-decoration: none;
+}
+
+/* 클릭 했을 때 링크 상태이다. */
+a.none-underline:active {
+	color: lightgray;
+	text-decoration: none;
 }

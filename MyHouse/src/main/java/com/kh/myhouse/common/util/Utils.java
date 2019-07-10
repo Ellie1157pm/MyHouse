@@ -57,7 +57,7 @@ public class Utils {
 		//[다음]section
 		//다음페이지가 없는 경우
 		if(pageNo > totalPage) {
-			pageBar += "<li class='page-item'>";
+			pageBar += "<li class='page-item disabled'>";
 			pageBar += "<a class='page-link' href='#'>></a>";
 			pageBar += "</li>";
 		}
