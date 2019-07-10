@@ -13,7 +13,7 @@
 <!-- agent js jsp -->
 <jsp:include page="/resources/js/agentScript.jsp"/>
 <!-- member js jsp -->
-<%-- <jsp:include page="/resources/js/memberScript.jsp"/> --%>
+<jsp:include page="/resources/js/memberScript.jsp"/>
 <script
 	src="${pageContext.request.contextPath }/resources/js/jquery-3.4.0.js"></script>
 <!-- 부트스트랩관련 라이브러리 -->
