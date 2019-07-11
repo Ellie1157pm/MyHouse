@@ -31,8 +31,8 @@ public class EstateServiceImpl implements EstateService{
 
 
 	@Override
-	public Estate selectDetailEstate(Map<String, String> param) {
-		return estateDAO.selectDetailEstate(param);
+	public List<Map<String,String>> selectDetailEstate(int estateNo) {
+		return estateDAO.selectDetailEstate(estateNo);
 	}
 
 
@@ -95,11 +95,15 @@ public class EstateServiceImpl implements EstateService{
 	public List<String> selectApartListSelectStructureSelectOption(Map<String, Object> map) {
 		return estateDAO.selectApartListSelectStructureSelectOption(map);
 	}
-
+	
+	@Override
+	public List<Map<String, String>> showRecommendEstate(int cPage, int numPerPage, String addressName) {
+		return estateDAO.showRecommendEstate(cPage,numPerPage,addressName);
+	}
 
 	@Override
-	public List<Map<String, String>> selectShowEstate(int cPage, int numPerPage, String roadAddressName) {
-		return estateDAO.selectShowEstate(cPage,numPerPage,roadAddressName);
+	public List<Map<String, String>> showNotRecommendEstate(int cPage2, int numPerPage, String addressName) {
+		return estateDAO.showNotRecommendEstate(cPage2,numPerPage,addressName);
 	}
 
 
@@ -202,5 +206,12 @@ public class EstateServiceImpl implements EstateService{
 	@Override
 	public List<String> selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee(Map<String, Object> map) {
 		return estateDAO.selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee(map);
+	}
+
+
+	@Override
+	public List<Estate> selectlocalList(String localCode) {
+		// TODO Auto-generated method stub
+		return estateDAO.selectlocalList(localCode);
 	}
 }

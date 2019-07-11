@@ -22,17 +22,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 import com.kh.myhouse.estate.model.service.EstateService;
 import com.kh.myhouse.estate.model.vo.Estate;
 import com.kh.myhouse.estate.model.vo.EstateAttach;
 import com.kh.myhouse.estate.model.vo.Option;
-
-import net.sf.json.JSONArray;
 
 @Controller
 @RequestMapping("/estate")
@@ -397,75 +395,62 @@ public class EstateController {
 	
 
 
-	//지도상에 아파트클릭시 사이드바에 상세정보를 가져오기위해서
+	//매물 클릭시 사이드바에 상세정보를 가져오기위해서
 	@RequestMapping("/detailEstate")
 	public void detailResult(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		String addressName=request.getParameter("addressName");
-		System.out.println("주소명 : "+addressName);
-
-		String roadAddressName=request.getParameter("roadAddressName");
-		System.out.println("도로명 : "+roadAddressName);
-
-		Map<String, String> param = new HashMap<>();
-		param.put("addressName", addressName);
-		param.put("roadAddressName", roadAddressName);
-
-		Estate detailEstate = estateService.selectDetailEstate(param);
-		EstateAttach estateAttach = estateService.selectEstateAttach(detailEstate.getEstateNo());
-
-		Map<String,Object> map = new HashMap<>();
-		map.put("detailEstate", detailEstate);
-		map.put("EstateAttach", estateAttach);
-
-		System.out.println(detailEstate+"상세정보");
-
-		response.setContentType("application/json; charset=utf-8");
-		new Gson().toJson(map,response.getWriter());
-	}
-
-	//마크 클릭후 매물보기 버튼누르면 해당하는 매물들 가져오는 컨트롤러
-	@RequestMapping("/showEstate")
-	public void showEstate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String estateNo=request.getParameter("estateNo");
+		
+		
+		int estateNo=Integer.parseInt(request.getParameter("estateNo"));
 		System.out.println("매물번호 : "+estateNo);
 
-		String addressName=request.getParameter("addressName");
-		System.out.println("주소명 : "+addressName);
 
-		String roadAddressName=request.getParameter("roadAddressName");
-		System.out.println("도로명 : "+roadAddressName);
+		List<Map<String,String>> detailEstate = estateService.selectDetailEstate(estateNo);
+		
+		System.out.println(detailEstate);
 
-		Map<String, String> param = new HashMap<>();
-		param.put("estateNo", estateNo);
-		param.put("addressName", addressName);
-		param.put("roadAddressName", roadAddressName);
-
-
+		response.setContentType("application/json; charset=utf-8");
+		new Gson().toJson(detailEstate,response.getWriter());
 	}
+
 	
-	
-	 //마크 클릭후 해당하는 매물들 가져오는 컨트롤러
-    @RequestMapping("/getEstate")
-    public void getEstate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	//마크 클릭후 해당하는 추천매물들 가져오는 컨트롤러
+    @RequestMapping("/getRecommendEstate")
+    public void getRecommendEstate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         
         int numPerPage = 10;
         int cPage = Integer.parseInt(request.getParameter("cPage"));
         
         System.out.println("클릭페이지="+cPage);
         
-        String roadAddressName=request.getParameter("roadAddressName");
-        System.out.println("도로명 : "+roadAddressName);
+        String addressName=request.getParameter("addressName");
+        System.out.println("도로명 : "+addressName);
         
         
-        List<Map<String,String>> showEstate = estateService.selectShowEstate(cPage,numPerPage,roadAddressName);
-        
-        System.out.println("제발나와라"+showEstate);
-        
-        System.out.println(showEstate.size()+"dsaf0");
+        List<Map<String,String>> showRecommendEstate = estateService.showRecommendEstate(cPage,numPerPage,addressName);
         
         response.setContentType("application/json; charset=utf-8");
-        new Gson().toJson(showEstate,response.getWriter());
+        new Gson().toJson(showRecommendEstate,response.getWriter());
+    }
+    
+    //마크 클릭후 해당하는 일반매물들 가져오는 컨트롤러
+    @RequestMapping("/getNotRecommendEstate")
+    public void getNotRecommendEstate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    	
+    	int numPerPage = 10;
+    	int cPage2 = Integer.parseInt(request.getParameter("cPage2"));
+    	
+    	System.out.println("클릭페이지="+cPage2);
+    	
+    	String addressName=request.getParameter("addressName");
+    	System.out.println("도로명 : "+addressName);
+    	
+    	
+    	List<Map<String,String>> showNotRecommendEstate = estateService.showNotRecommendEstate(cPage2,numPerPage,addressName);
+    	
+    	System.out.println("제발 나와라="+showNotRecommendEstate.size());
+    	
+    	response.setContentType("application/json; charset=utf-8");
+    	new Gson().toJson(showNotRecommendEstate,response.getWriter());
     }
 
 
@@ -613,11 +598,23 @@ public class EstateController {
 
 
 		model.addAttribute("msg",msg);
-
+		
 		return "common/msg";
 	}
+	
+	@RequestMapping("/findApartTermsTest")
+    public void findApartTermsTest(HttpServletRequest request, HttpServletResponse response) throws JsonIOException, IOException {
+        String address =request.getParameter("address");
+        System.out.println("addressnumber@@@@의 값은 ????"+address);
+    
+        String localCode=estateService.selectLocalCodeFromRegion(address);
 
-
-
-
+        System.out.println("로컬 코드 파이트 아파트 @controller = " +localCode);
+        
+        List<Estate> list =new ArrayList<>();
+        list = estateService.selectlocalList(localCode);
+        System.out.println("파인드list@@@@@=="+list);
+         response.setContentType("application/json; charset=utf-8");
+            new Gson().toJson(list,response.getWriter());
+    }
 }
