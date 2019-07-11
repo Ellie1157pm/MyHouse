@@ -131,4 +131,76 @@ public class EstateServiceImpl implements EstateService{
 	public String selectLocalName(String address) {
 		return estateDAO.selectLocalName(address);
 	}
+
+
+	@Override
+	public List<String> selectEstateListForAllNotOption(Map<String, Object> map) {
+		return estateDAO.selectEstateListForAllNotOption(map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListForAllSelectOption(Map<String, Object> map) {
+		return estateDAO.selectEstateListForAllSelectOption(map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListSelectStructureNotOption(Map<String, Object> map) {
+		return estateDAO.selectEstateListSelectStructureNotOption(map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListSelectStructureNotOptoin(Map<String, Object> map) {
+		return estateDAO.selectEstateListSelectStructureNotOptoin(map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListForAllNotOptionForMontlyFee(Map<String, Object> map) {
+		return estateDAO.selectEstateListForAllNotOptionForMontlyFee(map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListForAllNotOptionSelectFloorOptionForMontlyFee(Map<String, Object> map) {
+		return estateDAO.selectEstateListForAllNotOptionSelectFloorOptionForMontlyFee(map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListForAllSelectOptionNotFloorOpionForMontlyFee(Map<String, Object> map) {
+		return estateDAO.selectEstateListForAllSelectOptionNotFloorOpionForMontlyFee(map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListForAllSelectOptionSelectFloorOptionMontlyFee(Map<String, Object> map) {
+		return estateDAO.selectEstateListForAllSelectOptionSelectFloorOptionMontlyFee(map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListSelectStructureNotOpionNotFloorOptionMontlyFee(Map<String, Object> map) {
+		return estateDAO.selectEstateListSelectStructureNotOpionNotFloorOptionMontlyFee(map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListSelectStructureNotOpionSelectFloorOptionMontlyFee(Map<String, Object> map) {
+		return estateDAO.selectEstateListSelectStructureNotOpionSelectFloorOptionMontlyFee(map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListSelectStructureSelectOptionNotFloorOptionMontlyFee(Map<String, Object> map) {
+		return estateDAO.selectEstateListSelectStructureSelectOptionNotFloorOptionMontlyFee(map);
+	}
+
+
+	@Override
+	public List<String> selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee(Map<String, Object> map) {
+		return estateDAO.selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee(map);
+	}
 }

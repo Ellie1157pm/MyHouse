@@ -5,16 +5,16 @@ import java.util.Map;
 
 public interface NoteService {
 
-	List<Map<String, String>> selectNoteList(int cPage, int numPerPage);
+	List<Map<String, String>> selectNoteList(int cPage, int numPerPage, int memberNo);
 
-	int selectNoteTotalContents();
+	int selectNoteTotalContents(int memberNo);
 
 	List<Object> selectNote(int noteno);
 
 	void deleteNote(List<Integer> list);
 
-	int selectNoContents();
+	int selectNoContents(int memberNo);
 
-	void updateNoteYN();
+	void updateNoteYN(int noteno);
 
 }

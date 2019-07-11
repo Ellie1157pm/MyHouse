@@ -24,25 +24,28 @@ public class NoteController {
 	@Autowired
 	NoteService noteService;
 	
-	@RequestMapping("/note/noteMain.do")
+//	@RequestMapping("/note/noteMain.do")
+	@RequestMapping("/agent/warningMemo.do")
 	public ModelAndView MainNote(
-			@RequestParam(value="cPage",required=false, defaultValue="1") int cPage
+			@RequestParam(value="cPage",required=false, defaultValue="1") int cPage,
+			@RequestParam int memberNo
 			) {
-		
+		int memberNO = memberNo;
 		
 		ModelAndView mav = new ModelAndView();
 		
 		int numPerPage = 10;
 		//1. 현재페이지 컨텐츠 구하기
-		List<Map<String,String>> list = noteService.selectNoteList(cPage,numPerPage);
+		List<Map<String,String>> list = noteService.selectNoteList(cPage,numPerPage,memberNo);
 		
 		//2. 전체컨텐츠 수 구하기
-		int totalContents = noteService.selectNoteTotalContents();
+		int totalContents = noteService.selectNoteTotalContents(memberNo);
 		
 		//3. 안읽은 컨텐츠 수 구하기
-		int noReadContents = noteService.selectNoContents();
+		int noReadContents = noteService.selectNoContents(memberNo);
 		
 		mav.addObject("list",list);
+		mav.addObject("memberNO",memberNO);
 		mav.addObject("totalContents",totalContents);
 		mav.addObject("noReadContents",noReadContents);
 		mav.addObject("numPerPage",numPerPage);
@@ -57,31 +60,33 @@ public class NoteController {
 
 	@RequestMapping("/note/noteCon.do")
 	@ResponseBody
-	public void noteContents(@RequestParam int noteNo,
+	public String noteContents(@RequestParam int noteNo,
+								@RequestParam int memberNo,
 							HttpServletRequest request, HttpServletResponse response)
 							throws ServletException, IOException {
+		
+		System.out.println(noteNo);
 		//3. note-modal contents
 		List<Object> noteContents = noteService.selectNote(noteNo);
-	
+		
+		//업데이트 yn
+		noteService.updateNoteYN(noteNo);
+		
 		response.setContentType("application/json; charset=utf-8");
 		new Gson().toJson(noteContents,response.getWriter());
+		
+		return "/agent/warningMemo.do?memberNo="+memberNo;
 		
 	}
 	
 	@RequestMapping("/note/noteDelete.do")
-	public String noteDelete(@RequestParam List<Integer> list, Model model) {
+	public String noteDelete(@RequestParam List<Integer> list ,
+							@RequestParam int memberNo
+							) {
 		System.out.println("list@controller="+list);
 		noteService.deleteNote(list);
 		
-		return "redirect:/note/noteMain.do";
+		return "redirect:/agent/warningMemo.do?memberNo="+memberNo;
 	}
-	
-	@RequestMapping("/note/noteYN.do")
-	public String noteYN() {
-		
-		noteService.updateNoteYN();
-		return "redirect:/note/noteMain.do";
-	}
-	
-	
+
 }

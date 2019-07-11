@@ -19,7 +19,6 @@ function updateEstate(e){
 		return;
 	}
 }
-
 $(function() {
 	$("#estateList").css("opacity", 0.6);
 	
@@ -47,7 +46,7 @@ $(function() {
 <form action="${pageContext.request.contextPath}/agent/estateListEnd"
 	  id="estateListEndFrm"
 	  method="post">
-	<input type="hidden" name="memberNo" value="0" />
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
 </form>
 <form action="${pageContext.request.contextPath}/agent/updateEstate"
 	  id="updateEstateFrm"

@@ -15,13 +15,13 @@ public class NoteServiceImpl implements NoteService{
 	private NoteDAO noteDAO;
 	
 	@Override
-	public List<Map<String, String>> selectNoteList(int cPage, int numPerPage) {
-		return noteDAO.selectNoteList(cPage, numPerPage);
+	public List<Map<String, String>> selectNoteList(int cPage, int numPerPage, int memberNo) {
+		return noteDAO.selectNoteList(cPage, numPerPage, memberNo);
 	}
 
 	@Override
-	public int selectNoteTotalContents() {
-		return noteDAO.selectNoteTotalContents();
+	public int selectNoteTotalContents(int memberNo) {
+		return noteDAO.selectNoteTotalContents(memberNo);
 	}
 
 	@Override
@@ -35,13 +35,13 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 	@Override
-	public int selectNoContents() {
-		return noteDAO.selectNoReadContents();
+	public int selectNoContents(int memberNo) {
+		return noteDAO.selectNoReadContents(memberNo);
 	}
 
 	@Override
-	public void updateNoteYN() {
-		noteDAO.updateNoteYN();
+	public void updateNoteYN(int noteno) {
+		noteDAO.updateNoteYN(noteno);
 	}
 
 }

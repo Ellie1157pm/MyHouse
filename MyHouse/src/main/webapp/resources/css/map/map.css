@@ -229,6 +229,11 @@ button.second {
 	color: black;
 	border: none;
 }
+button.third{
+	background: white;
+	color: black;
+	border: none;
+}
 
 div#search3 table#areaTbl td {
 	border: 1px solid gray;

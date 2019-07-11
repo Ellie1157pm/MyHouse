@@ -25,24 +25,22 @@ import com.kh.myhouse.admin.model.vo.Rss;
 
 @Service
 public class AdminServiceImpl implements AdminService {
-	private Logger logger = LoggerFactory.getLogger(getClass());
-	
 	@Autowired 
 	private AdminDAO adminDAO;
 
 	@Override
-	public List<Map<String, String>> selectMemberList() {
-		return adminDAO.selectMemberList();
+	public List<Map<String, String>> selectMemberList(RowBounds rb) {
+		return adminDAO.selectMemberList(rb);
 	}
 
 	@Override
-	public List<Map<String, String>> selectRealtorList() {
-		return adminDAO.selectRealtorList();
+	public List<Map<String, String>> selectRealtorList(RowBounds rb) {
+		return adminDAO.selectRealtorList(rb);
 	}
 
 	@Override
-	public List<Map<String, String>> selectReportList() {
-		return adminDAO.selectReportList();
+	public List<Map<String, String>> selectReportList(RowBounds rb) {
+		return adminDAO.selectReportList(rb);
 	}
 
 	@Override
@@ -117,19 +115,42 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<Map<String, String>> selectAllNews(int cPage) {
-		List<Map<String, String>> list = new ArrayList<>();
-		
-		try {
-			int numPerPage = 10;
-			int offset = numPerPage*(cPage-1);
-			RowBounds rb = new RowBounds(offset, numPerPage);
-			
-			list = adminDAO.selectAllNews(rb);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
+	public List<Map<String, String>> selectAllNews(RowBounds rb) {
+		return adminDAO.selectAllNews(rb);
+	}
+
+	@Override
+	public int insertNotice(Map<String, String> param) {
+		return adminDAO.insertNotice(param);
+	}
+	
+	@Override
+	public List<Map<String, String>> selectAllNotice(RowBounds rb) {
+		return adminDAO.selectAllNotice(rb);
+	}
+	
+	@Override
+	public int newsTotalPage() {
+		return adminDAO.newsTotalPage();
+	}
+	
+	@Override
+	public int noticeTotalPage() {
+		return adminDAO.noticeTotalPage();
+	}
+
+	@Override
+	public int memberTotalPage() {
+		return adminDAO.memberTotalPage();
+	}
+
+	@Override
+	public int realtorTotalPage() {
+		return adminDAO.realtorTotalPage();
+	}
+
+	@Override
+	public int reportTotalPage() {
+		return adminDAO.reportTotalPage();
 	}
 }

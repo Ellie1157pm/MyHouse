@@ -66,7 +66,8 @@ public class AgentController {
 	
 	@RequestMapping("/loginCheck")
 	@ResponseBody
-	public Agent loginCheck(@RequestParam(value="memberEmail") String memberEmail){
+	public Agent loginCheck(@RequestParam(value="memberEmail") String memberEmail,
+							Model model){
 		Agent a = agentService.selectOneAgent(memberEmail);
 		
 		return a;
@@ -79,17 +80,27 @@ public class AgentController {
 	public String insertEstateAgent(String companyName,
 									String companyRegNo,
 									String companyPhone,
+									int memberNo,
 									Model model) {
-		Map<String, String> map = new HashMap();
+		Map<String, Object> map = new HashMap();
 		map.put("companyName", companyName);
 		map.put("companyRegNo", companyRegNo);
 		map.put("companyPhone", companyPhone);
+		map.put("memberNo", memberNo);
 		
 		String msg = "";
 		
+		int checkCompany = agentService.checkCompany(memberNo);
+		if(checkCompany>0) {
+			msg = "이미 신청 하셨습니다.";
+			model.addAttribute("msg", msg);
+			return "common/msg";
+		}
+		
 		int companyCount = agentService.checkCompanyCount(companyRegNo);
 		if(companyCount>2) {
-			msg = "더이상 회원가입이 불가능합니다.";
+			msg = "더이상 중개사무소 가입이 불가능합니다.";
+			model.addAttribute("msg", msg);
 			return "common/msg";
 		}
 		
@@ -148,9 +159,28 @@ public class AgentController {
 	
 	@RequestMapping("/advertisedQuestion")
 	public void advertisedQuestion(int memberNo, Model model) {
-		List<Map<String, String>> list = agentService.estateListEnd(0);
+		List<Map<String, String>> list = agentService.estateListEnd(memberNo);
 		
 		model.addAttribute("list", list);
+	}
+	
+	@RequestMapping("advertisedReq")
+	@ResponseBody
+	public String advertisedReq(@RequestParam(value="advertiseDate") int advertiseDate,
+								@RequestParam(value="estateNo") int estateNo) {
+		Map<String, Integer> map = new HashMap();
+		int price = 0;
+		if(advertiseDate == 30) price = 50000;
+		else if (advertiseDate == 60) price = 100000;
+		else if (advertiseDate == 90) price = 140000;
+		
+		map.put("advertiseDate", advertiseDate);
+		map.put("estateNo", estateNo);
+		map.put("price", price);
+		
+		int result = agentService.updateAdvertised(map);
+		
+		return "";
 	}
 	
 	@RequestMapping("/agentMypage")

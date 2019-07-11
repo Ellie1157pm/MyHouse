@@ -3,8 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.kh</groupId>
-	<artifactId>spring</artifactId>
-	<name>01_HelloSpring</name>
+	<name>MyHouse</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
@@ -306,4 +305,5 @@
             </plugin>
         </plugins>
     </build>
+    <artifactId>myhouse</artifactId>
 </project>

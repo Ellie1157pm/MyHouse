@@ -3,28 +3,23 @@ div.noteMain .btn-group{
 	left: 30%;
 	top: 12%;
 }
-div.notebox{
-	width: 700px;
-	min-height:600px;
-	background-color:white;
-	margin-left: 30%;
-	/* visibility: hidden; */
-	visibility: visible;
-}
+
 span.note1{
 	padding: 3% 2%;
 }
 /*쪽지함*/
-div.notebox span.noteBOX{
+div.not-sub{
+	margin-top: -16%;
+}
+span.noteBOX{
 	font-size:25px;
 	margin: 1%;
 }
 
 /*delete button*/
-div.notebox button.btn-primary{
-	margin-left: 20%;
-    margin-top: 2%;
-    padding: 4px;
+button#deleteBtn{
+	height: 35px;
+	margin-left: 13%;
     font-size: 16px;
 }
 
@@ -32,7 +27,7 @@ div.notebox hr{
 	border: solid 1px #c4c4c4;
 }
 
-/*table  */
+ /*table  */
 div.table-note-div table#tbl-note{
 	width: 600px;
 	min-height: 100px;
@@ -40,10 +35,6 @@ div.table-note-div table#tbl-note{
 }
 table#tbl-note tr th{
 	padding-left:1%;
-}
-table#tbl-note td{
-	padding-left: 2%;
-	padding-bottom: 6%;
 }
 
 td#no{
@@ -55,6 +46,10 @@ table#tbl-note tr td.td-primary{
 	background-color: white;
 	border: white;
 }
+td.yn{
+	text-align: center;
+}
+
 
 /*tr hover*/
 tr.note-select:hover{
