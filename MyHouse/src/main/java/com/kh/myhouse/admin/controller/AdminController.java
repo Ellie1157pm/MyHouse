@@ -56,6 +56,7 @@ public class AdminController {
 		logger.info("list@adminListView={}", list);
 		
 		model.addAttribute("list", list);
+		model.addAttribute("item", item);
 		model.addAttribute("pageBar", Utils.getPageBar(totalContents, cPage, numPerPage, "/myhouse/admin/list?item="+item));
 		return "admin/adminInfo";
 	}
@@ -83,6 +84,7 @@ public class AdminController {
 		logger.info("list@showAdminBoard={}", list);
 		
 		request.setAttribute("list", list);
+		request.setAttribute("item", item);
 		request.setAttribute("pageBar", Utils.getPageBar(totalContents, cPage, numPerPage, "/myhouse/admin/board?item="+item));
 		
 		return "admin/adminBoard";
