@@ -82,4 +82,22 @@
 	select count(*) cnt
 	from report_estate
 	</select>
+	
+	<select id="selectRecentNews" resultType="map">
+	select a.*
+	from (
+		select * 
+		from news
+		order by news_no desc) a
+	where rownum <![CDATA[ <= ]]> 5
+	</select>
+	
+	<select id="selectRecentNotice" resultType="map">
+	select a.*
+	from (
+		select * 
+		from notice
+		order by notice_no desc) a
+	where rownum <![CDATA[ <= ]]> 5
+	</select>
 </mapper>

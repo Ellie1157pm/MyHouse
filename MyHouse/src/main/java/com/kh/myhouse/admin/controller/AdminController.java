@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.myhouse.admin.model.service.AdminService;
 import com.kh.myhouse.common.util.Utils;
@@ -91,8 +92,15 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/indexBoard")
-	public String showAdminIndexBoard() {
-		return "admin/adminIndexBoard";
+	public String showAdminIndexBoard(Model model) {
+		ModelAndView mav = new ModelAndView();
+		List<Map<String, String>> newsList = adminService.selectRecentNews();
+		List<Map<String, String>> noticeList = adminService.selectRecentNotice();
+		
+		model.addAttribute("newsList", newsList);
+		model.addAttribute("noticeList", noticeList);
+		
+		return "redirect:/";
 	}
 	
 	@RequestMapping(value="/getRecipient", method=RequestMethod.GET)

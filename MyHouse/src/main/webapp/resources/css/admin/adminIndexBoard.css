@@ -28,7 +28,8 @@
     height: 17px;
     font-size: 15px;
     color: black;
-    padding-bottom: 13px;
+    padding-bottom: 24px;
+    /* padding-bottom: 13px; */
     border-bottom: 2px solid #e1e1e1;
     margin-bottom: 17px;
     margin-top: 0px;

@@ -141,6 +141,10 @@ $(function() {
         <p></p>
       </div>
       <div class="modal-footer">
+        <c:if test="${item eq 'notice'}">
+	        <button type="button" class="btn btn-secondary">수정</button>
+	        <button type="button" class="btn btn-secondary">삭제</button>
+        </c:if>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
