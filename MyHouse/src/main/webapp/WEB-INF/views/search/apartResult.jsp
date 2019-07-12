@@ -73,7 +73,7 @@
 		</select>
 		<div id="filter" onclick="viewFilter();">
 		<input type="button" readonly value="검색 조건을 설정해주세요" />
-		<img src="${pageContext.request.contextPath }/resources/images/search/filter.svg" alt="" />
+		<img src="${pageContext.request.contextPath }/resources/images/search/filter.png" alt="" />
 		</div>
 	</div>
 	<hr />
@@ -322,6 +322,7 @@ kakao.maps.event.addListener(map, 'dragend', function() {
 	//법정동 상세주소 얻어오기
 		searchDetailAddrFromCoords(map.getCenter(),function(result,status){
 		$('#estateFrm #localName').val(map.getCenter());
+		console.log($('#estateFrm #localName').val());
 		address=(result[0].address.address_name).substring(0,8);
 		$('#estateFrm #address').val(address);
 		$('#estateFrm').submit();

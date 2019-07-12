@@ -73,7 +73,7 @@
 		</select>
 		<div id="filter" onclick="viewFilter();">
 		<input type="button" readonly value="검색 조건을 설정해주세요" />
-		<img src="${pageContext.request.contextPath }/resources/images/search/filter.svg" alt="" />
+		<img src="${pageContext.request.contextPath }/resources/images/search/filter.png" alt="" />
 		</div>
 	</div>
 	<hr />
@@ -114,6 +114,7 @@
 			<div id="slider-range">
 			  <input type="text" class="js-range-slider" name="my_range" value="" />
 			</div>
+			<hr />
 		</c:if>
 		<c:if test="${dealType eq 'J' }">
 			<p class="filterSubTitle" style="margin:0;">전세</p>
@@ -122,6 +123,7 @@
 			<div id="slider-range">
 			  <input type="text" class="js-range-slider2" name="my_range" value="" />
 			</div>
+			<hr />
 		</c:if>
 		<c:if test="${dealType eq 'O' }">
 			<p class="filterSubTitle" style="margin:0;">보증금</p>
@@ -130,13 +132,18 @@
 			<div id="slider-range">
 			  <input type="text" class="js-range-slider2" name="my_range" value="" />
 			</div>
+			<hr />
 			<!--월세  -->
 			<p class="filterSubTitle" style="margin:0;">월세</p>
 			<p class="filterTitle button range3" style="margin-bottom:4px;">전체</p>
 			<div id="slider-range">
 			  <input type="text" class="js-range-slider3" name="my_range" value="" />
 			</div>
+			
+			<hr />
 		</c:if>
+		<hr />
+		<hr />
 			<p class="filterSubTitle" style="margin:0;">옵션</p>
 			<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= option.contains("엘레베이터")?"checked":"" %><%} %> /><label for="엘레베이터">엘리베이터</label>
 			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= option.contains("애완동물")?"checked":"" %><%} %> /><label for="애완동물">반려동물 가능</label>
