@@ -6,19 +6,18 @@
 		substr(region_code,0,5) FROM REGION where legal_dong like
 		'%'||#{localName}||'%' and rownum=1
 	</select>
+	
 	<select id="selectApartmentname" resultType="string"> select address from
 		estate where region_code= #{localCode}
 	</select>
 
-	<select id="selectDetailEstate" resultType="estate">
-		select * from estate
-		where ADDRESS = #{addressName} or ADDRESS=#{roadAddressName}
+	<select id="selectDetailEstate" resultMap="estateAttchmentMap">
+		select * from estate e join estate_photo p using(estate_no)
+		where estate_no = #{estateNo}
 	</select>
 	
-	
-	
-	<select id="selectShowEstate" resultMap="estateAttchmentMap">
-		select * from estate e join power_link p using(estate_no) join estate_photo p using(estate_no) order by start_date
+	<select id="showRecommendEstate" resultMap="estateAttchmentMap">
+		select * from estate e join power_link pl using(estate_no) join estate_photo p using(estate_no) where address=#{addressName} order by start_date
 	</select>
 	<resultMap type="estate" id="estateAttchmentMap">
 		<id column="ESTATE_NO" property="EstateNo"/>
@@ -49,16 +48,26 @@
 	</resultMap>
 	
 	
+	<select id="showNotRecommendEstate" resultMap="estateAttchmentMap">
+		 select * 
+       		 from estate e join estate_photo p using(estate_no)
+    	 where estate_no not in (select estate_no from estate e join power_link pl using(estate_no) join estate_photo p using(estate_no)) and address=#{addressName}
+    	 order by written_date desc
+	</select>
+	
+	
 	
 	<select id="selectEstateAttach" resultType="estateAttach">
 		select * from
 		estate_photo where estate_no=#{estateNo}
 	</select>
-	<insert id="estateoptionlist">
-	 insert into tbl_option(estate_no,option_detail,construction,flooroption)
-	 values(seq_estate_no.currval,#{optionDetail, typeHandler=strArrTypeHandler},
-	         #{construction,typeHandler=strArrTypeHandler},#{floorOpt,typeHandler=strArrTypeHandler})
-	</insert>
+	
+	
+	 <insert id="estateoptionlist">
+     insert into tbl_option(estate_no,option_detail,construction,flooroption)
+     values(seq_estate_no.currval,#{optionDetail, typeHandler=strArrTypeHandler},
+             #{construction,typeHandler=strArrTypeHandler},#{floorOpt,typeHandler=strArrTypeHandler})
+    </insert>
 	
 
 	<resultMap type="option" id="optionMap">
@@ -229,5 +238,10 @@
 		and o.construction =#{structure}  and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
 		and o.flooroption=#{topOption}
 	</select>
+	
+	<select id="selectlocalList" resultType="estate">
+    select * from
+        estate where region_code=#{localCode}
+    </select>
 	
 </mapper> 

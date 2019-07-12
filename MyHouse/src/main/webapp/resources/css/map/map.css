@@ -18,18 +18,59 @@ div#map {
 	z-index: 50;
 }
 
-/*사이드바  */
+/*사이드바  
+-매물목록 or 상세정보 뿌려주는 곳
+*/
+
 div#sidebar {
 	width: 430px;
 	height: 700px;
 	position: absolute;
-	right: 0px;
+	right: -1px;
 	top: 111px;
 	margin: 0px;
 	padding: 0px;
 	z-index: 100;
 	background-color: white;
 	overflow: scroll;
+}
+
+/*마크 클릭시 매물 목록 보여주는 css  */
+div#estateBar{
+	width: 430px;	
+	margin: 0px;
+	padding: 0px;
+}
+
+div#estateBar p{	
+	padding: 10px 0px 0px 35px;
+	font-size: 120%;
+	font-weight: bold;
+}
+
+div#sidebar .estateBar2{
+	padding:10px 0px 0px 10px;
+}
+
+div#estate{
+	width: 430px;
+	height:132px;
+	margin: 0px;
+	padding: 10px;
+}
+
+div#estate img{
+	width: 145px;
+	height:113px;
+}
+
+div#estate .apart{
+	position:relative;
+	color: #757575;
+	font-size: 70%;
+	bottom: 37px;
+    margin: 10px;
+	
 }
 
 div#sidebar #imgBox {
@@ -93,7 +134,7 @@ div#sidebar #location {
 	font-weight: bold;
 }
 
-div#sidebar #location .line {
+div#sidebar .line {
 	border: 6px solid #eeeeee;
 	margin: 0px;
 }
@@ -129,7 +170,9 @@ div#searchArea input[type=search] {
 	border: 1px solid gray;
 	width: 150px;
 }
-/* ----------------  */
+/*지도 및 사이드바 css 종료 */
+/* ---------------- ------------------ */
+
 div#search1 button img {
 	width: 25px;
 	height: 25px;
@@ -255,11 +298,4 @@ div#search3 p.range {
 	font-size: 30px;
 	font-weight: bold;
 	color: orange;
-}
-
-div#map {
-	width: 70%;
-	height: 700px;
-	margin-bottom: 2px;
-	margin-left: 5px;
 }

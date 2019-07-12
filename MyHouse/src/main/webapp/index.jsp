@@ -46,7 +46,7 @@
 		type="hidden" name="searchKeyword" id="searchKeyword" /> <input
 		type="hidden" name="locate" id="locate" /> 
 		<input type="hidden" name="coords" id="coords" /> 
-		<input type="hidden"name="typeCheck" id="typeCheck" />
+		<input type="hidden"name="typeCheck" id="typeCheck" data-type="false" />
 </form>
 
 
@@ -68,17 +68,20 @@ $(function() {
 	});
 });
 function searchAddress(obj) {
+	console.log('주소찾기');
 	var keyword = obj;
 	console.log('입력값=' + keyword);
 	//키워드로 검색해본다.
 	 ps.keywordSearch(keyword, placesSearchCB);
+	console.log('검색 후 여부 : '+flag);
 	//만약, 키워드로 검색이 되지 않는다면 주소로 검색해본다.
-	if(flag==false){
+	if($('#locate').val() == null || $('#locate').val() == ''){
 		geocoder.addressSearch(keyword, function(result, status) {
 		    // 정상적으로 검색이 완료됐으면 
 		     if (status === kakao.maps.services.Status.OK) {
 		        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 				console.log('좌표검색 : '+coords);
+				$('#coords').val(coords);
 				searchDetailAddrFromCoords(coords,function(data){
 					console.log(data);
 					if (status === kakao.maps.services.Status.OK) {
@@ -98,6 +101,7 @@ function searchAddress(obj) {
 }
 //키워드 검색 완료 시 호출되는 콜백함수
 function placesSearchCB(data, status, pagination) {
+	console.log('키워드 검색')
 	console.log('status=' + status); //넘어갈때 전송이 완료되면 OK
 	console.log('data=' + data); // api 데이터를 뿌려주는것같음
 	console.log('pagination=' + pagination); //페이지? 몇페이지 나눈는거 같음
@@ -105,19 +109,21 @@ function placesSearchCB(data, status, pagination) {
 	if (status === daum.maps.services.Status.OK) {
 		// 전송이 잘 됬다면 status가 ok이므로  실행
 		for (var i = 0; i < data.length; i++) {
+			console.log(data);
 			address = data[i].address_name;
 			//데이터의 address_name필드명의 값을 address변수에 담아줌
 			//서울과 경기권이 우선이므로 서울부터 확인
 			if (address.indexOf('서울') > -1) {
 				//api 의 address의 컬럼의 서울 인텍스를찾아서 ex) 서울시 도봉구 서울은 당연히 0이나옴 -1보다 크므로 실행
-				console.log(address);
 				$('#locate').val(address.substring(0, 8));
+				$('#coords').val("("+data[i].x+","+data[i].y+")");
 				$('#indexFrm').submit();
 				flag= true;
 				break; //찾으면 종료
 			} else if (address.indexOf('경기') > -1) {
 				//위에꺼랑 똑같이 경기를 찾음 검색바에 경기도 의 아파트를 입력하면 실행되겠쥬?
 				$('#locate').val(address.substring(0, 8));
+				$('#coords').val("("+data[i].x+","+data[i].y+")");
 				$('#indexFrm').submit();
 				flag= true;
 				break;
@@ -125,14 +131,16 @@ function placesSearchCB(data, status, pagination) {
 				console.log(address.indexOf(0, 8) > -1);
 				//나머지 다른주소
 				$('#locate').val(address.substring(0, 8));
+				$('#coords').val("("+data[i].x+","+data[i].y+")");
 				$('#indexFrm').submit();
 				flag= true;
 			}
 		}
 	}
 }
-var typeCheck = $('#typeCheck');
+
 function setestate(obj, type) {
+	var $typeCheck = $('input[name=typeCheck]');
 	$("#insertSearchKeyword")
 			.attr(
 					"placeholder",
@@ -144,24 +152,28 @@ function setestate(obj, type) {
 	$('.check').css('color', 'white');
 	obj.style.color = "yellow";
 	$('#estateType').val(type);
-	typeCheck.value = true;
-	console.log(typeCheck)
+	$typeCheck.data('type',true);
 }
 function validate() {
-	var flag;
+	var $typeCheck = $('input[name=typeCheck]');
 	var $keyword = $('#insertSearchKeyword').val().trim();
 	console.log($keyword);
 	if ($keyword.length == 0) {
 		alert('검색어를 입력해주세요');
 		return false;
 	}
-	else if (typeCheck.value == null || typeCheck.value == '') {
+	else if ($typeCheck.data().type == null || $typeCheck.data().type == '') {
 		alert('검색하실 매물 타입을 선택해주세요');
 		return false;
-	} else if (typeCheck.value == true) {
+	} else if ($typeCheck.data().type == true) {
 		$('#searchKeyword').val($keyword);
 		searchAddress($keyword);
 	}
+}
+
+function searchDetailAddrFromCoords(coords, callback) {
+    // 좌표로 법정동 상세 주소 정보를 요청합니다
+    geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
 }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
