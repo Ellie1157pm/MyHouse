@@ -31,8 +31,8 @@ public class EstateDAOImpl implements EstateDAO{
 	}
 
 	@Override
-	public Estate selectDetailEstate(Map<String, String> param) {
-		return sqlSession.selectOne("estate.selectDetailEstate", param);
+	public List<Map<String,String>> selectDetailEstate(int estateNo) {
+		return sqlSession.selectList("estate.selectDetailEstate",estateNo);
 	}
 
 
@@ -74,14 +74,18 @@ public class EstateDAOImpl implements EstateDAO{
 	public List<String> selectApartListForAllSelectOption(Map<String, Object> map) {
 		return sqlSession.selectList("estate.selectApartListForAllNotOption",map);
 	}
-
-
+	
 	@Override
-	public List<Map<String, String>> selectShowEstate(int cPage, int numPerPage, String roadAddressName) {
+	public List<Map<String, String>> showRecommendEstate(int cPage, int numPerPage, String addressName) {
 		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage, numPerPage);
-		return sqlSession.selectList("estate.selectShowEstate",roadAddressName,rowBounds);
+		return sqlSession.selectList("estate.showRecommendEstate",addressName,rowBounds);
 	}
-
+	
+	@Override
+	public List<Map<String, String>> showNotRecommendEstate(int cPage2, int numPerPage, String addressName) {
+		RowBounds rowBounds = new RowBounds((cPage2-1)*numPerPage, numPerPage);
+		return sqlSession.selectList("estate.showNotRecommendEstate",addressName,rowBounds);
+	}
 
 	@Override
 	public List<String> selectApartListSelectStructureNotOption(Map<String, Object> map) {
@@ -195,4 +199,10 @@ public class EstateDAOImpl implements EstateDAO{
 	public List<String> selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee(Map<String, Object> map) {
 		return sqlSession.selectList("estate.selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee",map);
 	}
+
+
+	@Override
+    public List<Estate> selectlocalList(String localCode) {
+        return sqlSession.selectList("estate.selectlocalList",localCode);
+    }
 }

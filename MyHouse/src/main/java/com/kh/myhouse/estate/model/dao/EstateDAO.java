@@ -13,7 +13,7 @@ public interface EstateDAO {
 
 	List<Estate> selectApartmentname(String localCode);
 	
-	Estate selectDetailEstate(Map<String, String> param);
+	List<Map<String, String>> selectDetailEstate(int estateNo);
 
 	EstateAttach selectEstateAttach(int estateNo);
 
@@ -26,8 +26,11 @@ public interface EstateDAO {
 	List<String> selectApartListForAll(Map<String, Object> map);
 
 	List<String> selectApartListForAllSelectOption(Map<String, Object> map);
-
-	List<Map<String, String>> selectShowEstate(int cPage, int numPerPage, String roadAddressName);
+	
+	List<Map<String, String>> showRecommendEstate(int cPage, int numPerPage, String roadAddressName);
+	
+	List<Map<String, String>> showNotRecommendEstate(int cPage2, int numPerPage, String roadAddressName);
+	
 
 	List<String> selectApartListSelectStructureNotOption(Map<String, Object> map);
 
@@ -66,5 +69,7 @@ public interface EstateDAO {
 	List<String> selectEstateListSelectStructureSelectOptionNotFloorOptionMontlyFee(Map<String, Object> map);
 
 	List<String> selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee(Map<String, Object> map);
+
+	List<Estate> selectlocalList(String localCode);
 
 }

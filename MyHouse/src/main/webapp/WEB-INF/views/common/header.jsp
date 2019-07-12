@@ -33,8 +33,8 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/css/index.css" />
 <!--다음 지도 api : 예림 api key -->
-<script
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=52628547fe813f9f2accb85c95efcde3&libraries=services,clusterer"></script>
+
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=52628547fe813f9f2accb85c95efcde3&libraries=services,clusterer"></script>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/css/member.css" />
 
@@ -114,8 +114,14 @@
 							<span><a href="${pageContext.request.contextPath }/agent/agentMypage">${memberLoggedIn.memberName }</a>님 환영합니다.</span>
 						</c:if>
 						<c:if test="${memberLoggedIn.status eq 'U'.charAt(0)}">
-							<span><a href="${pageContext.request.contextPath }/member/memberView.do?memberEmail=${memberLoggedIn.memberEmail}">${memberLoggedIn.memberName }</a>님
-								환영합니다.</span>
+							<c:if test="${memberLoggedIn.memberNo ne 1}">
+								<span><a href="${pageContext.request.contextPath }/member/memberView.do?memberNo=${memberLoggedIn.memberNo}">${memberLoggedIn.memberName }</a>님
+									환영합니다.</span>
+							</c:if>
+							<c:if test="${memberLoggedIn.memberNo eq 1}">
+								<span><a href="${pageContext.request.contextPath }/admin/list">${memberLoggedIn.memberName }</a>님
+									환영합니다.</span>
+							</c:if>
 						</c:if>
 			    	&nbsp;
 				    <button type="button" class="btn btn-outline-success"
