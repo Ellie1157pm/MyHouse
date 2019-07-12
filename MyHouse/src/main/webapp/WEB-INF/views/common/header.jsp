@@ -113,8 +113,14 @@
 							<span><a href="${pageContext.request.contextPath }/agent/agentMypage">${memberLoggedIn.memberName }</a>님 환영합니다.</span>
 						</c:if>
 						<c:if test="${memberLoggedIn.status eq 'U'.charAt(0)}">
-							<span><a href="${pageContext.request.contextPath }/member/memberView.do?memberEmail=${memberLoggedIn.memberEmail}">${memberLoggedIn.memberName }</a>님
-								환영합니다.</span>
+							<c:if test="${memberLoggedIn.memberNo ne 1}">
+								<span><a href="${pageContext.request.contextPath }/member/memberView.do?memberNo=${memberLoggedIn.memberNo}">${memberLoggedIn.memberName }</a>님
+									환영합니다.</span>
+							</c:if>
+							<c:if test="${memberLoggedIn.memberNo eq 1}">
+								<span><a href="${pageContext.request.contextPath }/admin/list">${memberLoggedIn.memberName }</a>님
+									환영합니다.</span>
+							</c:if>
 						</c:if>
 			    	&nbsp;
 				    <button type="button" class="btn btn-outline-success"

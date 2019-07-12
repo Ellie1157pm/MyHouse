@@ -52,9 +52,24 @@ div#list-container th{
 	background: lightgray;
 }
 div#list-container td{
-	width: 400px;
+	width: 250px;
     text-align: left;
     padding-left: 20px;
+}
+/*중개인 프로필 사진*/
+div#agentProfileImg{
+    position: relative;
+    float: right;
+    margin-top: -260px;
+    height: 150px;
+    width: 150px;
+    border: 3px solid gray;
+    border-radius: 100px;
+}
+button#agnetChangeImg-btn{
+	position: relative;
+    float: right;
+    margin: -98px 19px 0 0px;
 }
 /*중개인 설정페이지 버튼그룹*/
 div#agentSet-btnGroup{

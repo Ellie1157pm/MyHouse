@@ -187,6 +187,13 @@ public class AgentController {
 	public void agentMypage() {
 	}
 	
+	@RequestMapping("/updateAgent")
+	public String updateAgent(int memberNo, String newPwd) {
+		System.out.println("memberNo@controller="+memberNo);
+		System.out.println("newPwd@controller="+newPwd);
+		return "common/msg";
+	}
+	
 	@RequestMapping("/estateList")
 	public void estateList(String searchType, String searchKeyword, Model model) {
 		Map<String, String> map = new HashMap();
