@@ -1,3 +1,4 @@
+
 @charset "UTF-8";
 
 /* 배경 */
@@ -19,7 +20,7 @@ div#info-container {
 div#list-container {
     background-color: white;
     width: 800px;
-    height: 558px;
+    min-height: 558px;
     text-align: center;
     padding: 100px;
 }
