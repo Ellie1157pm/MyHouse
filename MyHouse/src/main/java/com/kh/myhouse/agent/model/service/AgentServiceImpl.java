@@ -65,24 +65,4 @@ public class AgentServiceImpl implements AgentService {
 		return agentDAO.checkCompany(memberNo);
 	}
 
-	@Override
-	public int updateAgent(Map<String, Object> map) {
-		return agentDAO.updateAgent(map);
-	}
-
-	@Override
-	public int updateAgentProfileImg(Map<String, Object> map) {
-		return agentDAO.updateAgentProfileImg(map);
-	}
-
-	@Override
-	public String selectProfileImg(int memberNo) {
-		return agentDAO.selectProfileImg(memberNo);
-	}
-
-	@Override
-	public int agentDeleteImg(int memberNo) {
-		return agentDAO.agentDeleteImg(memberNo);
-	}
-
 }

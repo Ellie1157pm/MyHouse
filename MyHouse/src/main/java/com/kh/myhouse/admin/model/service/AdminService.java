@@ -34,8 +34,4 @@ public interface AdminService {
 	int realtorTotalPage();
 	
 	int reportTotalPage();
-
-	List<Map<String, String>> selectRecentNews();
-	
-	List<Map<String, String>> selectRecentNotice();
 }

@@ -1,13 +1,8 @@
 package com.kh.myhouse.agent.controller;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.myhouse.agent.model.service.AgentService;
@@ -42,7 +36,9 @@ public class AgentController {
 
 	@RequestMapping("/insertAgent")
 	public String insertAgent(Agent agent, Model model) {
+		
 		//0.비밀번호 암호화 처리(random salt값을 이용해서 해싱처리됨)
+		System.out.println("agent.getMemberPwd()="+agent.getMemberPwd());
 		String rawPassword = agent.getMemberPwd();
 		System.out.println("rawPassword="+rawPassword);
 		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
@@ -125,6 +121,7 @@ public class AgentController {
 			logger.debug("로그인 요청!");
 		
 		String encodedPassword = bcryptPasswordEncoder.encode(memberPwd);
+		System.out.println("암호화후: "+encodedPassword);
 		
 		try {
 
@@ -167,9 +164,9 @@ public class AgentController {
 		model.addAttribute("list", list);
 	}
 	
-	@RequestMapping("/advertisedReq")
+	@RequestMapping("advertisedReq")
 	@ResponseBody
-	public void advertisedReq(@RequestParam(value="advertiseDate") int advertiseDate,
+	public String advertisedReq(@RequestParam(value="advertiseDate") int advertiseDate,
 								@RequestParam(value="estateNo") int estateNo) {
 		Map<String, Integer> map = new HashMap();
 		int price = 0;
@@ -182,97 +179,19 @@ public class AgentController {
 		map.put("price", price);
 		
 		int result = agentService.updateAdvertised(map);
+		
+		return "";
 	}
 	
 	@RequestMapping("/agentMypage")
-	public void agentMypage(int memberNo, Model model) {
-		String renamedFileName = agentService.selectProfileImg(memberNo);
-		
-		model.addAttribute("renamedFileName", renamedFileName);
+	public void agentMypage() {
 	}
 	
 	@RequestMapping("/updateAgent")
-	public String updateAgent(int memberNo, String newPwd, String renamedFileNamed,
-			HttpServletRequest request,
-			MultipartFile upFile, Model model) { 
-		
-			Map<String, Object> map = new HashMap();
-			map.put("memberNo", memberNo);
-			
-			String msg = "";
-		
-			if(!newPwd.equals("")) {
-				
-				String encodedPassword = bcryptPasswordEncoder.encode(newPwd);
-				map.put("newPwd", encodedPassword);
-				
-				int result = agentService.updateAgent(map);
-				
-				msg = result>0?"비밀번호변경 성공! ":"비밀번호 변경 실패! ";
-			}
-		
-		try {
-			//1. 파일업로드
-			String saveDirectory = request.getSession().getServletContext()
-										  .getRealPath("/resources/upload/agentprofileimg");
-			
-			if(!renamedFileNamed.equals("")) {
-				File f = new File(saveDirectory+"/"+renamedFileNamed);
-				if(f.exists()) f.delete();
-			}
-			
-			if(!upFile.isEmpty()) {
-				String originalFileName = upFile.getOriginalFilename();
-				String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
-				int rndNum = (int)(Math.random()*1000);
-				
-				String renamedFileName = sdf.format(new Date())+"_"+rndNum+"."+ext;
-				
-				map.put("originalFileName", originalFileName);
-				map.put("renamedFileName", renamedFileName);
-				
-				int result = agentService.updateAgentProfileImg(map);
-				
-				msg += result>0?"이미지 업로드성공!":"이미지 업로드실패!";
-				
-				try {
-					//서버 지정위치에 파일 보관
-					upFile.transferTo(new File(saveDirectory+"/"+renamedFileName));
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		model.addAttribute("msg", msg);
-		
+	public String updateAgent(int memberNo, String newPwd) {
+		System.out.println("memberNo@controller="+memberNo);
+		System.out.println("newPwd@controller="+newPwd);
 		return "common/msg";
-	}
-	
-	@RequestMapping("/agentDeleteImg")
-	@ResponseBody
-	public boolean agentDeleteImg(int memberNo, String renamedFileNamed,
-									HttpServletRequest request) {
-		
-		String saveDirectory = request.getSession().getServletContext()
-				  .getRealPath("/resources/upload/agentprofileimg");
-
-		System.out.println("renamedFileNamed밖@controller="+renamedFileNamed);
-		if(!renamedFileNamed.equals("")) {
-			System.out.println("renamedFileNamed안@controller="+renamedFileNamed);
-			File f = new File(saveDirectory+"/"+renamedFileNamed);
-			if(f.exists()) f.delete();
-		}
-		
-		int result = agentService.agentDeleteImg(memberNo);
-		
-		boolean bool = result>0?true:false;
-		
-		return bool;
 	}
 	
 	@RequestMapping("/estateList")
@@ -317,7 +236,7 @@ public class AgentController {
 		
 		return "common/msg";
 	}
-	 
+	
 	@RequestMapping("/estateListEnd")
 	public void estateListEnd(int memberNo, Model model) {
 		
