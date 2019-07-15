@@ -20,7 +20,9 @@ public class AgentLoginInterceptor extends HandlerInterceptorAdapter {
 			String reqUrl = request.getRequestURL().toString();
 			
 			if(reqUrl.equals(request.getHeader("Origin")+"/myhouse/agent/loginCheck") ||
-					reqUrl.equals(request.getHeader("Origin")+"/myhouse/agent/agentLogin")) {
+					reqUrl.equals(request.getHeader("Origin")+"/myhouse/agent/agentLogin") ||
+					reqUrl.equals(request.getHeader("Origin")+"/myhouse/agent/insertAgent") ||
+					reqUrl.equals(request.getHeader("Origin")+"/myhouse/agent/checkMemberEmail")){
 				return super.preHandle(request, response, handler);
 			}
 			

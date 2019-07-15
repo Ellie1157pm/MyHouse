@@ -27,7 +27,7 @@ $(function() {
 	if("${searchKeyword}".length != 0) $("input#estateList-searchKeyword").val("${searchKeyword}");
 	
 	$("#agent-set-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/agent/agentMypage";
+		$("#agentMypageFrm").submit();
 	});
 	$("#estateList-end").on("click", function(){
 		$("#estateListEndFrm").submit();
@@ -43,6 +43,11 @@ $(function() {
 	});
 });
 </script>
+<form action="${pageContext.request.contextPath}/agent/agentMypage"
+	  method="post"
+	  id="agentMypageFrm">
+	  <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
 <form action="${pageContext.request.contextPath}/agent/estateListEnd"
 	  id="estateListEndFrm"
 	  method="post">
