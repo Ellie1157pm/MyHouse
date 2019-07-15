@@ -51,7 +51,14 @@ $(function() {
 		data: JSON.stringify({noteNo : noteNo}),
 		contentType: "application/json; charset=UTF-8",
 		success: function(data) {
+			var status = $("td#"+noteNo+" span").html();
 			$("td#"+noteNo+" span").html('Y');
+			var unread = $("#unreadCnt").html();
+			console.log("unread1="+unread+"\nstatus="+status);
+			// 만약 읽지않은 쪽지라면 변화가 안읽은 쪽지 갯수를 변화시킨다.
+			if(status == 'N') {
+				$("#unreadCnt").html(unread-1);
+			}
 			/* $("span.note1 span").html('${noReadContents}통'); */
 		},
 		error: function(jqxhr, textStatus, errorThrown) {
@@ -127,10 +134,10 @@ function noteDel(){
 </button> -->
 		
 		<div id="list-container">
-
+		
 			<div class="not-sub">
 				<span class="noteBOX">받은 쪽지함</span>
-				<span class="note1">안읽은쪽지 <span>${noReadContents }통</span></span>
+				<span class="note1">안읽은쪽지 <span id="unreadCnt">${noReadContents }</span>통</span>
 				<span class="note2">전체쪽지 <span>${totalContents }통</span></span>
 				<button type="button" id="deleteBtn" class="btn btn-primary" onclick="noteDel();">삭제하기</button>
 			</div>
@@ -146,7 +153,7 @@ function noteDel(){
 					<tr class="note-select">
 						<td><input type="checkbox" class="c1" name="list" value="${n.MEMO_NO }" /></td>
 						<td id="${n.MEMO_NO }" class="td-primary">관리자</td>
-						<td id="${n.MEMO_NO }" class="td-primary" data-toggle="modal" data-target="#exampleModalCenter" data-content="${n.MEMO_CONTENTS}" data-memo="${n.MEMO_NO }" data-member="${memberLoggedIn.memberNo }"><div id="contentC">${n.MEMO_CONTENTS }</div></td>
+						<td id="${n.MEMO_NO }" class="td-primary"><a class="none-underline" href="#" data-toggle="modal" data-target="#exampleModalCenter" data-content="${n.MEMO_CONTENTS}" data-memo="${n.MEMO_NO }" data-member="${memberLoggedIn.memberNo }"><div id="contentC">${n.MEMO_CONTENTS }</div></a></td>
 						<td id="${n.MEMO_NO }" class="td-primary"><fmt:formatDate value="${n.MEMO_DATE}" pattern="yyyy-MM-dd" /></td>
 						<td id="${n.MEMO_NO }" class="td-primary yn"><span>${n.MEMO_YN}</span></td>
 					</tr>
