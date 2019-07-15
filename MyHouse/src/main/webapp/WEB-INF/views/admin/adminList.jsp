@@ -5,7 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <!-- 검색창 -->
-<c:if test="${param.item eq 'member' || param.item eq 'realtor' || param.item eq 'report'}">
+<c:if test="${item eq 'member' || item eq 'realtor' || item eq 'report'}">
 <nav class="navbar navbar-light bg-light" id="search-nav">
   <form class="form-inline" style="margin: auto;">
     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -15,7 +15,7 @@
 </c:if>
 
 <!-- 일반회원 리스트 -->
-<c:if test="${param.item eq 'member'}">
+<c:if test="${item eq 'member'}">
 <table class="table">
   <thead class="thead-light">
     <tr>
@@ -46,7 +46,7 @@
 </c:if>
 
 <!-- 중개회원 리스트 -->
-<c:if test="${param.item eq 'realtor'}">
+<c:if test="${item eq 'realtor'}">
 <table class="table">
   <thead class="thead-light">
     <tr>
@@ -79,7 +79,7 @@
 </c:if>
 
 <!-- 신고목록 -->
-<c:if test="${param.item eq 'report'}">
+<c:if test="${item eq 'report'}">
 <table class="table">
   <thead class="thead-light">
     <tr>

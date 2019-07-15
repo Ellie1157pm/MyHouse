@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.myhouse.admin.model.service.AdminService;
 import com.kh.myhouse.common.util.Utils;
@@ -56,6 +57,7 @@ public class AdminController {
 		logger.info("list@adminListView={}", list);
 		
 		model.addAttribute("list", list);
+		model.addAttribute("item", item);
 		model.addAttribute("pageBar", Utils.getPageBar(totalContents, cPage, numPerPage, "/myhouse/admin/list?item="+item));
 		return "admin/adminInfo";
 	}
@@ -83,14 +85,23 @@ public class AdminController {
 		logger.info("list@showAdminBoard={}", list);
 		
 		request.setAttribute("list", list);
+		request.setAttribute("item", item);
 		request.setAttribute("pageBar", Utils.getPageBar(totalContents, cPage, numPerPage, "/myhouse/admin/board?item="+item));
 		
 		return "admin/adminBoard";
 	}
 	
+	@ResponseBody
 	@RequestMapping("/indexBoard")
-	public String showAdminIndexBoard() {
-		return "admin/adminIndexBoard";
+	public Object showAdminIndexBoard() {
+		Map<String, Object> map = new HashMap<>();
+		List<Map<String, String>> newsList = adminService.selectRecentNews();
+		List<Map<String, String>> noticeList = adminService.selectRecentNotice();
+		
+		map.put("newsList", newsList);
+		map.put("noticeList", noticeList);
+		
+		return map;
 	}
 	
 	@RequestMapping(value="/getRecipient", method=RequestMethod.GET)

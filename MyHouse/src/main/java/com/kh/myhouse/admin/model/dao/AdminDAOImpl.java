@@ -94,4 +94,14 @@ public class AdminDAOImpl implements AdminDAO {
 	public int reportTotalPage() {
 		return sqlSession.selectOne("admin.reportTotalPage");
 	}
+
+	@Override
+	public List<Map<String, String>> selectRecentNews() {
+		return sqlSession.selectList("admin.selectRecentNews");
+	}
+
+	@Override
+	public List<Map<String, String>> selectRecentNotice() {
+		return sqlSession.selectList("admin.selectRecentNotice");
+	}
 }
