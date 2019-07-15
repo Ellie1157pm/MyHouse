@@ -39,6 +39,11 @@
 
 </head>
 <body>
+	<form action="${pageContext.request.contextPath}/agent/agentMypage"
+		  method="post"
+		  id="agentMypageFrm">
+		  <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+	</form>
 	<div id="container">
 		<header>
 			<div id="header-container">
@@ -110,7 +115,7 @@
 					</c:if>
 					<c:if test="${memberLoggedIn != null }">
 						<c:if test="${memberLoggedIn.status eq 'B'.charAt(0)}">
-							<span><a href="${pageContext.request.contextPath }/agent/agentMypage">${memberLoggedIn.memberName }</a>님 환영합니다.</span>
+							<span><a onclick="agentLogin();" id="mName">${memberLoggedIn.memberName}</a>님 환영합니다.</span>
 						</c:if>
 						<c:if test="${memberLoggedIn.status eq 'U'.charAt(0)}">
 							<c:if test="${memberLoggedIn.memberNo ne 1}">

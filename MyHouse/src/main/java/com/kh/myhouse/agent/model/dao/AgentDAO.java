@@ -27,5 +27,13 @@ public interface AgentDAO {
 
 	int checkCompany(int memberNo);
 
+	int updateAgent(Map<String, Object> map);
+
+	int updateAgentProfileImg(Map<String, Object> map);
+
+	String selectProfileImg(int memberNo);
+
+	int agentDeleteImg(int memberNo);
+
 
 }
