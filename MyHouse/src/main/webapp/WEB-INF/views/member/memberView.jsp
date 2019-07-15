@@ -19,7 +19,7 @@ $(function() {
 		location.href="${pageContext.request.contextPath}/member/forSaleList";
 	});
 	$("#warning_memo").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/memoList";
+		location.href="${pageContext.request.contextPath}/member/warningMemo.do?memberNo="+${member.memberNo};
 	});
 	
 	/* updateMember submit */

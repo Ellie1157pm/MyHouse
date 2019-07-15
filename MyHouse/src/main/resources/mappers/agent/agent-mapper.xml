@@ -37,31 +37,6 @@
 	<select id="checkCompanyCount" resultType="_int">
 		select count(*) from company_info where company_reg_no = #{companyRegNo}
 	</select>
-	
-	<update id="updateAgent">
-		update member set member_pwd = #{newPwd} where member_no = #{memberNo}
-	</update>
-	
-	<update id="updateAgentProfileImg">
-		merge into profile_photo
-		using dual
-		on(member_no = #{memberNo})
-		when MATCHED then
-		    update set original_filename = #{originalFileName}, renamed_filename = #{renamedFileName}, upload_date = default
-		when not MATCHED then
-		    insert
-		    values(#{memberNo}, #{originalFileName}, #{renamedFileName}, default)
-	</update>
-	
-	<select id="selectProfileImg" resultType="string">
-		select renamed_filename from profile_photo
-		where member_no = #{memberNo}
-	</select>
-	
-	<delete id="agentDeleteImg">
-		delete from profile_photo where member_no = #{memberNo}
-	</delete>
-	
 	<resultMap type="map" id="estate"></resultMap>
 	<select id="estateList" resultType="map">
 		select e.estate_no, e.business_member_no, e.transaction_type, e.estate_price, e.estate_area, e.address, e.estate_content,
