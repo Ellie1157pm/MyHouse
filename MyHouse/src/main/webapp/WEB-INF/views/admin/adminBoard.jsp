@@ -127,12 +127,20 @@ $(function() {
 	  modal.find('.modal-body p').html(content)
 	});
 });
+
+function updateNotice() {
+	alert("Update!");
+}
+
+function deleteNotice() {
+	alert("Delete!");
+}
 </script>
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalCenterTitle"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -142,10 +150,10 @@ $(function() {
       </div>
       <div class="modal-footer">
         <c:if test="${item eq 'notice'}">
-	        <button type="button" class="btn btn-secondary">수정</button>
-	        <button type="button" class="btn btn-secondary">삭제</button>
+	        <button type="button" class="btn btn-secondary" onclick="updateNotice();">수정</button>
+	        <button type="button" class="btn btn-secondary" onclick="deleteNotice();">삭제</button>
         </c:if>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
       </div>
     </div>
   </div>

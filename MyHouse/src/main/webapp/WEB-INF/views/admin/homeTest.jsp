@@ -38,12 +38,49 @@
 </div>
 <!--end of search-container-div  -->
 <script>
-<% if(stop==null){%>
 $(document).ready(function() {
-	location.href = "${pageContext.request.contextPath}/admin/indexBoard";
+	//location.href = "${pageContext.request.contextPath}/admin/indexBoard";
 	$(this).stop();
+	$.ajax({
+		url:  "${pageContext.request.contextPath}/admin/indexBoard",
+		contentType: "application/json; charset=utf-8;",
+		success: function(data) {
+			for(var i = 0 ; i < data.newsList.length ; i++) {
+				var title = data.newsList[i].NEWS_TITLE;
+				var content = data.newsList[i].NEWS_CONTENT;
+				content += '</br></br><div style="text-align:center;">';
+				content += '<a class="none-underline" href="'+data.newsList[i].NEWS_LINK+'" target="_blank">';
+				content += '[원본 링크]</a>';
+				content += '</div>';
+				var news = "<div>";
+				news +=		"<a class='none-underline' href='#'";
+				news +=		   "data-toggle='modal' data-target='#exampleModalCenter'"; 
+				news +=		   "data-title='"+title+"'";
+				news +=		   "data-content='"+content+"'>";
+				news +=		   title.substring(0, 30)+"...</a>";
+				news += "</div>";
+				$("#m-news .item_box").append(news);
+			}
+			
+			var noticeList = data.noticeList;
+			for(var i=0 ; i < noticeList.length ; i++) {
+				var content = '';
+				var notice = "<div>";
+				notice += "<a class='none-underline' href='#'";
+				notice += "data-toggle='modal' data-target='#exampleModalCenter'";
+				notice += "data-title='"+noticeList[i].NOTICE_TITLE+"'";
+				notice += "data-content='"+noticeList[i].NOTICE_CONTENT+"'>"+noticeList[i].NOTICE_TITLE+"</a>";
+				notice += "</div>";
+				$("#m-notice .item_box").append(notice);
+			}
+		},
+		error: function(jqxhr, textStatus, errorThrown) {
+			console.log("ajax처리실패: "+jqxhr.status);
+			console.log("ajax textStatus: "+textStatus);
+			console.log("ajax errorThrown: "+errorThrown);
+		}
+	});	
 });
-<%}%>
 
 $(function() {
 	$('#exampleModalCenter').on('show.bs.modal', function (event) {
@@ -90,36 +127,17 @@ $(function() {
 		<div class="main-intro">
 	    <div class="wrap-840">
 	        <div class="m-tv">
-			<a href="/home/RegisterInfo" style="display:block" ><img style="display:block" src="//s.zigbang.com/v1/web/main/banner_agent_register.jpg" width="260" height="200" alt="중개사무소 가입 및 광고 방법 자세히 알아보기" /></a>
+			<a href="#" style="display:block" ><img style="display:block" src="//s.zigbang.com/v1/web/main/banner_agent_register.jpg" width="260" height="200" alt="중개사무소 가입 및 광고 방법 자세히 알아보기" /></a>
 	        </div>
 	        <div class="m-news" id="m-news">
 	            <h4>뉴스</h4>
-	            <div class="item_box">
-	            	<c:forEach items="${newsList}" var="news">
-						<div>
-						  <a class="none-underline" href="#"
-				    		   data-toggle="modal" data-target="#exampleModalCenter"
-				    		   data-title="${news.NEWS_TITLE}"
-				    		   data-content="${news.NEWS_CONTENT}&#60;/br&#62;&#60;/br&#62;&#60;div style='text-align:center;'&#62;&#60;a class='none-underline' href='${news.NEWS_LINK}' target='_blank'&#62;[원본 링크]&#60;/a&#62;&#60;/div&#62;">
-			    		   	${fn:substring(news.NEWS_TITLE, 0, 30)}...</a>
-						</div>
-	            	</c:forEach>
-	            </div>
+	            <div class="item_box"></div>
 	            <a href="${pageContext.request.contextPath}/admin/board" class="item_more" title="뉴스 더보기">더보기</a>
 	        </div>
 	
 	        <div class="m-notice" id="m-notice">
 	            <h4>공지사항</h4>
-	            <div class="item_box">
-	            	<c:forEach items="${noticeList}" var="notice">
-						<div>
-						  <a class="none-underline" href="#"
-				    		   data-toggle="modal" data-target="#exampleModalCenter"
-				    		   data-title="${notice.NOTICE_TITLE}"
-				    		   data-content="${notice.NOTICE_CONTENT}">${notice.NOTICE_TITLE}</a>
-						</div>
-	            	</c:forEach>
-	            </div>
+	            <div class="item_box"></div>
 	            <a href="${pageContext.request.contextPath}/admin/board?item=notice" class="item_more" title="공지사항 더보기">더보기</a>
 	        </div>
 	    </div>

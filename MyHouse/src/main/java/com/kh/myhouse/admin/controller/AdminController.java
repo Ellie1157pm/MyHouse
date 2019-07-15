@@ -91,16 +91,17 @@ public class AdminController {
 		return "admin/adminBoard";
 	}
 	
+	@ResponseBody
 	@RequestMapping("/indexBoard")
-	public String showAdminIndexBoard(Model model) {
-		ModelAndView mav = new ModelAndView();
+	public Object showAdminIndexBoard() {
+		Map<String, Object> map = new HashMap<>();
 		List<Map<String, String>> newsList = adminService.selectRecentNews();
 		List<Map<String, String>> noticeList = adminService.selectRecentNotice();
 		
-		model.addAttribute("newsList", newsList);
-		model.addAttribute("noticeList", noticeList);
+		map.put("newsList", newsList);
+		map.put("noticeList", noticeList);
 		
-		return "redirect:/";
+		return map;
 	}
 	
 	@RequestMapping(value="/getRecipient", method=RequestMethod.GET)
