@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.myhouse.admin.model.service.AdminService;
 import com.kh.myhouse.common.util.Utils;
@@ -102,6 +101,24 @@ public class AdminController {
 		map.put("noticeList", noticeList);
 		
 		return map;
+	}
+	
+	@RequestMapping("/noticeDelete")
+	public String noticeDelete(@RequestParam("noticeNo") int noticeNo, Model model) {
+		int result = adminService.deleteNotice(noticeNo);
+		
+		model.addAttribute("msg", result>0?"공지 삭제 성공!":"공지 삭제 실패!");
+		model.addAttribute("loc", "/admin/board?item=notice");
+		
+		return "common/msg";
+	}
+	
+	@RequestMapping("/noticeUpdate")
+	public String noticeUpdate(@RequestParam("noticeNo") int noticeNo, Model model) {
+		Map<String, Object> notice = adminService.selectOneNotice(noticeNo);
+		model.addAttribute("notice", notice);
+		
+		return "admin/noticeForm";
 	}
 	
 	@RequestMapping(value="/getRecipient", method=RequestMethod.GET)

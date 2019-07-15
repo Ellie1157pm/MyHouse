@@ -100,4 +100,15 @@
 		order by notice_no desc) a
 	where rownum <![CDATA[ <= ]]> 5
 	</select>
+	
+	<delete id="deleteNotice">
+	delete from notice
+	where notice_no = #{noticeNo}
+	</delete>
+	
+	<select id="selectOneNotice" resultType="map">
+	select *
+	from notice
+	where notice_no=#{noticeNo}
+	</select>
 </mapper>

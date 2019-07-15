@@ -163,4 +163,14 @@ public class AdminServiceImpl implements AdminService {
 	public List<Map<String, String>> selectRecentNotice() {
 		return adminDAO.selectRecentNotice();
 	}
+
+	@Override
+	public int deleteNotice(int noticeNo) {
+		return adminDAO.deleteNotice(noticeNo);
+	}
+	
+	@Override
+	public Map<String, Object> selectOneNotice(int noticeNo) {
+		return adminDAO.selectOneNotice(noticeNo);
+	}
 }

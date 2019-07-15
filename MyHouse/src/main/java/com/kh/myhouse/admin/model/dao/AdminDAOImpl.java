@@ -104,4 +104,14 @@ public class AdminDAOImpl implements AdminDAO {
 	public List<Map<String, String>> selectRecentNotice() {
 		return sqlSession.selectList("admin.selectRecentNotice");
 	}
+
+	@Override
+	public int deleteNotice(int noticeNo) {
+		return sqlSession.delete("admin.deleteNotice", noticeNo);
+	}
+	
+	@Override
+	public Map<String, Object> selectOneNotice(int noticeNo) {
+		return sqlSession.selectOne("admin.selectOneNotice", noticeNo);
+	}
 }

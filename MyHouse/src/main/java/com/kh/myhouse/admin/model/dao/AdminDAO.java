@@ -36,4 +36,8 @@ public interface AdminDAO {
 	List<Map<String, String>> selectRecentNews();
 	
 	List<Map<String, String>> selectRecentNotice();
+
+	int deleteNotice(int noticeNo);
+
+	Map<String, Object> selectOneNotice(int noticeNo);
 }

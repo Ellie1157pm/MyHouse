@@ -37,6 +37,15 @@ $(function() {
 			공지사항
 		</button>
 	</div>
+	<div class="btn-group btn-group-lg" role="group" aria-label="..." id="button-container"
+		 style="float: right;">
+		<button type="button" 
+			class="btn btn-secondary boardBtn"
+			id="noticeWriteBtn"
+			onclick="location.href='${pageContext.request.contextPath}/admin/noticeForm'">
+			공지 작성
+		</button>
+	</div>
 	<div id="list-container">
 	<!-- 뉴스 리스트 -->
 	<c:if test="${item eq 'news'}">
@@ -91,7 +100,8 @@ $(function() {
 			    	<td><a class="none-underline" href="#"
 			    		   data-toggle="modal" data-target="#exampleModalCenter"
 			    		   data-title="${notice.NOTICE_TITLE}"
-			    		   data-content="${notice.NOTICE_CONTENT}">${notice.NOTICE_TITLE}</a></td>
+			    		   data-content="${notice.NOTICE_CONTENT}"
+			    		   data-index='${notice.NOTICE_NO}'>${notice.NOTICE_TITLE}</a></td>
 			    	<td>${fn:substring(notice.WRITTEN_DATE, 0, 10)}</td>
 				</tr>
 			</c:forEach>
@@ -118,22 +128,27 @@ $(function() {
 	  var button = $(event.relatedTarget) // Button that triggered the modal
 	  var title = button.data('title') // Extract info from data-* attributes
 	  var content = button.data('content')
+	  var noticeNo = button.data('index')
 	  console.log("title="+title);
 	  console.log("content="+content);
+	  console.log("noticeNo="+noticeNo);
 	  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
 	  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 	  var modal = $(this)
 	  modal.find('.modal-title').text(title)
+	  modal.find('#noticeNo').val(noticeNo)
 	  modal.find('.modal-body p').html(content)
 	});
 });
 
 function updateNotice() {
-	alert("Update!");
+	location.href='${pageContext.request.contextPath}/admin/noticeUpdate?noticeNo='+$('#noticeNo').val();
 }
 
 function deleteNotice() {
-	alert("Delete!");
+	var bool = confirm('공지를 삭제하시겠습니까?')
+	if(bool)
+		location.href='${pageContext.request.contextPath}/admin/noticeDelete?noticeNo='+$('#noticeNo').val();
 }
 </script>
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -141,6 +156,7 @@ function deleteNotice() {
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalCenterTitle"></h5>
+        <input type="number" name="noticeNo" id="noticeNo" hidden="true"/>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
