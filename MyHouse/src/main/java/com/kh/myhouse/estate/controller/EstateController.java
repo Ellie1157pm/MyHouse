@@ -73,9 +73,12 @@ public class EstateController {
 		//매물 리스트 받아오기<빌라,원룸,오피스텔의 경우에는 default옵션이 있다. 이부분 확인할것.
 		//매매/월세/전세/전체/ 구조/보증금/주차옵션,기타옵션 등 괴애애앵장히 많다.
 		//List<>
+		
+		Map<String, String> map=new HashMap<>();
+		map.put("estateType",estateType);
+		map.put("localCode",localCode);
 
-
-		List<Estate> list =estateService.selectApartmentname(localCode);
+		List<Estate> list =estateService.selectApartmentname(map);
 		System.out.println("list@@@@===="+list);
 
 		//searchkeyword를 view단으로 보내 지도 api의 중심지를 searchKeyword로 잡도록 한다.
@@ -92,10 +95,10 @@ public class EstateController {
 		mav.addObject("range2","0");
 		mav.addObject("range3","0");
 		mav.addObject("range4","0");
+		mav.addObject("list", list);
 		
 		
 		if(estateType.equals("A")) {
-			mav.addObject("list", list);
 			mav.addObject("dealType","M");
 			mav.addObject("structure","all");
 			mav.addObject("localName",localName);
@@ -382,6 +385,8 @@ public class EstateController {
 		mav.addObject("range2","400");
 		mav.addObject("range3","0");
 		mav.addObject("range4","300");
+		
+		
 		if(estateType.equals("A")) {
 		mav.setViewName("search/apartResult");
 		}else {
@@ -475,6 +480,9 @@ public class EstateController {
 			@RequestParam int estateArea,
 			@RequestParam String estatecontent,
 			@RequestParam String[] etcoption,
+			@RequestParam int MemberNo,
+			@RequestParam int BusinessMemberNo,
+			@RequestParam String agentphone,
 			@RequestParam String SubwayStation,
 			@RequestParam String[] construction,
             @RequestParam String[] flooropt,
@@ -520,13 +528,18 @@ public class EstateController {
 
 		System.out.println("ss의 값은 ====="+estateprice);
 		System.out.println("transactiontype의 값은 ====="+transactiontype);
-
+     
+		if(!agentphone.equals("0")) {
+			phone = agentphone;
+		}
+		
+		
 		//매물 테이블에 insert 
-		Estate estate =new Estate(0, localCode, 0,
-				0, phone, "01012341234",
+	Estate estate =new Estate(0, localCode, MemberNo,
+			BusinessMemberNo, phone, agentphone,
 				address1, estateType, transactiontype, estateprice, 
 				ManageMenetFee, estateArea, SubwayStation, 
-				estatecontent, null, deposit);
+				estatecontent, null, deposit,address1);
 
 		String msg ="에러입니다.";
 		System.out.println("ESTATE E의 값은@@@@@@@"+estate);

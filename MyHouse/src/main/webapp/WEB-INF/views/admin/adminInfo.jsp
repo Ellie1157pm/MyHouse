@@ -48,6 +48,7 @@ $(function() {
 		</div>
 		<div id="list-container">
 			<jsp:include page="/WEB-INF/views/admin/adminList.jsp"/>
+			<jsp:include page="/WEB-INF/views/admin/adminStatistics.jsp"/>
 		</div>
 	</div>
 	<div class="pageBar-container">

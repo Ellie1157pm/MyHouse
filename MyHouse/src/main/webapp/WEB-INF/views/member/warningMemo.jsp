@@ -6,13 +6,24 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <!-- 사용자 작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/agent/agentMypage.css" />
-<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/memo/agentNote.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/memo/memberNote.css" />
 <script>
 //일반회원
 var memberNo = ${memberLoggedIn.memberNo};
 var cPage = ${cPage};
 $(function() {
-	
+	$("#update-member-btn").on("click", function(){
+		location.href="${pageContext.request.contextPath}/member/memberView.do?memberNo=${memberLoggedIn.memberNo}";	
+	});
+	$("#cart-list-btn").on("click", function(){
+		location.href="${pageContext.request.contextPath}/member/cartList";
+	});
+	$("#interest-list-btn").on("click", function(){
+		location.href="${pageContext.request.contextPath}/member/interestList.do?memberNo=${memberLoggedIn.memberNo}";
+	});
+	$("#for-sale-btn").on("click", function(){
+		location.href="${pageContext.request.contextPath}/member/forSaleList";
+	});
 	
 	$("#allcheck").click(function(){
 		console.log("allcheck");
@@ -114,10 +125,11 @@ function noteDel(){
 <div id="back-container">
 	<div id="info-container">
 		<div class="btn-group btn-group-lg" role="group" aria-label="..." id="button-container">
-			<button type="button" id="agentMypage-btn" class="btn btn-secondary" id="agent-set-btn">설정</button>
-			<button type="button" id="" class="btn btn-secondary" id="estateList">매물신청목록</button>
-			<button type="button" id="" class="btn btn-secondary" id="estateList-end">등록된매물</button>
-			<button type="button" id="" class="btn btn-secondary" id="warning_memo">쪽지함</button>
+			<button type="button" class="btn btn-secondary" id="update-member-btn">설정</button>
+			<button type="button" class="btn btn-secondary" id="cart-list-btn">찜한 매물</button>
+			<button type="button" class="btn btn-secondary" id="interest-list-btn">관심 매물</button>
+			<button type="button" class="btn btn-secondary" id="for-sale-btn">내놓은 매물</button>
+			<button type="button" class="btn btn-secondary" id="warning_memo">쪽지함</button>
 		</div>
 		<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
   Launch demo modal

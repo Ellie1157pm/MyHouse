@@ -24,9 +24,9 @@ public class EstateServiceImpl implements EstateService{
 
 
 	@Override
-	public List<Estate> selectApartmentname(String localCode) {
+	public List<Estate> selectApartmentname(Map<String, String> map) {
 
-		return estateDAO.selectApartmentname(localCode);
+		return estateDAO.selectApartmentname(map);
 	}
 
 

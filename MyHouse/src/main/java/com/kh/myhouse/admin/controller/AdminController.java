@@ -56,7 +56,6 @@ public class AdminController {
 		logger.info("list@adminListView={}", list);
 		
 		model.addAttribute("list", list);
-		model.addAttribute("item", item);
 		model.addAttribute("pageBar", Utils.getPageBar(totalContents, cPage, numPerPage, "/myhouse/admin/list?item="+item));
 		return "admin/adminInfo";
 	}
@@ -124,23 +123,14 @@ public class AdminController {
 		logger.info("list@showAdminBoard={}", list);
 		
 		request.setAttribute("list", list);
-		request.setAttribute("item", item);
 		request.setAttribute("pageBar", Utils.getPageBar(totalContents, cPage, numPerPage, "/myhouse/admin/board?item="+item));
 		
 		return "admin/adminBoard";
 	}
 	
-	@ResponseBody
 	@RequestMapping("/indexBoard")
-	public Object showAdminIndexBoard() {
-		Map<String, Object> map = new HashMap<>();
-		List<Map<String, String>> newsList = adminService.selectRecentNews();
-		List<Map<String, String>> noticeList = adminService.selectRecentNotice();
-		
-		map.put("newsList", newsList);
-		map.put("noticeList", noticeList);
-		
-		return map;
+	public String showAdminIndexBoard() {
+		return "admin/adminIndexBoard";
 	}
 	
 	@RequestMapping("/noticeDelete")

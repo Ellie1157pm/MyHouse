@@ -25,9 +25,9 @@ public class EstateDAOImpl implements EstateDAO{
 
 
 	@Override
-	public List<Estate> selectApartmentname(String localCode) {
+	public List<Estate> selectApartmentname(Map<String, String> map) {
 
-		return sqlSession.selectList("estate.selectApartmentname", localCode);
+		return sqlSession.selectList("estate.selectApartmentname", map);
 	}
 
 	@Override

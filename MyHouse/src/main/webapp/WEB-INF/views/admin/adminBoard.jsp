@@ -140,11 +140,9 @@ $(function() {
 	  modal.find('.modal-body p').html(content)
 	});
 });
-
 function updateNotice() {
 	location.href='${pageContext.request.contextPath}/admin/noticeUpdate?noticeNo='+$('#noticeNo').val();
 }
-
 function deleteNotice() {
 	var bool = confirm('공지를 삭제하시겠습니까?')
 	if(bool)
