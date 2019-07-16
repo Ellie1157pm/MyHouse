@@ -23,13 +23,18 @@ $(function() {
 		location.href="${pageContext.request.contextPath}/agent/estateList";
 	});
 	$("#agent-set-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/agent/agentMypage";
+		$("#agentMypageFrm").submit();
 	});
 	$("#warning_memo").on("click", function(){
 		location.href="${pageContext.request.contextPath}/agent/warningMemo";
 	});
 });
 </script>
+<form action="${pageContext.request.contextPath}/agent/agentMypage"
+	  method="post"
+	  id="agentMypageFrm">
+	  <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
 <div id="back-container">
 	<div id="info-container">
 		<div class="btn-group btn-group-lg" role="group" aria-label="..." id="button-container">

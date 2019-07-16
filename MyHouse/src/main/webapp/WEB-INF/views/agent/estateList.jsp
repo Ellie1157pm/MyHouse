@@ -19,6 +19,35 @@ function updateEstate(e){
 		return;
 	}
 }
+/*신청목록 클릭했을때 정보창*/
+function estateReqView(e){
+	var estateNo = $(e).children("button").attr("id");
+	var param = {
+			estateNo : $(e).children("button").attr("id")
+	}
+	$.ajax({
+		url : "${pageContext.request.contextPath}/agent/estateReqView",
+		data : param,
+		success : function(data){
+			$("h5.estate-info-title").text(data.estate.address);
+			console.log(data);
+			var html = "";
+			if(data.estateAttach != null){
+				$("div.carousel-item").remove();
+				for(var i=0; i<(data.estateAttach).length; i++){
+					if(i==0) html += '<div class="carousel-item active">';
+					else html += '<div class="carousel-item">';
+					html += '<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/'+data.estateAttach[i].renamedFileName+'" width="400px;" height="400px;" alt="매물사진">';
+					html += '</div>';
+				}
+			}
+			$("div.carousel-inner").append(html);
+		}, error : function(jqxhr, textStatus, errorThrown) {
+			console.log("ajax처리실패: "+ jqxhr.status);
+			console.log(errorThrown);
+		}
+	});
+}
 $(function() {
 	$("#estateList").css("opacity", 0.6);
 	
@@ -27,7 +56,7 @@ $(function() {
 	if("${searchKeyword}".length != 0) $("input#estateList-searchKeyword").val("${searchKeyword}");
 	
 	$("#agent-set-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/agent/agentMypage";
+		$("#agentMypageFrm").submit();
 	});
 	$("#estateList-end").on("click", function(){
 		$("#estateListEndFrm").submit();
@@ -43,6 +72,11 @@ $(function() {
 	});
 });
 </script>
+<form action="${pageContext.request.contextPath}/agent/agentMypage"
+	  method="post"
+	  id="agentMypageFrm">
+	  <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
 <form action="${pageContext.request.contextPath}/agent/estateListEnd"
 	  id="estateListEndFrm"
 	  method="post">
@@ -84,9 +118,9 @@ $(function() {
 			</div>
 			<div id="estateList">
 				<c:forEach var="e" items="${list}">
-					<div class="estateList-box">
+					<div class="estateList-box" data-toggle="modal" data-target="#estateReqModal" onclick="estateReqView(this);">
 						<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/${e.RENAMED_FILENAME}" alt="매물사진"/>
-						<button type="button" class="btn btn-info update-estate-btn" onclick="updateEstate(this);" id="${e.ESTATE_NO}">등록</button>
+						<button type="button" class="btn btn-success update-estate-btn" onclick="updateEstate(this);" id="${e.ESTATE_NO}">등록</button>
 						<p>
 							<c:choose>
 								<c:when test="${e.TRANSACTION_TYPE eq 'M'}">
@@ -109,5 +143,39 @@ $(function() {
 			</div>
 		</div>	
 	</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="estateReqModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document" style="max-width: 802px;">
+    <div class="modal-content" style="width: 802px;">
+      <div class="modal-header">
+        <h5 class="modal-title estate-info-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="estate-info-box">
+      <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style ="width:400px;">
+		 <div class="carousel-inner">
+		  
+		 </div>
+		 <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+		   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		   <span class="sr-only">Previous</span>
+		 </a>
+		 <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+		   <span class="carousel-control-next-icon" aria-hidden="true"></span>
+		   <span class="sr-only">Next</span>
+		 </a>
+	  </div>
+	  <div class ="estate-info">
+		  	
+	  </div>
+	  </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
