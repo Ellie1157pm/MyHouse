@@ -37,6 +37,7 @@
 
 </div>
 <div id="sidebar">
+<<<<<<< HEAD
 				
 </div>
 <div id="searchArea">
@@ -851,7 +852,6 @@ function searchAddress(obj) {
          $('#estateFrm').submit();
     }
 }
-
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
