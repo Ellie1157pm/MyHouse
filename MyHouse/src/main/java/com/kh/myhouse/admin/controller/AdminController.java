@@ -56,7 +56,48 @@ public class AdminController {
 		logger.info("list@adminListView={}", list);
 		
 		model.addAttribute("list", list);
+		model.addAttribute("item", item);
 		model.addAttribute("pageBar", Utils.getPageBar(totalContents, cPage, numPerPage, "/myhouse/admin/list?item="+item));
+		return "admin/adminInfo";
+	}
+	
+	@RequestMapping("/search")
+	public String searchList(@RequestParam String searchKeyword,
+							 @RequestParam(value="cPage", required=false, defaultValue="1") int cPage,
+							 @RequestParam(value="item", required=false, defaultValue="member") String item,
+							 Model model) {
+		List<Map<String, String>>  list = null;
+		
+		logger.info("SearchKeyword@searchList={}", searchKeyword);
+		logger.info("cPaged@searchList={}", cPage);
+		
+		// rowBounds를 이용한 페이징 처리
+		int numPerPage = 6;
+		int totalContents = 0;
+		RowBounds rb = new RowBounds(numPerPage*(cPage-1), numPerPage);
+		
+		if("member".equals(item)) {
+			list = adminService.selectMemberSearchList(searchKeyword, rb);
+			totalContents = adminService.memberSearchTotalpage(searchKeyword);
+		}
+		else if("realtor".equals(item)) {
+			list = adminService.selectRealtorSearchList(searchKeyword, rb);
+			totalContents = adminService.realtorSearchTotalpage(searchKeyword);
+		}
+		else if("report".equals(item)) {
+			list = adminService.selectReportSearchList(searchKeyword, rb);
+			totalContents = adminService.reportSearchTotalpage(searchKeyword);
+		}
+		
+		logger.info("list@searchList={}", list);
+		logger.info("totalContents@searchList={}", totalContents);
+		
+		String url = "/myhouse/admin/search?item="+item+"&searchKeyword="+searchKeyword;
+		model.addAttribute("cPage", cPage);
+		model.addAttribute("item", item);
+		model.addAttribute("list", list);
+		model.addAttribute("pageBar", Utils.getPageBar(totalContents, cPage, numPerPage, url));
+		
 		return "admin/adminInfo";
 	}
 	
@@ -83,14 +124,23 @@ public class AdminController {
 		logger.info("list@showAdminBoard={}", list);
 		
 		request.setAttribute("list", list);
+		request.setAttribute("item", item);
 		request.setAttribute("pageBar", Utils.getPageBar(totalContents, cPage, numPerPage, "/myhouse/admin/board?item="+item));
 		
 		return "admin/adminBoard";
 	}
 	
+	@ResponseBody
 	@RequestMapping("/indexBoard")
-	public String showAdminIndexBoard() {
-		return "admin/adminIndexBoard";
+	public Object showAdminIndexBoard() {
+		Map<String, Object> map = new HashMap<>();
+		List<Map<String, String>> newsList = adminService.selectRecentNews();
+		List<Map<String, String>> noticeList = adminService.selectRecentNotice();
+		
+		map.put("newsList", newsList);
+		map.put("noticeList", noticeList);
+		
+		return map;
 	}
 	
 	@RequestMapping("/noticeDelete")
@@ -111,6 +161,26 @@ public class AdminController {
 		return "admin/noticeForm";
 	}
 	
+	@RequestMapping("/noticeUpdateEnd")
+	@ResponseBody
+	public Object noticeUpdateEnd(@RequestBody Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<>();
+		logger.info("param@noticeUpdateEnd={}", param);
+		
+		int result = adminService.updateNotice(param);
+		
+		if(result>0) {
+			map.put("msg", "공지 수정 성공!");
+			map.put("result", result);
+		}
+		else {
+			map.put("msg", "공지 수정 실패!");
+			map.put("result", result);
+		}
+		
+		return map;
+	}
+	
 	@RequestMapping(value="/getRecipient", method=RequestMethod.GET)
 	@ResponseBody
 	public Map<String, String> getMsgRecipient(@RequestParam("recipient") String recipient) {
@@ -120,13 +190,15 @@ public class AdminController {
 		return map;
 	}
 	
-	@RequestMapping("/warn")
-	public Map<String, String> warnRealtor(@RequestParam String memberNo,
-											@RequestParam String memoContent) {
+	@RequestMapping(value="/reportUpdate", method=RequestMethod.POST)
+	@ResponseBody
+	public Object reportUpdate(@RequestBody Map<String, String> param) {
 		Map<String, String> map = new HashMap<>();
-
-		int result = adminService.insertWarn(memberNo, memoContent);
+		logger.info("param@reportUpdate={}", param);
+		
+		int result = adminService.updateReport(param);
 		String msg = result>0?"신고 처리 성공!":"신고 처리 실패!";
+		
 		map.put("msg", msg);
 
 		return map;
@@ -137,7 +209,7 @@ public class AdminController {
 		request.setCharacterEncoding("EUC-KR");
 		adminService.newsAllData("부동산");
 		
-		return "admin/board";
+		return "admin/adminBoard";
 	}
 	
 	@RequestMapping("/noticeForm")

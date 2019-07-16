@@ -20,7 +20,6 @@ public class Estate {
 	private String EstateContent;
 	private Date WrittenDate;
 	private int Deposit;
-	private String AddressDetail;
 	private List<EstateAttach> attachList;
 
 	public List<EstateAttach> getAttachList() {
@@ -38,7 +37,7 @@ public class Estate {
 
 	public Estate(int estateNo, String regionCode, int memberNo, int businessMemberNo, String phone, String businessPhone,
 			String address, char estateType, char transActionType, int estatePrice, int manageMenetFee, int estateArea,
-			String subwayStation, String estateContent, Date writtenDate, int deposit,String addressDetail) {
+			String subwayStation, String estateContent, Date writtenDate, int deposit) {
 		super();
 		EstateNo = estateNo;
 		RegionCode = regionCode;
@@ -56,7 +55,6 @@ public class Estate {
 		EstateContent = estateContent;
 		WrittenDate = writtenDate;
 		Deposit = deposit;
-		AddressDetail =addressDetail;
 	}
 	public int getEstateNo() {
 		return EstateNo;
@@ -154,12 +152,6 @@ public class Estate {
 	public void setDeposit(int deposit) {
 		Deposit = deposit;
 	}
-	public String getAddressDetail() {
-		return AddressDetail;
-	}
-	public void setAddressDetail(String addressDetail) {
-		AddressDetail = addressDetail;
-	}
 	@Override
 	public String toString() {
 		return "Estate [EstateNo=" + EstateNo + ", RegionCode=" + RegionCode + ", MemberNo=" + MemberNo
@@ -167,6 +159,6 @@ public class Estate {
 				+ ", Address=" + Address + ", EstateType=" + EstateType + ", TransActionType=" + TransActionType
 				+ ", EstatePrice=" + EstatePrice + ", ManageMenetFee=" + ManageMenetFee + ", EstateArea=" + EstateArea
 				+ ", SubwayStation=" + SubwayStation + ", EstateContent=" + EstateContent + ", WrittenDate="
-				+ WrittenDate + ", Deposit=" + Deposit +", AddressDetail= "+AddressDetail+", attachList=" + attachList + "]";
+				+ WrittenDate + ", Deposit=" + Deposit + ", attachList=" + attachList + "]";
 	}
 }

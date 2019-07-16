@@ -11,7 +11,7 @@ public interface EstateDAO {
 
 	String selectLocalCodeFromRegion(String localName);
 
-	List<Estate> selectApartmentname(Map<String, String> map);
+	List<Estate> selectApartmentname(String localCode);
 	
 	List<Map<String, String>> selectDetailEstate(int estateNo);
 

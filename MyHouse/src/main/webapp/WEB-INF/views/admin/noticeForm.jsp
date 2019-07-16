@@ -20,20 +20,17 @@ $(function(){
 		var content = $(this).val();
 		$("#txtLength").html(content.length+'자');
 	});
+	
+	console.log('notice is null? '+('${notice}' == ''));
+	console.log('notice = ${notice}');
 });
 
 function goBack() {
-	
-	if(${empty notice}) {
-		location.href='${pageContext.request.contextPath}/admin/list';
-	}
-	else {
-		location.href='${pageContext.request.contextPath}/admin/board?item=notice';
-	}
+	location.href='${pageContext.request.contextPath}/admin/board?item=notice';
 }
 
 $(document).ready(function(){
-	if(${not empty notice}) {
+	if('${notice}' != '') {
 		$('.noticeTitle').val('${notice.NOTICE_TITLE}');
 		$('.noticeContent').val('${notice.NOTICE_CONTENT}');
 		$("#txtLength").html('${notice.NOTICE_CONTENT}'.length+'자');
@@ -45,29 +42,55 @@ function noticeSubmit() {
 	if(bool) {
 		var title = $("input.noticeTitle").val();
 		var content = $("textarea.noticeContent").val(); 
-		
-		$.ajax({
-			url: "${pageContext.request.contextPath}/admin/noticeFormEnd",
-			type: "POST", 
-			data: JSON.stringify({noticeTitle : title,
-				   noticeContent : content}),
-			contentType: "application/json; charset=UTF-8",
-			success: function(data) {
-				alert(data.msg);
-				if(data.result == "1") {
-					location.href = '${pageContext.request.contextPath}/admin/board?item=notice';
+		if('${notice}' == '') {
+			$.ajax({
+				url: "${pageContext.request.contextPath}/admin/noticeFormEnd",
+				type: "POST", 
+				data: JSON.stringify({noticeTitle : title,
+					   noticeContent : content}),
+				contentType: "application/json; charset=UTF-8",
+				success: function(data) {
+					alert(data.msg);
+					if(data.result == "1") {
+						location.href = '${pageContext.request.contextPath}/admin/board?item=notice';
+					}
+					else {
+						$("#noticeForm")[0].reset();
+					}		
+				},
+				error: function(jqxhr, textStatus, errorThrown) {
+					console.log("ajax처리실패: "+jqxhr.status);
+					console.log(jqxhr);
+	    			console.log(textStatus);
+	    			console.log(errorThrown);
 				}
-				else {
-					$("#noticeForm")[0].reset();
-				}		
-			},
-			error: function(jqxhr, textStatus, errorThrown) {
-				console.log("ajax처리실패: "+jqxhr.status);
-				console.log(jqxhr);
-    			console.log(textStatus);
-    			console.log(errorThrown);
-			}
-		});
+			});
+		}
+		else {
+			$.ajax({
+				url: "${pageContext.request.contextPath}/admin/noticeUpdateEnd",
+				type: "POST", 
+				data: JSON.stringify({noticeTitle : title,
+					   				  noticeContent : content,
+					   				  noticeNo : '${notice.NOTICE_NO}'}),
+				contentType: "application/json; charset=UTF-8",
+				success: function(data) {
+					alert(data.msg);
+					if(data.result >0) {
+						location.href = '${pageContext.request.contextPath}/admin/board?item=notice';
+					}
+					else {
+						$("#noticeForm")[0].reset();
+					}		
+				},
+				error: function(jqxhr, textStatus, errorThrown) {
+					console.log("ajax처리실패: "+jqxhr.status);
+					console.log(jqxhr);
+	    			console.log(textStatus);
+	    			console.log(errorThrown);
+				}
+			});
+		}
 	}
 }
 

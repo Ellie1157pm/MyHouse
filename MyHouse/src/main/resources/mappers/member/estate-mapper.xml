@@ -8,7 +8,7 @@
 	</select>
 	
 	<select id="selectApartmentname" resultType="string"> select address from
-		estate where region_code= #{localCode} and estate_type=#{estateType}
+		estate where region_code= #{localCode}
 	</select>
 
 	<select id="selectDetailEstate" resultMap="estateAttchmentMap">
@@ -17,9 +17,7 @@
 	</select>
 	
 	<select id="showRecommendEstate" resultMap="estateAttchmentMap">
-		 select *  from estate e join power_link pl using(estate_no) join 
-         (select e.*from( select * from  estate_photo)e where rowid in(select max(rowid) from  estate_photo group by estate_no))using(estate_no)
-         where address=#{address} order by start_date desc
+		select * from estate e join power_link pl using(estate_no) join estate_photo p using(estate_no) where address=#{addressName} order by start_date
 	</select>
 	<resultMap type="estate" id="estateAttchmentMap">
 		<id column="ESTATE_NO" property="EstateNo"/>
@@ -37,7 +35,6 @@
 		<result column="SUBWAY_STATION" property="SubwayStation"/>
 		<result column="ESTATE_CONTENT" property="EstateContent"/>
 		<result column="WRITTEN_DATE" property="WrittenDate"/>
-		<result column="ADDRESS_DETAIL" property="AddressDetail"/>
 		<result column="DEPOSIT" property="Deposit"/>
 		
 		<!-- collection: 1:n 관계e를 표현 -->
@@ -82,10 +79,10 @@
 		insert into estate
 		(estate_no,region_code,member_no,business_member_no,phone,business_phone,
 		address,estate_type,transaction_type,estate_price,management_fee,estate_area,subway_station,
-		estate_content,written_date,deposit,address_detail)
+		estate_content,written_date,deposit)
 		values(seq_estate_no.nextval,#{RegionCode},#{MemberNo},#{BusinessMemberNo},#{Phone},#{BusinessPhone},#{Address},
 		#{EstateType},#{TransActionType},#{EstatePrice},#{ManageMenetFee},#{EstateArea},#{SubwayStation},#{EstateContent},
-		sysdate,#{Deposit},#{AddressDetail})
+		sysdate,#{Deposit})
 	</insert>
 	<insert id="insertattach">
 		insert into

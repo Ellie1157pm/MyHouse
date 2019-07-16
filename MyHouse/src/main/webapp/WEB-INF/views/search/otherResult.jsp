@@ -61,8 +61,8 @@
 </div>
 <div id="searchArea">
 	<div id="search1">
-		<input type="search" name="searchKeyword" id="searchBar" />
-		<button id="searchBarBtn" ><img src="${pageContext.request.contextPath }/resources/images/search/searchbutton.png" alt="" /></button>
+		<input type="search" name="searchKeyword" id="#searhBar" />
+		<button ><img src="${pageContext.request.contextPath }/resources/images/search/searchbutton.png" alt="" /></button>
 	</div>
 	<hr />
 	<div id="search2">
@@ -188,13 +188,6 @@ $(function(){
 		//전세금 최대 10억
 		deposit();
 	}
-	
-	//필터 검색창 검색 시 
-	$('#searchBarBtn').click(function(){
-		var keyword=$('#searchBar').val();
-		searchAddress(keyword);
-	});
-	
 });
 //옵션 체크시에 실행
 function checkOption(obj){
@@ -722,39 +715,6 @@ function filterReset(){
 	//거래 유형(매매,면적 전체,매매가 전체)
 	location.href="${pageContext.request.contextPath}/estate/filterReset?localName="+$('#localName').val()+"&estateType=${estateType}";
 }
-function searchAddress(obj) {
-	console.log('주소찾기');
-	var keyword = obj;
-	console.log('입력값=' + keyword);
-	//키워드로 검색해본다.
-	 ps.keywordSearch(keyword, placesSearchCB);
-	console.log('검색 후 여부 : '+flag);
-	//만약, 키워드로 검색이 되지 않는다면 주소로 검색해본다.
-	if($('#address').val() == null || $('#address').val() == ''){
-		geocoder.addressSearch(keyword, function(result, status) {
-		    // 정상적으로 검색이 완료됐으면 
-		     if (status === kakao.maps.services.Status.OK) {
-		        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-				console.log('좌표검색 : '+coords);
-				$('#localName').val(coords);
-				searchDetailAddrFromCoords(coords,function(data){
-					console.log(data);
-					if (status === kakao.maps.services.Status.OK) {
-						
-						$('#address').val(result[0].address.address_name.substring(0, 8));
-		        		$('#localName').val(coords);
-			        console.log($('#localName').val());
-			        $('#estateFrm').submit();
-					}
-				});
-		    }
-		});    
-	}else {
-		$('#address').val(keyword.substring(0, 7));
-		 $('#estateFrm').submit();
-	}
-}
-
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
