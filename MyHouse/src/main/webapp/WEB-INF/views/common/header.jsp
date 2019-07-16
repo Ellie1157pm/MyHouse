@@ -34,7 +34,7 @@
 	href="${pageContext.request.contextPath }/resources/css/index.css" />
 <!--다음 지도 api : 예림 api key -->
 <script
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d4275a07a4af1fbc6337cd3fd731620b&libraries=services,clusterer"></script>
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=52628547fe813f9f2accb85c95efcde3&libraries=services,clusterer"></script>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/css/member.css" />
 
