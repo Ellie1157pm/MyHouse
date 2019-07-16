@@ -3,12 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
-
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="" name="pageTitle" />
 </jsp:include>
-
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
  function validate(){
@@ -99,19 +96,16 @@ $(document).ready(function() {
 }); 
 //2019년07월09일(화) 수정한 부분
 </script>
-
-<c:if test="${memberLoggedIn !=null }">
-
 <form action="${pageContext.request.contextPath}/estate/EnrollTestEnd.do" method="post" onsubmit="return validate();"
 enctype="multipart/form-data">
 	<table>
 		<tr style="display:none;">
 			<th>일반회원번호</th>
-			<td><input type="text" name="MemberNo" id="MemberNo" value="${memberLoggedIn.status eq'U'.charAt(0)?memberLoggedIn.memberNo:memberLoggedIn.memberNo}" /></td>
+			<td><input type="text" name="MemberNo" id="MemberNo" /></td>
 		</tr>
 		<tr style="display:none;">
 			<th>중개인회원번호</th>
-		<td><input type="text" name="BusinessMemberNo" id="BusinessMemberNo" value="${memberLoggedIn.status eq'B'.charAt(0)?memberLoggedIn.memberNo:'0'}" /></td>
+		<td><input type="text" name="BusinessMemberNo" id="BusinessMemberNo" /></td>
 		</tr>
 
 		<tr>
@@ -127,7 +121,7 @@ enctype="multipart/form-data">
 		</tr>
 		<tr>
 			<th>상세정보</th>
-			<td><input type="text" name="address2" id="address2" class="addr" required
+			<td><input type="text" name="address2" id="address2" class="addr" required pattern="^[1-9][0-9][0-9][동][1-2][1-9][층][1-4][호]"
 			    placeholder="124동15층4호 공백없이 이력하세요"></td>
 		</tr>
 		
@@ -136,13 +130,6 @@ enctype="multipart/form-data">
            <td><input type="text"name="phone1" pattern="01(0|1)" required> -
                <input type="text" name="phone2" pattern="\d{4}" required> -
                <input type="text" name="phone3"  pattern="\d{4}"required>
-           </td>
-          </tr>
-          	 <tr style="display:none;">
-          <th>중개인핸드폰 번호</th>
-           <td>
-           <input type="text"name="agentphone" value="${memberLoggedIn.status eq'B'.charAt(0)?memberLoggedIn.phone:'0'}"> 
-               
            </td>
           </tr>
 		<tr>
@@ -297,16 +284,6 @@ enctype="multipart/form-data">
 	<input type="submit" value="등록신청" />
 </form>
     <input type="button" value="취소" onclick="location.href='${pageContext.request.contextPath}'" />
-
-
-</c:if>
-
-
-<br />
-
-
-
-
 
 
 
