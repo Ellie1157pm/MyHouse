@@ -23,9 +23,22 @@ $(function(){
 });
 
 function goBack() {
-	location.href='${pageContext.request.contextPath}/admin/listView?item=member';
+	
+	if(${empty notice}) {
+		location.href='${pageContext.request.contextPath}/admin/list';
+	}
+	else {
+		location.href='${pageContext.request.contextPath}/admin/board?item=notice';
+	}
 }
 
+$(document).ready(function(){
+	if(${not empty notice}) {
+		$('.noticeTitle').val('${notice.NOTICE_TITLE}');
+		$('.noticeContent').val('${notice.NOTICE_CONTENT}');
+		$("#txtLength").html('${notice.NOTICE_CONTENT}'.length+'자');
+	}
+});
 function noticeSubmit() {
 	var bool = validate();
 	console.log('bool='+bool);
@@ -42,7 +55,7 @@ function noticeSubmit() {
 			success: function(data) {
 				alert(data.msg);
 				if(data.result == "1") {
-					location.href = '${pageContext.request.contextPath}/admin/board?item=news';
+					location.href = '${pageContext.request.contextPath}/admin/board?item=notice';
 				}
 				else {
 					$("#noticeForm")[0].reset();
