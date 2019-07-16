@@ -6,23 +6,25 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <!-- 사용자 작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/agent/agentMypage.css" />
-<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/note.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/memo/memberNote.css" />
 <script>
+//일반회원
 var memberNo = ${memberLoggedIn.memberNo};
 var cPage = ${cPage};
 $(function() {
 	$("#update-member-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/memberView.do?memberEmail=${member.memberEmail}";	
+		location.href="${pageContext.request.contextPath}/member/memberView.do?memberNo=${memberLoggedIn.memberNo}";	
 	});
 	$("#cart-list-btn").on("click", function(){
 		location.href="${pageContext.request.contextPath}/member/cartList";
 	});
 	$("#interest-list-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/interestList.do?memberNo=${member.memberNo}";
+		location.href="${pageContext.request.contextPath}/member/interestList.do?memberNo=${memberLoggedIn.memberNo}";
 	});
 	$("#for-sale-btn").on("click", function(){
 		location.href="${pageContext.request.contextPath}/member/forSaleList";
 	});
+	
 	$("#allcheck").click(function(){
 		console.log("allcheck");
 		if($("input#allcheck").is(":checked")){

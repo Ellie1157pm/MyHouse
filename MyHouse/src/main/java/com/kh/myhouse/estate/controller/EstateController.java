@@ -41,7 +41,6 @@ public class EstateController {
 	@Autowired
 	EstateService estateService;
 	
-	test
 	
 
 	//인덱스 화면에서 검색했을때 오는 controller

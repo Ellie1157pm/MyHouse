@@ -51,11 +51,6 @@ td.yn{
 }
 
 
-/*tr hover*/
-tr.note-select:hover{
-	background-color: #28a7457a !important;
-}
-
 /*쪽지모달*/
 div.modal-content{
 	weight: 300px;
