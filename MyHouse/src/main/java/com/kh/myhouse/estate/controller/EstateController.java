@@ -480,6 +480,9 @@ public class EstateController {
 			@RequestParam int estateArea,
 			@RequestParam String estatecontent,
 			@RequestParam String[] etcoption,
+			@RequestParam int MemberNo,
+			@RequestParam int BusinessMemberNo,
+			@RequestParam String agentphone,
 			@RequestParam String SubwayStation,
 			@RequestParam String[] construction,
             @RequestParam String[] flooropt,
@@ -525,13 +528,18 @@ public class EstateController {
 
 		System.out.println("ss의 값은 ====="+estateprice);
 		System.out.println("transactiontype의 값은 ====="+transactiontype);
-
+     
+		if(!agentphone.equals("0")) {
+			phone = agentphone;
+		}
+		
+		
 		//매물 테이블에 insert 
-		Estate estate =new Estate(0, localCode, 0,
-				0, phone, "01012341234",
+	Estate estate =new Estate(0, localCode, MemberNo,
+			BusinessMemberNo, phone, agentphone,
 				address1, estateType, transactiontype, estateprice, 
 				ManageMenetFee, estateArea, SubwayStation, 
-				estatecontent, null, deposit);
+				estatecontent, null, deposit,address1);
 
 		String msg ="에러입니다.";
 		System.out.println("ESTATE E의 값은@@@@@@@"+estate);
