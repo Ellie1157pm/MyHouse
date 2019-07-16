@@ -37,7 +37,7 @@
 	<!--end of search-input  -->
 </div>
 <!--end of search-container-div  -->
-	<div id="notice-div"></div>
+<jsp:include page="/WEB-INF/views/admin/adminIndexBoard.jsp" />
 </div>
 
 <form action="${pageContext.request.contextPath }/estate/searchKeyword"
