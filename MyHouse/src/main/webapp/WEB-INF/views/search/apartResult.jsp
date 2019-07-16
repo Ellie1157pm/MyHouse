@@ -836,7 +836,7 @@ function searchAddress(obj) {
                 console.log('좌표검색 : '+coords);
                 $('#localName').val(coords);
                 searchDetailAddrFromCoords(coords,function(data){
-                    console.log(data);
+                    console.log(data); 
                     if (status === kakao.maps.services.Status.OK) {
                         alert(result[0].address.address_name)
                         $('#address').val(result[0].address.address_name.substring(0, 8));
