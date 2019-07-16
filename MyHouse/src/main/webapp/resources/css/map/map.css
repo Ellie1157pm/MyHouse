@@ -23,37 +23,52 @@ div#map {
 */
 
 div#sidebar {
-	width: 430px;
+	width: 383px;
 	height: 700px;
 	position: absolute;
-	right: -1px;
+	right: -2px;
 	top: 111px;
 	margin: 0px;
 	padding: 0px;
 	z-index: 100;
 	background-color: white;
 	overflow: scroll;
+	overflow-x:hidden; 
 }
 
 /*마크 클릭시 매물 목록 보여주는 css  */
 div#estateBar{
-	width: 430px;	
+	position: sticky;
+	top:0px;
+	width: 366px;
+    height: 70px;
 	margin: 0px;
 	padding: 0px;
+	z-index: 15px;
+	background-color: white;
 }
 
 div#estateBar p{	
-	padding: 10px 0px 0px 35px;
+	position: relative;
+    top: 15px;
+    left: 10px;
 	font-size: 120%;
 	font-weight: bold;
+	display: inline-block;
 }
 
-div#sidebar .estateBar2{
+div#estateBar .change{
+	position: relative;
+    bottom: 68px;
+    left: 300px;
+}
+
+div#sidebar .estateList{
 	padding:10px 0px 0px 10px;
 }
 
 div#estate{
-	width: 430px;
+	width: 366px;
 	height:132px;
 	margin: 0px;
 	padding: 10px;
@@ -74,30 +89,49 @@ div#estate .apart{
 }
 
 div#sidebar #imgBox {
-	width: 413px;
-	height: 230px;
+	width: 383px;
+	height: 287px;
 	padding: 0px;
 	border: 0px;
 }
 
 div#sidebar #imgBox img {
-	width: 413px;
-	height: 230px;
-	padding: 0px;
-	border: 0px;
+	position: relative;
+    top: 0px;
+    width: 366px;
+    height: 287px;
+    padding: 0px;
+    border: 0px;
 }
 
-div#sidebar #floating button {
-	width: 413px;
-	height: 50px;
+div#sidebar #floating{
+	position: sticky;
+	top:0px;
+	width: 366px;
+	height: 55px;
 	padding: 0px;
 	border: 0px;
-	color: white;
+	background-color:white;
+	color: black;
 	font-size: 20px;
+	border-bottom: 1px solid;
+	z-index: 15;
+}
+
+div#sidebar #floating span{
+	position: relative;
+	font-weight: bold;
+	top:6px;
+}
+div#sidebar #floating .change{
+	position: relative;
+    top: 5px;
+    left: 90px;
+	
 }
 
 div#sidebar #houseDetail {
-	width: 413px;
+	width: 366px;
 	height: 200px;
 	padding: 0px;
 	margin-top: 10px;
@@ -129,7 +163,7 @@ div#sidebar #houseDetail .character {
 }
 
 div#sidebar #location {
-	width: 413px;
+	width: 366px;
 	font-size: 115%;
 	font-weight: bold;
 }
@@ -146,7 +180,7 @@ div#sidebar #location .addressName {
 }
 
 div#sidebar #roadview {
-	width: 413px;
+	width: 366px;
 	height: 300px;
 	top: 10px;
 }

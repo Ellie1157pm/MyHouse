@@ -17,7 +17,9 @@
 	</select>
 	
 	<select id="showRecommendEstate" resultMap="estateAttchmentMap">
-		select * from estate e join power_link pl using(estate_no) join estate_photo p using(estate_no) where address=#{addressName} order by start_date
+		 select *  from estate e join power_link pl using(estate_no) join 
+         (select e.*from( select * from  estate_photo)e where rowid in(select max(rowid) from  estate_photo group by estate_no))using(estate_no)
+         where address=#{address} order by start_date desc
 	</select>
 	<resultMap type="estate" id="estateAttchmentMap">
 		<id column="ESTATE_NO" property="EstateNo"/>
@@ -35,6 +37,7 @@
 		<result column="SUBWAY_STATION" property="SubwayStation"/>
 		<result column="ESTATE_CONTENT" property="EstateContent"/>
 		<result column="WRITTEN_DATE" property="WrittenDate"/>
+		<result column="ADDRESS_DETAIL" property="AddressDetail"/>
 		<result column="DEPOSIT" property="Deposit"/>
 		
 		<!-- collection: 1:n 관계e를 표현 -->

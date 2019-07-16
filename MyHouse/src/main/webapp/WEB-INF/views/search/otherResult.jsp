@@ -61,8 +61,8 @@
 </div>
 <div id="searchArea">
 	<div id="search1">
-		<input type="search" name="searchKeyword" id="searhBar" />
-		<button id="searhBarBtn" ><img src="${pageContext.request.contextPath }/resources/images/search/searchbutton.png" alt="" /></button>
+		<input type="search" name="searchKeyword" id="searchBar" />
+		<button id="searchBarBtn" ><img src="${pageContext.request.contextPath }/resources/images/search/searchbutton.png" alt="" /></button>
 	</div>
 	<hr />
 	<div id="search2">
@@ -197,8 +197,8 @@ $(function(){
 	}
 	
 	//필터 검색창 검색 시 
-	$('#searhBarBtn').click(function(){
-		var keyword=$('#searhBar').val();
+	$('#searchBarBtn').click(function(){
+		var keyword=$('#searchBar').val();
 		searchAddress(keyword);
 	});
 	
