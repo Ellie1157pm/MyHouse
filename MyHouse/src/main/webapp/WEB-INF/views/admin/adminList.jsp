@@ -4,12 +4,65 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
+<script>
+$(function() {
+	$('#searchKeyword').focus();
+	if('${param.searchKeyword}' != ''){
+		$('#searchKeyword').val('${param.searchKeyword}');
+	}
+	
+	$('#searchBtn').click(function() {
+		search();
+	});
+	
+	$('#reportModal').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget) // Button that triggered the modal
+		  var receiver = button.data('reciever') // Extract info from data-* attributes
+		  var other = button.data('other')
+		  console.log("recipient="+receiver)
+		  console.log("other="+other)
+		  var modal = $(this)
+		  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+		  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+		  $.ajax({
+			url: "${pageContext.request.contextPath}/admin/getRecipient",
+			type: "GET", 
+			data: {recipient: receiver},
+			contentType: "application/json; charset=UTF-8",
+			success: function(data) {
+				recipient = data.email;
+				modal.find('.modal-title').text('New message to ' + recipient);
+			    modal.find('.modal-body #memberNo1').val(receiver);
+			    modal.find('.modal-body #memberNo2').val(other);
+				modal.find('.modal-body #recipient-name').val(recipient);
+			},
+			error: function(jqxhr, textStatus, errorThrown) {
+				console.log("ajax처리실패: "+jqxhr.status);
+				console.log(jqxhr);
+				console.log(textStatus);
+				console.log(errorThrown);
+			}
+		  });
+	});
+});
+
+function search() {
+	if($('#searchKeyword').val() == '') {
+		alert('검색어를 입력하지 않으면 전체를 출력합니다.');
+		location.href = '${pageContext.request.contextPath}/admin/list?item=${item}';
+	}
+	else {
+		location.href = '${pageContext.request.contextPath}/admin/search?item=${item}&searchKeyword='+$('#searchKeyword').val();
+	}
+}
+</script>
 <!-- 검색창 -->
 <c:if test="${item eq 'member' || item eq 'realtor' || item eq 'report'}">
 <nav class="navbar navbar-light bg-light" id="search-nav">
-  <form class="form-inline" style="margin: auto;">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
+  <form class="form-inline" style="margin: auto;" onsubmit="return false;">
+    <input class="form-control mr-sm-2" type="text" placeholder="Search" id="searchKeyword" name="searchKeyword" aria-label="Search"
+    	   onkeypress="if(window.event.keyCode == 13) { search() }">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="searchBtn">검색</button>
   </form>
 </nav>
 </c:if>
@@ -100,17 +153,19 @@
 	      <td>
 	      	<fmt:formatDate value="${report.REPORT_DATE}" pattern="yyyy-MM-dd"/>
 	      </td>
-	      <td>
+	      <td style="padding: 8px 0 7px 0;">
 	      	<!-- 중개회원에게 경고를 주고 경고 쪽지 보냄. -->
 	      	<button type="button" class="btn btn-outline-secondary btn-sm" id="warn"
-	      			style="margin-top: -5px;"
-	      			data-toggle="modal" data-target="#reportModal" data-whatever="${report.ESTATE_NO}">
+	      			data-toggle="modal" data-target="#reportModal" 
+	      			data-reciever="${report.ESTATE_NO}" data-other="${report.MEMBER_NO}"
+	      			style="${report.WARN_FLAG eq 'W' ? 'background-color: gray; color: white;':''}">
 	      		경고
 	      	</button>	
 	      	<!-- 일반회원에게 경고 기각 사유 쪽지 보냄. -->
 	      	<button type="button" class="btn btn-outline-secondary btn-sm" id="warn"
-	      			style="margin-top: -5px;"
-	      			data-toggle="modal" data-target="#reportModal" data-whatever="${report.MEMBER_NO}">
+	      			data-toggle="modal" data-target="#reportModal" 
+	      			data-reciever="${report.MEMBER_NO}" data-other="${report.ESTATE_NO}"
+	      			style="${report.WARN_FLAG eq 'R' ? 'background-color: gray; color: white;':''}">
 	      		기각
 	      	</button>
 	      </td>
@@ -125,21 +180,3 @@
   </tbody>
 </table>
 </c:if>
-
-<!-- <nav aria-label="Page navigation example" id="pageBar">
-  <ul class="pagination">
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  </ul>
-</nav> -->

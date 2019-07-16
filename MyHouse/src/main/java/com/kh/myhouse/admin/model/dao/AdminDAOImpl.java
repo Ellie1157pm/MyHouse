@@ -114,4 +114,74 @@ public class AdminDAOImpl implements AdminDAO {
 	public Map<String, Object> selectOneNotice(int noticeNo) {
 		return sqlSession.selectOne("admin.selectOneNotice", noticeNo);
 	}
+	
+	@Override
+	public int updateNotice(Map<String, Object> param) {
+		return sqlSession.update("admin.updateNotice", param);
+	}
+	
+	@Override
+	public List<Map<String, String>> selectMemberSearchList(String searchKeyword, RowBounds rb) {
+		return sqlSession.selectList("admin.selectMemberSearchList", searchKeyword, rb);
+	}
+	
+	@Override
+	public int memberSearchTotalpage(String searchKeyword) {
+		return sqlSession.selectOne("admin.memberSearchTotalpage", searchKeyword);
+	}
+
+	@Override
+	public List<Map<String, String>> selectRealtorSearchList(String searchKeyword, RowBounds rb) {
+		return sqlSession.selectList("admin.selectRealtorSearchList", searchKeyword, rb);
+	}
+
+	@Override
+	public int realtorSearchTotalpage(String searchKeyword) {
+		return sqlSession.selectOne("admin.realtorSearchTotalpage", searchKeyword);
+	}
+
+	@Override
+	public List<Map<String, String>> selectReportSearchList(String searchKeyword, RowBounds rb) {
+		return sqlSession.selectList("admin.selectReportSearchList", searchKeyword, rb);
+	}
+
+	@Override
+	public int reportSearchTotalpage(String searchKeyword) {
+		return sqlSession.selectOne("admin.reportSearchTotalpage", searchKeyword);
+	}
+
+	@Override
+	public Map<String, String> selectOneWarn(int memberNo) {
+		return sqlSession.selectOne("admin.selectOneWarn", memberNo);
+	}
+	
+	@Override
+	public String getMemberStatus(int memberNo) {
+		return sqlSession.selectOne("admin.getMemberStatus", memberNo);
+	}
+	
+	@Override
+	public int updateMemberQuit(int memberNo) {
+		return sqlSession.update("admin.updateMemberQuit", memberNo);
+	}
+	
+	@Override
+	public int updateWarn(Map<String, Object> updateWarnParam) {
+		return sqlSession.update("admin.updateWarn", updateWarnParam);
+	}
+	
+	@Override
+	public int insertWarn(Map<String, Object> updateWarnParam) {
+		return sqlSession.insert("admin.insertWarn", updateWarnParam);
+	}
+	
+	@Override
+	public int updateReport(Map<String, String> param) {
+		return sqlSession.update("admin.updateReport", param);
+	}
+	
+	@Override
+	public int insertReportMemo(Map<String, String> param) {
+		return sqlSession.insert("admin.insertReportMemo", param);
+	}
 }
