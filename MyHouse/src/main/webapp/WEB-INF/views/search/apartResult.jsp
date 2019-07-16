@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="com.kh.myhouse.estate.model.vo.Estate"%>
@@ -851,7 +852,5 @@ function searchAddress(obj) {
         $('#address').val(keyword.substring(0, 7));
          $('#estateFrm').submit();
     }
-}
-</script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
