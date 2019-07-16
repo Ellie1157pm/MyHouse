@@ -8,7 +8,7 @@
 	</select>
 	
 	<select id="selectApartmentname" resultType="string"> select address from
-		estate where region_code= #{localCode}
+		estate where region_code= #{localCode} and estate_type=#{estateType}
 	</select>
 
 	<select id="selectDetailEstate" resultMap="estateAttchmentMap">

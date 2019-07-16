@@ -61,8 +61,8 @@
 </div>
 <div id="searchArea">
 	<div id="search1">
-		<input type="search" name="searchKeyword" id="#searhBar" />
-		<button ><img src="${pageContext.request.contextPath }/resources/images/search/searchbutton.png" alt="" /></button>
+		<input type="search" name="searchKeyword" id="searhBar" />
+		<button id="searhBarBtn" ><img src="${pageContext.request.contextPath }/resources/images/search/searchbutton.png" alt="" /></button>
 	</div>
 	<hr />
 	<div id="search2">
@@ -73,7 +73,7 @@
 		</select>
 		<div id="filter" onclick="viewFilter();">
 		<input type="button" readonly value="검색 조건을 설정해주세요" />
-		<img src="${pageContext.request.contextPath }/resources/images/search/filter.svg" alt="" />
+		<img src="${pageContext.request.contextPath }/resources/images/search/filter.png" alt="" />
 		</div>
 	</div>
 	<hr />
@@ -114,6 +114,7 @@
 			<div id="slider-range">
 			  <input type="text" class="js-range-slider" name="my_range" value="" />
 			</div>
+			<hr />
 		</c:if>
 		<c:if test="${dealType eq 'J' }">
 			<p class="filterSubTitle" style="margin:0;">전세</p>
@@ -122,6 +123,7 @@
 			<div id="slider-range">
 			  <input type="text" class="js-range-slider2" name="my_range" value="" />
 			</div>
+			<hr />
 		</c:if>
 		<c:if test="${dealType eq 'O' }">
 			<p class="filterSubTitle" style="margin:0;">보증금</p>
@@ -130,13 +132,18 @@
 			<div id="slider-range">
 			  <input type="text" class="js-range-slider2" name="my_range" value="" />
 			</div>
+			<hr />
 			<!--월세  -->
 			<p class="filterSubTitle" style="margin:0;">월세</p>
 			<p class="filterTitle button range3" style="margin-bottom:4px;">전체</p>
 			<div id="slider-range">
 			  <input type="text" class="js-range-slider3" name="my_range" value="" />
 			</div>
+			
+			<hr />
 		</c:if>
+		<hr />
+		<hr />
 			<p class="filterSubTitle" style="margin:0;">옵션</p>
 			<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= option.contains("엘레베이터")?"checked":"" %><%} %> /><label for="엘레베이터">엘리베이터</label>
 			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= option.contains("애완동물")?"checked":"" %><%} %> /><label for="애완동물">반려동물 가능</label>
@@ -188,6 +195,13 @@ $(function(){
 		//전세금 최대 10억
 		deposit();
 	}
+	
+	//필터 검색창 검색 시 
+	$('#searhBarBtn').click(function(){
+		var keyword=$('#searhBar').val();
+		searchAddress(keyword);
+	});
+	
 });
 //옵션 체크시에 실행
 function checkOption(obj){
@@ -715,6 +729,39 @@ function filterReset(){
 	//거래 유형(매매,면적 전체,매매가 전체)
 	location.href="${pageContext.request.contextPath}/estate/filterReset?localName="+$('#localName').val()+"&estateType=${estateType}";
 }
+function searchAddress(obj) {
+	console.log('주소찾기');
+	var keyword = obj;
+	console.log('입력값=' + keyword);
+	//키워드로 검색해본다.
+	 ps.keywordSearch(keyword, placesSearchCB);
+	console.log('검색 후 여부 : '+flag);
+	//만약, 키워드로 검색이 되지 않는다면 주소로 검색해본다.
+	if($('#address').val() == null || $('#address').val() == ''){
+		geocoder.addressSearch(keyword, function(result, status) {
+		    // 정상적으로 검색이 완료됐으면 
+		     if (status === kakao.maps.services.Status.OK) {
+		        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+				console.log('좌표검색 : '+coords);
+				$('#localName').val(coords);
+				searchDetailAddrFromCoords(coords,function(data){
+					console.log(data);
+					if (status === kakao.maps.services.Status.OK) {
+						
+						$('#address').val(result[0].address.address_name.substring(0, 8));
+		        		$('#localName').val(coords);
+			        console.log($('#localName').val());
+			        $('#estateFrm').submit();
+					}
+				});
+		    }
+		});    
+	}else {
+		$('#address').val(keyword.substring(0, 7));
+		 $('#estateFrm').submit();
+	}
+}
+
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
