@@ -14,7 +14,7 @@ public class Estate {
 	private char EstateType;
 	private char TransActionType;
 	private int EstatePrice;
-	private int ManageMenetFee;
+	private int ManageMentFee;
 	private int EstateArea;
 	private String SubwayStation;
 	private String EstateContent;
@@ -36,7 +36,7 @@ public class Estate {
 	}
 
 	public Estate(int estateNo, String regionCode, int memberNo, int businessMemberNo, String phone, String businessPhone,
-			String address, char estateType, char transActionType, int estatePrice, int manageMenetFee, int estateArea,
+			String address, char estateType, char transActionType, int estatePrice, int manageMentFee, int estateArea,
 			String subwayStation, String estateContent, Date writtenDate, int deposit) {
 		super();
 		EstateNo = estateNo;
@@ -49,7 +49,7 @@ public class Estate {
 		EstateType = estateType;
 		TransActionType = transActionType;
 		EstatePrice = estatePrice;
-		ManageMenetFee = manageMenetFee;
+		ManageMentFee = manageMentFee;
 		EstateArea = estateArea;
 		SubwayStation = subwayStation;
 		EstateContent = estateContent;
@@ -116,11 +116,11 @@ public class Estate {
 	public void setEstatePrice(int estatePrice) {
 		EstatePrice = estatePrice;
 	}
-	public int getManageMenetFee() {
-		return ManageMenetFee;
+	public int getManageMentFee() {
+		return ManageMentFee;
 	}
-	public void setManageMenetFee(int manageMenetFee) {
-		ManageMenetFee = manageMenetFee;
+	public void setManageMentFee(int manageMentFee) {
+		ManageMentFee = manageMentFee;
 	}
 	public int getEstateArea() {
 		return EstateArea;
@@ -157,7 +157,7 @@ public class Estate {
 		return "Estate [EstateNo=" + EstateNo + ", RegionCode=" + RegionCode + ", MemberNo=" + MemberNo
 				+ ", BusinessMemberNo=" + BusinessMemberNo + ", Phone=" + Phone + ", BusinessPhone=" + BusinessPhone
 				+ ", Address=" + Address + ", EstateType=" + EstateType + ", TransActionType=" + TransActionType
-				+ ", EstatePrice=" + EstatePrice + ", ManageMenetFee=" + ManageMenetFee + ", EstateArea=" + EstateArea
+				+ ", EstatePrice=" + EstatePrice + ", ManageMentFee=" + ManageMentFee + ", EstateArea=" + EstateArea
 				+ ", SubwayStation=" + SubwayStation + ", EstateContent=" + EstateContent + ", WrittenDate="
 				+ WrittenDate + ", Deposit=" + Deposit + ", attachList=" + attachList + "]";
 	}

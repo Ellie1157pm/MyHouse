@@ -64,12 +64,15 @@
 	
 	<resultMap type="map" id="estate"></resultMap>
 	<select id="estateList" resultType="map">
-		select e.estate_no, e.business_member_no, e.transaction_type, e.estate_price, e.estate_area, e.address, e.estate_content,
-         p.renamed_filename
-		from estate e left join (select estate_no, renamed_filename from estate_photo
-		                                where rowid in (select min(rowid) from estate_photo group by estate_no))p
-		                                on e.estate_no = p.estate_no
-		where e.business_member_no = 0
+		  select B.*
+ 		  from (select rownum as rnum, A.*
+             from (select e.estate_no, e.business_member_no, e.transaction_type, e.estate_price, e.estate_area, e.address, e.estate_content,
+                     p.renamed_filename
+                    from estate e left join (select estate_no, renamed_filename from estate_photo
+                                                    where rowid in (select min(rowid) from estate_photo group by estate_no))p
+                                                    on e.estate_no = p.estate_no
+                    where e.business_member_no = 0) A) B
+		  where rnum between #{pageStart} and #{pageEnd}
 		<if test="searchType != null">
 			and estate_type like #{searchType}
 		</if>

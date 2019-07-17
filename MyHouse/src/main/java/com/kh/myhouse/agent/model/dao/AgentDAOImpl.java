@@ -38,7 +38,7 @@ public class AgentDAOImpl implements AgentDAO {
 	}
 
 	@Override
-	public List<Map<String, String>> estateList(Map map) {
+	public List<Map<String, Object>> estateList(Map map) {
 		return sqlSession.selectList("agent.estateList", map);
 	}
 

@@ -153,9 +153,45 @@ div#estate-info-box{
 	display: -webkit-box;
 	margin-top: -1px;
 }
+/*매물신청목록 정보*/
 div.estate-info{
 	width: 400px;
 	height: 400px;
+	overflow: scroll;
+}
+div.estate-info div{
+	padding: 10px;
+	border-bottom: 1px solid lightgray;
+}
+div.estate-info div p{
+	margin: 0;
+}
+div.estate-info div span{
+	font-size: 13px;
+}
+div#estate-info-header p{
+	color: gray;
+}
+div#estate-info-area table{
+	width: 300px;
+}
+div#estate-info-area table th{
+	font-size: 18px;
+}
+div#estate-info-area table td{
+	font-size: 25px;
+	color: dodgerblue;
+}
+div#estate-info-managementFee p{
+	font-size: 25px;
+	color: dodgerblue;
+}
+div#estate-info-contents{
+	color: gray;
+	word-break:break-all;
+}
+div#estate-info-station p, div#estate-info-option p, div#estate-info-phone p{
+	font-size: 18px;
 }
 /*등록된매물*/
 div#estateListEnd{

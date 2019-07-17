@@ -137,8 +137,14 @@ public class AgentController {
 			
 			if(a == null) {
 				msg = "존재하지 않는 회원입니다.";
-			}
-			else {
+			} else {
+				if(a.getQuitYN() == 'Y') {
+					msg = "회원탈퇴된 아이디 입니다.";
+					mav.addObject("msg", msg);
+					
+					mav.setViewName("/common/msg");
+					return mav;
+				}
 				boolean bool = bcryptPasswordEncoder.matches(memberPwd, a.getMemberPwd());
 				if(bool) {
 					msg = "로그인 성공! ["+a.getMemberName()+"]님, 반갑습니다." ;
@@ -279,7 +285,12 @@ public class AgentController {
 	
 	@RequestMapping("/estateList")
 	public void estateList(String searchType, String searchKeyword, Model model) {
-		Map<String, String> map = new HashMap();
+		Map<String, Object> map = new HashMap();
+		int cPage = 1;
+		int numPerPage = 10;
+		
+		int pageStart = (cPage-1)*numPerPage+1;
+		int pageEnd = pageStart+9;
 		
 		model.addAttribute("searchType", searchType);
 		model.addAttribute("searchKeyword", searchKeyword);
@@ -295,11 +306,45 @@ public class AgentController {
 		
 		map.put("searchType", searchType);
 		map.put("searchKeyword", searchKeyword);
+		map.put("pageStart", pageStart);
+		map.put("pageEnd", pageEnd);
 		
-		List<Map<String, String>> list = agentService.estateList(map);
+		List<Map<String, Object>> list = agentService.estateList(map);
 		
 		
 		model.addAttribute("list", list);
+	}
+	
+	@RequestMapping("/estateListAdd")
+	@ResponseBody
+	public List<Map<String, Object>> estateListAdd(String searchType, String searchKeyword, int cPage){
+		System.out.println("searchType@controller="+searchType);
+		System.out.println("searchKeyword@controller="+searchKeyword);
+		System.out.println("cPage@controller="+cPage);
+		
+		Map<String, Object> map = new HashMap();
+		int numPerPage = 10;
+		
+		int pageStart = (cPage-1)*numPerPage+1;
+		int pageEnd = pageStart+9;
+		
+		try {			
+			if(searchType.equals("상관없음")) searchType = null;
+			else if(searchType.equals("아파트")) searchType = "A";
+			else if(searchType.equals("빌라")) searchType = "B";
+			else if(searchType.equals("원룸")) searchType = "O";
+			else if(searchType.equals("오피스텔")) searchType = "P";
+			if(searchKeyword.equals("")) searchKeyword = null;
+		} catch(Exception e) {}
+		
+		map.put("searchType", searchType);
+		map.put("searchKeyword", searchKeyword);
+		map.put("pageStart", pageStart);
+		map.put("pageEnd", pageEnd);
+		
+		List<Map<String, Object>> list = agentService.estateList(map);
+		
+		return list;
 	}
 	
 	@RequestMapping("/estateReqView")

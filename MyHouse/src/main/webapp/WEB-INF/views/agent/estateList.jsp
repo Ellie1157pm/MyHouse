@@ -32,6 +32,11 @@ function estateReqView(e){
 			$("h5.estate-info-title").text(data.estate.address);
 			console.log(data);
 			var html = "";
+			$("div.estate-info").remove();
+			var info_div = "<div class='estate-info'></div>";
+			$("div#estate-info-box").append(info_div);
+			var info_html = "";
+			var str = "";
 			if(data.estateAttach != null){
 				$("div.carousel-item").remove();
 				for(var i=0; i<(data.estateAttach).length; i++){
@@ -42,6 +47,38 @@ function estateReqView(e){
 				}
 			}
 			$("div.carousel-inner").append(html);
+			
+			if(data.estate.transActionType == 'O') str = "월세";
+			else if(data.estate.transActionType == 'J') str = "전세";
+			else if(data.estate.transActionType == 'M') str = "매매";
+			info_html += '<div id="estate-info-header">';
+			info_html += "<h3>보증금"+data.estate.deposit+" "+str;
+			info_html += (data.estate.estatePrice).toLocaleString();
+			if(data.estate.estateType == 'A') str = "아파트";
+			else if(data.estate.estateType == 'B') str = "빌라";
+			else if(data.estate.estateType == 'O') str = "원룸";
+			else if(data.estate.estateType == 'P') str = "오피스텔";
+			info_html += "("+str+")</h3>";
+			var date = new Date(data.estate.writtenDate);
+			var year = date.getFullYear();
+			var month = date.getMonth()+1;
+			var day = date.getDate();
+			info_html += "<p>"+year+"/"+month+"/"+day+"<p/></div>"
+			info_html += '<div id="estate-info-area">';
+			info_html += '<table><tr><th>면적</th><th>동/호</th></tr>';
+			info_html += '<tr><td>'+data.estate.estateArea+'㎡</td><td>'+data.estate.addressDetail+'</td></tr></table></div>';
+			info_html += '<div id="estate-info-contents">';
+		  	info_html += '<p>'+data.estate.estateContent+'</p></div>';
+		  	info_html += '<div id="estate-info-managementFee">';
+		  	info_html += '<span>관리비(난방비 제외)</span><p>월 '+data.estate.manageMentFee+'만원</p></div>';
+			info_html += '<div id="estate-info-station"><span>주변역</span><p>'+data.estate.subwayStation+'</p>';
+			info_html += '</div><div id="estate-info-option"><span>옵션정보</span>';
+			info_html += '<p>'+data.option.OPTION_DETAIL+'</p></div>';
+			info_html += '<div id="estate-info-phone"><span>매물신청자 번호</span>';
+	  		info_html += '<p>'+data.estate.phone+'</p></div>';
+		  	
+			$("div.estate-info").append(info_html);
+			
 		}, error : function(jqxhr, textStatus, errorThrown) {
 			console.log("ajax처리실패: "+ jqxhr.status);
 			console.log(errorThrown);
@@ -64,11 +101,30 @@ $(function() {
 	$("#warning_memo").on("click", function(){
 		location.href="${pageContext.request.contextPath}/agent/warningMemo";
 	});
+	var searchType = "";
+	var searchKeyword = "";
 	$("#estateList-search-btn").on("click", function(){
-		var searchType = $("button.btn-info").text().trim();
-		var searchKeyword = $("input#estateList-searchKeyword").val().trim();
+		searchType = $("button.btn-info").text().trim();
+		searchKeyword = $("input#estateList-searchKeyword").val().trim();
 		
 		location.href="${pageContext.request.contextPath}/agent/estateList?searchType="+searchType+"&searchKeyword="+searchKeyword;
+	});
+	var cPage = 1;
+	$("div#estateList").scroll(function(){
+		if($(this)[0].scrollHeight <= (Math.round($(this).scrollTop()) + $(this).height())){
+			param = {
+					cPage: ++cPage,
+					searchType: searchType,
+					searchKeyword: searchKeyword
+			}
+			$.ajax({
+				url: "${pageContext.request.contextPath}/agent/estateListAdd",
+				data: param,
+				success: function(data){
+					console.log(data);
+				}
+			});
+		}
 	});
 });
 </script>
@@ -168,9 +224,43 @@ $(function() {
 		   <span class="sr-only">Next</span>
 		 </a>
 	  </div>
-	  <div class ="estate-info">
-		  	
-	  </div>
+	  <!-- <div class ="estate-info">
+		  	<div id="estate-info-header">
+		  		<h3>월세 2,000/55(아파트)</h3>
+		  		<p>2019.06.19</p>
+		  	</div>
+		  	<div id="estate-info-area">
+		  		<table>
+		  			<tr>
+		  				<th>면적</th>
+		  				<th>동/호</th>
+		  			</tr>
+		  			<tr>
+		  				<td>79/60m2</td>
+		  				<td>124동13층3호</td>
+		  			</tr>
+		  		</table>
+		  	</div>
+		  	<div id="estate-info-contents">
+		  		<p>고급자재로 인테리어완비. 도배완료했습니다.</p>
+		  	</div>
+		  	<div id="estate-info-managementFee">
+		  		<span>관리비(난방비 제외)</span>
+		  		<p>월 11만원</p>
+		  	</div>
+		  	<div id="estate-info-station">
+		  		<span>주변역</span>
+		  		<p>쌍문역</p>
+		  	</div>
+		  	<div id="estate-info-option">
+		  		<span>옵션정보</span>
+		  		<p>엘리베이터,애완동물</p>
+		  	</div>
+		  	<div id="estate-info-phone">
+		  		<span>매물신청자 번호</span>
+		  		<p>01012341234</p>
+		  	</div>
+	  </div> -->
 	  </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

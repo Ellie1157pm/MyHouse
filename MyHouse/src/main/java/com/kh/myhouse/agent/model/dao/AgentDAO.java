@@ -17,7 +17,7 @@ public interface AgentDAO {
 
 	int checkCompanyCount(String companyRegNo);
 
-	List<Map<String, String>> estateList(Map map);
+	List<Map<String, Object>> estateList(Map map);
 
 	List<Map<String, String>> estateListEnd(int memberNo);
 

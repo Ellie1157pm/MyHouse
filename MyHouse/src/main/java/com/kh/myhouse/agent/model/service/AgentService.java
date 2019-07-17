@@ -17,7 +17,7 @@ public interface AgentService {
 
 	int checkCompanyCount(String companyRegNo);
 
-	List<Map<String, String>> estateList(Map<String, String> map);
+	List<Map<String, Object>> estateList(Map<String, Object> map);
 
 	List<Map<String, String>> estateListEnd(int memberNo);
 

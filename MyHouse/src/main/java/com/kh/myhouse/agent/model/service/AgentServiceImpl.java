@@ -38,7 +38,7 @@ public class AgentServiceImpl implements AgentService {
 	}
 
 	@Override
-	public List<Map<String, String>> estateList(Map map) {
+	public List<Map<String, Object>> estateList(Map map) {
 		return agentDAO.estateList(map);
 	}
 
