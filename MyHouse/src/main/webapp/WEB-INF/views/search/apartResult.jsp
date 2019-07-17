@@ -281,7 +281,7 @@ kakao.maps.event.addListener(map, 'dragend', function() {
 
 	 var localname =$('#estateFrm #localName').val(map.getCenter());
 var add=(result[0].address.address_name).substring(0,8);
-var param = {
+var param = { 
 		address : add
 };
 
