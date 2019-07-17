@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="com.kh.myhouse.estate.model.vo.Estate"%>
@@ -136,7 +136,7 @@
 		<input type="hidden" name="range_3" id="range_3" value="${range3 eq '0'?'0':range3 }" />
 		<input type="hidden" name="range_4" id="range_4" value="${range4 eq '0'?'300':range4 }" />
 		<input type="hidden" name="address" id="address" value="${localName }" />
-		<input type="hidden" name="localName" id="localName" value="${loc }" />
+		<input type="hidden" name="coords" id="coords" value="${loc }" />
 		
 		<div>
 			<input type="checkbox" name="optionResult" id="optionResult1" value="<%=option!=null&&option.contains("지하주차장")?"지하주차장":"" %>" <%=option.contains("지하주차장")?"checked":"" %> />
@@ -280,14 +280,23 @@ kakao.maps.event.addListener(map, 'dragend', function() {
 	//법정동 상세주소 얻어오기
 		searchDetailAddrFromCoords(map.getCenter(),function(result,status){
 
-	 var localname =$('#estateFrm #localName').val(map.getCenter());
+	 var localname =$('#estateFrm #coords').val(map.getCenter());
 var add=(result[0].address.address_name).substring(0,8);
+$('#address').val(add);
 var param = { 
-		address : add
+		address : add,
+		coords : $('#coords').val(),
+		estateType : $('#estateType').val(),
+		range1:$('#range_1').val(),
+		range2:$('#range_2').val(),
+		range3:$('#range_3').val(),
+		range4:$('#range_4').val(),
+		structure:$('#structure').val(),
+		dealType:$('#dealType').val()
+		
 };
 
 
-console.log("add==="+add); 
 		  
 		  $.ajax({
 		       url:"${pageContext.request.contextPath }/estate/findApartTermsTest",

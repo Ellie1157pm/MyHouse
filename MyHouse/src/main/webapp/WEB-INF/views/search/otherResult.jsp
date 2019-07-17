@@ -67,7 +67,7 @@
 	<hr />
 	<div id="search2">
 		<select name="dealType" id="dealType" onchange="changeDeal(this);">
-			<option value="M" ${dealType eq 'M'?'selected':'' } >매매</option>
+			<option value="M" ${dealType eq 'M'?'selected':(dealType eq 'all'?'selected':'') } >${dealType eq 'M'?'매매':(dealType eq 'all'?'전체':'') }</option>
 			<option value="J" ${dealType eq 'J'?'selected':'' }>전세</option>
 			<option value="O" ${dealType eq 'O'?'selected':'' }>월세</option>
 		</select>
@@ -83,8 +83,14 @@
 		<span onclick="filterReset();" id="reset">모두 초기화</span>
 		<hr />
 		<p class="filterSubTitle" style="margin:0;">거래유형</p>
-		<p class="filterTitle select" style="margin-bottom:4px;">${dealType eq 'M'?'매매':(dealType eq 'J'?'전세':(dealType eq 'O'?'월세':''))}</p>
-		<button type="button" class="btn btn-secondary first" value="M" ${dealType eq 'M'?'style="background:#6c757d;color:white;"':'' } data-type="매매"  onclick="changeDeal2(this);" >매매</button>
+		<p class="filterTitle select" style="margin-bottom:4px;">${dealType eq 'M'?'매매':(dealType eq 'J'?'전세':(dealType eq 'O'?'월세':(dealType eq 'all'?'전체':'')))}</p>
+	
+		<c:if test="${estateType eq 'B' }">
+		<button type="button" class="btn btn-secondary first" value="M" ${dealType eq 'M'?'style="background:#6c757d;color:white;"':'' } data-type="${dealType eq 'M'?'매매':''}"  onclick="changeDeal2(this);" >매매</button>
+		</c:if>
+		<c:if test="${estateType ne 'B' }">
+		<button type="button" class="btn btn-secondary first" value="all" ${dealType eq 'all'?'style="background:#6c757d;color:white;"':'' } data-type="${dealType eq 'all'?'전체':''}"  onclick="changeDeal2(this);" >전체</button>
+		</c:if>
 		<button type="button" class="btn btn-secondary first" value="J" ${dealType eq 'J'?'style="background:#6c757d;color:white;"':'' }data-type="전세" onclick="changeDeal2(this);">전세</button>
 		<button type="button" class="btn btn-secondary first" value="O" ${dealType eq 'O'?'style="background:#6c757d;color:white;"':'' }data-type="월세" onclick="changeDeal2(this);">월세</button>
 		<hr />
@@ -145,8 +151,8 @@
 	
 </div>
 
-	<form id="estateFrm" action="${pageContext.request.contextPath }/estate/findApartTerms" method="post" style="display: none;" >
-		<input type="hidden" name="estateType" id="estateType" value="A"  />
+	<form id="estateFrm" action="${pageContext.request.contextPath }/estate/findOtherTerms" method="post" style="display: none;" >
+		<input type="hidden" name="estateType" id="estateType" value="${estateType }"  />
 		<input type="hidden" name="dealType" id="dealType" value="${dealType }" />
 		<input type="hidden" name="structure" id="structure" value="${structure }" />
 		<input type="hidden" name="range_1" id="range_1" value="${range1 eq '0'?'0':range1 }" />
@@ -154,7 +160,7 @@
 		<input type="hidden" name="range_3" id="range_3" value="${range3 eq '0'?'0':range3 }" />
 		<input type="hidden" name="range_4" id="range_4" value="${range4 eq '0'?'300':range4 }" />
 		<input type="hidden" name="address" id="address" value="${localName }" />
-		<input type="hidden" name="localName" id="localName" value="${loc }" />
+		<input type="hidden" name="coords" id="coords" value="${loc }" />
 		
 		<div>
 			<input type="checkbox" name="optionResult" id="optionResult1" value="<%=option!=null&&option.contains("지하주차장")?"지하주차장":"" %>" <%=option.contains("지하주차장")?"checked":"" %> />
@@ -321,10 +327,44 @@ ps.keywordSearch(loc, placesSearchCB2); <% }%> --%>
 kakao.maps.event.addListener(map, 'dragend', function() {     
 	//법정동 상세주소 얻어오기
 		searchDetailAddrFromCoords(map.getCenter(),function(result,status){
-		$('#estateFrm #localName').val(map.getCenter());
+		$('#estateFrm #coords').val(map.getCenter());
 		address=(result[0].address.address_name).substring(0,8);
 		$('#estateFrm #address').val(address);
-		$('#estateFrm').submit();
+		var param = { 
+				address : address,
+				coords : $('#coords').val(),
+				estateType : $('#estateType').val(),
+				range1:$('#range_1').val(),
+				range2:$('#range_2').val(),
+				range3:$('#range_3').val(),
+				range4:$('#range_4').val(),
+				structure:$('#structure').val(),
+				dealType:$('#dealType').val()	
+		}
+		
+		$.ajax({
+		       url:"${pageContext.request.contextPath }/estate/findApartTermsTest",
+		       data: param,
+		       contentType:"json",
+		       type:"get",
+		       success: function(data){
+		    	   
+		    if(data !=null){
+		    
+		     for(var i=0; i<data.length; i++){
+		    	var dataloc= data[i].Address;
+		    	console.log('dataloc====='+dataloc);
+		    	 clusterer.clear();
+		    	geocoder.addressSearch(dataloc,placesSearchCB2);
+		    	 
+		     }}
+		    	
+		       },
+		       error:function(jqxhr,text,errorThrown){
+		           console.log(jqxhr);
+		       }
+		   });
+
 	});
     
    //address에 구단위 검색용 값이 들어온 상태-확인 후 지울것
