@@ -296,6 +296,19 @@ var map=new daum.maps.Map(mapContainer,mapOption);
      minLevel: 6 // 클러스터 할 최소 지도 레벨 
  });
 //controller에서 가져온 검색값 사용하기.
+if('${estateType}'==='B'){
+	var imageSrc = '${pageContext.request.contextPath/resources/images/search/bilar.png}'; // 마커이미지의 주소입니다
+}else if('${estateType}'==='O'){
+	var imageSrc = '${pageContext.request.contextPath/resources/images/search/oneRoom.png}'; // 마커이미지의 주소입니다
+}else{
+	var imageSrc = '${pageContext.request.contextPath/resources/images/search/office.png}'; // 마커이미지의 주소입니다
+}
+
+var imageSize = new kakao.maps.Size(40, 50), // 마커이미지의 크기입니다
+    imageOption = {offset: new kakao.maps.Point(30, 40)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+      
+
+
 //장소 검색 객체를 생성
 var ps = new daum.maps.services.Places();
 //검색 장소를 기준으로 지도 재조정.

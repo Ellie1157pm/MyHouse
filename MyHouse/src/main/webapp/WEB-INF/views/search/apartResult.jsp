@@ -271,6 +271,14 @@ console.log(loc);
 geocoder.addressSearch(loc,placesSearchCB2);
 <%}}%>
 
+
+//이미지 마커 올리기
+var imageSrc = '${pageContext.request.contextPath}/resources/images/search/oneRoom.png'; // 마커이미지의 주소입니다    
+var  imageSize = new kakao.maps.Size(70, 70); // 마커이미지의 크기입니다
+  var  imageOption = {offset: new kakao.maps.Point(30, 40)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+      
+  
+
 //사용자가 지도상에서 이동시 해당 매물 뿌려주는 부분
  //1.좌표=>주소 변환 객체 생성
 
@@ -336,12 +344,12 @@ function searchDetailAddrFromCoords(coords, callback) {
 //지도에 마커-클러스터링 하는 함수
 function displayMarker(place) {
 	var markerPosition  = new kakao.maps.LatLng(place.y, place.x); 
-	
+	markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
         // 데이터에서 좌표 값을 가지고 마커를 표시합니다
         var markers = $(this).map(function(markerPosition) {
             return new kakao.maps.Marker({
-                position : new kakao.maps.LatLng(place.y, place.x)
-          
+                position : new kakao.maps.LatLng(place.y, place.x),
+           		 image:markerImage
             });
         });       
        
