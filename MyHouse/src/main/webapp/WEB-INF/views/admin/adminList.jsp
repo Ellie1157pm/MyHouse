@@ -7,6 +7,7 @@
 <script>
 $(function() {
 	$('#searchKeyword').focus();
+	
 	if('${param.searchKeyword}' != ''){
 		$('#searchKeyword').val('${param.searchKeyword}');
 	}
@@ -158,14 +159,16 @@ function search() {
 	      	<button type="button" class="btn btn-outline-secondary btn-sm" id="warn"
 	      			data-toggle="modal" data-target="#reportModal" 
 	      			data-reciever="${report.ESTATE_NO}" data-other="${report.MEMBER_NO}"
-	      			style="${report.WARN_FLAG eq 'W' ? 'background-color: gray; color: white;':''}">
+	      			style="${report.WARN_FLAG eq 'W' ? 'background-color: gray; color: white;':''}"
+	      			${report.WARN_FLAG ne 'N' ? 'disabled':''}>
 	      		경고
 	      	</button>	
 	      	<!-- 일반회원에게 경고 기각 사유 쪽지 보냄. -->
 	      	<button type="button" class="btn btn-outline-secondary btn-sm" id="warn"
 	      			data-toggle="modal" data-target="#reportModal" 
 	      			data-reciever="${report.MEMBER_NO}" data-other="${report.ESTATE_NO}"
-	      			style="${report.WARN_FLAG eq 'R' ? 'background-color: gray; color: white;':''}">
+	      			style="${report.WARN_FLAG eq 'R' ? 'background-color: gray; color: white;':''}"
+	      			${report.WARN_FLAG ne 'N' ? 'disabled':''}>
 	      		기각
 	      	</button>
 	      </td>

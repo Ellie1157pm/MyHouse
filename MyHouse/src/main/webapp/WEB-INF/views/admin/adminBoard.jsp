@@ -6,6 +6,7 @@
 <link rel="stylesheet"
 	  href="${pageContext.request.contextPath }/resources/css/admin/adminInfo.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
+<% pageContext.setAttribute("newLineChar", "\n"); %>
 <script>
 $(function() {
 	$("button.boardBtn").css("opacity", 1);
@@ -100,7 +101,7 @@ $(function() {
 			    	<td><a class="none-underline" href="#"
 			    		   data-toggle="modal" data-target="#exampleModalCenter"
 			    		   data-title="${notice.NOTICE_TITLE}"
-			    		   data-content="${notice.NOTICE_CONTENT}"
+			    		   data-content="${fn:replace(notice.NOTICE_CONTENT, newLineChar, '<br>')}"
 			    		   data-index='${notice.NOTICE_NO}'>${notice.NOTICE_TITLE}</a></td>
 			    	<td>${fn:substring(notice.WRITTEN_DATE, 0, 10)}</td>
 				</tr>

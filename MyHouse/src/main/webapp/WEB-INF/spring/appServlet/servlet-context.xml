@@ -51,11 +51,20 @@
 	<beans:bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"></beans:bean>
 	
 	<beans:bean id="AgentLoginInterceptor" class="com.kh.myhouse.common.interceptor.AgentLoginInterceptor"></beans:bean>
+	<beans:bean id="AdminInfoInterceptor" class="com.kh.myhouse.common.interceptor.AdminInfoInterceptor"></beans:bean>
     
     <interceptors>
         <interceptor>
             <mapping path="/agent/*"/>
             <beans:ref bean="AgentLoginInterceptor"/>
+        </interceptor>
+        <interceptor>
+            <mapping path="/admin/list"/>
+            <beans:ref bean="AdminInfoInterceptor"/>
+        </interceptor>
+        <interceptor>
+            <mapping path="/admin/noticeForm"/>
+            <beans:ref bean="AdminInfoInterceptor"/>
         </interceptor>
     </interceptors>
 

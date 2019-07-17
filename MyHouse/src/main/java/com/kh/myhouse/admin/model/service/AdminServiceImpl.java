@@ -14,6 +14,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ import com.kh.myhouse.admin.model.vo.Rss;
 
 @Service
 public class AdminServiceImpl implements AdminService {
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired 
 	private AdminDAO adminDAO;
 
@@ -58,8 +61,6 @@ public class AdminServiceImpl implements AdminService {
 	public int updateReport(Map<String, String> param) {
 		// 복합키를 가진 report_estate를 위한 파라미터 맵
 		Map<String, String> updateReportParam = new HashMap<>(); 
-		// 페이지에 반환할 데이터맵
-		Map<String, Object> map = new HashMap<>();
 		int receiverNo = Integer.parseInt(param.get("receiver"));
 		String memoContent = param.get("memoContent");
 		updateReportParam.put("warningReason", memoContent);
@@ -82,14 +83,23 @@ public class AdminServiceImpl implements AdminService {
 			updateReportParam.put("estateNo", param.get("receiver"));
 			updateReportParam.put("memberNo", param.get("other"));
 			Map<String, String> warn = adminDAO.selectOneWarn(receiverNo); 
-			LoggerFactory.getLogger(getClass()).info("warn@reportUpate={}", warn);
+			logger.info("warn@reportUpate={}", warn);
+			
 			if(warn != null) {
-				int warnCnt = Integer.parseInt(warn.get("WARNING_COUNT"));
+				int warnCnt = 0;
+				try {
+					warnCnt = Integer.parseInt(String.valueOf(warn.get("WARNING_COUNT")));
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new AdminException("경고횟수 조회 오류");
+				}
 				// 만약 경고횟수가 이미 3회라면 
 				// 회원을 탈퇴처리한다.
 				// 탈퇴처리 시 로그인이 불가능하므로 이메일로 경고 퇴출 안내문을 이메일로 보내도록 처리할 수 있다면 좋겠다.
-				if(warnCnt >= 3)
+				if(warnCnt >= 3) {
 					result = adminDAO.updateMemberQuit(receiverNo);
+					logger.info("result@updateMemberQuit="+result);
+				}
 				// 3회 미만이라면 경고 처리한다.
 				else {
 					Map<String, Object> updateWarnParam = new HashMap<>();
@@ -97,6 +107,7 @@ public class AdminServiceImpl implements AdminService {
 					updateWarnParam.put("memberNo", receiverNo);
 					updateWarnParam.put("warningReason", warn.get("WARNING_REASON")+","+memoContent);
 					result = adminDAO.updateWarn(updateWarnParam);
+					logger.info("result@updateWarn="+result);
 				}
 			}
 			else {
@@ -104,6 +115,7 @@ public class AdminServiceImpl implements AdminService {
 				updateWarnParam.put("memberNo", receiverNo);
 				updateWarnParam.put("warningReason", memoContent);
 				result = adminDAO.insertWarn(updateWarnParam);
+				logger.info("result@insertWarn="+result);
 			}
 			
 			// 만약 경고가 입력이 안 된다면 여기서 반환시킨다.
@@ -111,14 +123,19 @@ public class AdminServiceImpl implements AdminService {
 				throw new AdminException("경고 등록 오류");
 		}
 		
+		logger.info("updateReportParam@reportUpdate={}",updateReportParam);
 		
 		// 회원 등급에 상관없이 쪽지를 보내고 신고테이블을 업데이트하는 기능은 동일하다.
 		// 2. report_estate
-		if(adminDAO.updateReport(updateReportParam)==0)
+		result = adminDAO.updateReport(updateReportParam);
+		logger.info("result@updateReport="+result);
+		if(result == 0)
 			throw new AdminException("신고 처리 오류");
 		else {
 			// 3. memo
-			if(adminDAO.insertReportMemo(param)==0)
+			result = adminDAO.insertReportMemo(param);
+			logger.info("result@insertReportMemo="+result);
+			if(result == 0)
 				throw new AdminException("쪽지 전송 오류");
 			else
 				return result;

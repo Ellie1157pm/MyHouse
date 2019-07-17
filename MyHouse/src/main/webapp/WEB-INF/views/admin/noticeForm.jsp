@@ -14,6 +14,7 @@ span#txtLength {
     font-size: 12px;
 }
 </style>
+<% pageContext.setAttribute("newLineChar", "\n"); %>
 <script>
 $(function(){
 	$("textarea.noticeContent").keyup(function() {
@@ -21,8 +22,7 @@ $(function(){
 		$("#txtLength").html(content.length+'자');
 	});
 	
-	console.log('notice is null? '+('${notice}' == ''));
-	console.log('notice = ${notice}');
+	console.log('notice is null? '+('${notice.NOTICE_NO}' == ''));
 });
 
 function goBack() {
@@ -30,10 +30,11 @@ function goBack() {
 }
 
 $(document).ready(function(){
-	if('${notice}' != '') {
+	if('${notice.NOTICE_NO}' != '') {
+		var content = '${fn:replace(notice.NOTICE_CONTENT, newLineChar, "\\n")}';
 		$('.noticeTitle').val('${notice.NOTICE_TITLE}');
-		$('.noticeContent').val('${notice.NOTICE_CONTENT}');
-		$("#txtLength").html('${notice.NOTICE_CONTENT}'.length+'자');
+		$('.noticeContent').val(content);
+		$("#txtLength").html(content.length+'자');
 	}
 });
 function noticeSubmit() {
@@ -42,7 +43,7 @@ function noticeSubmit() {
 	if(bool) {
 		var title = $("input.noticeTitle").val();
 		var content = $("textarea.noticeContent").val(); 
-		if('${notice}' == '') {
+		if('${notice.NOTICE_NO}' == '') {
 			$.ajax({
 				url: "${pageContext.request.contextPath}/admin/noticeFormEnd",
 				type: "POST", 
