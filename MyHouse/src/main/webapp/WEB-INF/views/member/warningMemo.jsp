@@ -7,6 +7,7 @@
 <!-- 사용자 작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/agent/agentMypage.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/memo/memberNote.css" />
+<div type="hidden"></div>
 <script>
 //일반회원
 var memberNo = ${memberLoggedIn.memberNo};

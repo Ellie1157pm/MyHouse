@@ -159,4 +159,5 @@ function noteDel(){
 		</div>
 	</div>
 </div>
+<div type="hidden"></div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

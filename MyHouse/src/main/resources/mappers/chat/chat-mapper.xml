@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ <mapper namespace="chat">
+	 <select resultType="String" id="findChatIdByMemberNo">
+	 	select chat_id from chat where member_no = #{memberNo} and business_member_no = #{agentNo}
+	 </select>
+	 <insert id="insertChatRoom">
+	 	insert into chat (chat_id, member_no)
+	 	values(#{chatId}, #{memberNo})
+	 </insert>
+	 
+	 <insert id="insertChatlog">
+	 	insert into chatlog(chat_no, chat_id, member_no, msg, time)
+	 	values(seq_chatlog.nextval, #{chatId}, #{memberNo}, #{msg}, #{time})
+	 </insert>
+	 
+	 <update id="updateLastCheck">
+	 </update>
+<!-- 	 <select id="findChatListByChatId" resultType="msg">
+		select * 
+		from chatlog
+		where chat_id = #{chatId}
+		order by chat_no
+	</select> -->
+ </mapper>

@@ -12,6 +12,28 @@
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
+	
+	
+	<!-- stomp관련 빈등록하기 -->
+<!-- 	<websocket:message-broker application-destination-prefix="/myhouse">
+		<websocket:stomp-endpoint path="/stomp">
+			<websocket:handshake-interceptors>
+				<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" >
+				</beans:bean>
+			</websocket:handshake-interceptors>
+			<websocket:sockjs session-cookie-needed="true"/>
+		</websocket:stomp-endpoint>
+		<websocket:simple-broker prefix="/hello, /chat"/>
+	</websocket:message-broker> -->
+	
+	<!-- sockjs관련 빈등록하기 -->
+	<!-- <beans:bean id="echoHandler" class="com.kh.myhouse.ws.EchoHandler" />
+	<websocket:handlers>
+		<websocket:mapping handler="echoHandler" path="/echo" />
+		<websocket:sockjs />
+	</websocket:handlers> -->
+	
+	
 	<annotation-driven />
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<!-- resources 로 요청이 들어오면 webapp밑에 resources 로 찾아가게 설정됨 -->
@@ -58,5 +80,5 @@
             <beans:ref bean="AgentLoginInterceptor"/>
         </interceptor>
     </interceptors>
-
+	
 </beans:beans>
