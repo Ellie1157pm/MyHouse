@@ -35,6 +35,7 @@
 		<result column="SUBWAY_STATION" property="SubwayStation"/>
 		<result column="ESTATE_CONTENT" property="EstateContent"/>
 		<result column="WRITTEN_DATE" property="WrittenDate"/>
+		<result column="ADDRESS_DETAIL" property="AddressDetail"/>
 		<result column="DEPOSIT" property="Deposit"/>
 		
 		<!-- collection: 1:n 관계e를 표현 -->
@@ -75,15 +76,17 @@
 			typeHandler="strArrTypeHandler" />
 	</resultMap>
 
-	<insert id="EstateInsert">
-		insert into estate
-		(estate_no,region_code,member_no,business_member_no,phone,business_phone,
-		address,estate_type,transaction_type,estate_price,management_fee,estate_area,subway_station,
-		estate_content,written_date,deposit)
-		values(seq_estate_no.nextval,#{RegionCode},#{MemberNo},#{BusinessMemberNo},#{Phone},#{BusinessPhone},#{Address},
-		#{EstateType},#{TransActionType},#{EstatePrice},#{ManageMenetFee},#{EstateArea},#{SubwayStation},#{EstateContent},
-		sysdate,#{Deposit})
-	</insert>
+	 <insert id="EstateInsert">
+        insert into estate
+        (estate_no,region_code,member_no,business_member_no,phone,business_phone,
+        address,estate_type,transaction_type,estate_price,management_fee,estate_area,subway_station,
+        estate_content,written_date,deposit,address_detail)
+        values(seq_estate_no.nextval,#{RegionCode},#{MemberNo},#{BusinessMemberNo},#{Phone},#{BusinessPhone},#{Address},
+        #{EstateType},#{TransActionType},#{EstatePrice},#{ManageMenetFee},#{EstateArea},#{SubwayStation},#{EstateContent},
+        sysdate,#{Deposit},#{AddressDetail})
+    </insert>
+	
+	
 	<insert id="insertattach">
 		insert into
 		estate_photo

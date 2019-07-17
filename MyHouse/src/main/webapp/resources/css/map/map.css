@@ -17,43 +17,57 @@ div#map {
 	display: inline-block;
 	z-index: 50;
 }
-
 /*사이드바  
 -매물목록 or 상세정보 뿌려주는 곳
 */
 
 div#sidebar {
-	width: 430px;
+	width: 383px;
 	height: 700px;
 	position: absolute;
-	right: -1px;
+	right: -2px;
 	top: 111px;
 	margin: 0px;
 	padding: 0px;
 	z-index: 100;
 	background-color: white;
 	overflow: scroll;
+	overflow-x:hidden; 
 }
 
 /*마크 클릭시 매물 목록 보여주는 css  */
 div#estateBar{
-	width: 430px;	
+	position: sticky;
+	top:0px;
+	width: 366px;
+    height: 70px;
 	margin: 0px;
 	padding: 0px;
+	z-index: 15px;
+	background-color: white;
 }
 
 div#estateBar p{	
-	padding: 10px 0px 0px 35px;
+	position: relative;
+    top: 15px;
+    left: 10px;
 	font-size: 120%;
 	font-weight: bold;
+	display: inline-block;
 }
 
-div#sidebar .estateBar2{
+div#estateBar .change{
+	position: relative;
+    bottom: 68px;
+    left: 300px;
+}
+
+div#sidebar .estateList{
 	padding:10px 0px 0px 10px;
 }
 
 div#estate{
-	width: 430px;
+	width: 366px;
 	height:132px;
 	margin: 0px;
 	padding: 10px;
@@ -64,40 +78,105 @@ div#estate img{
 	height:113px;
 }
 
-div#estate .apart{
-	position:relative;
-	color: #757575;
-	font-size: 70%;
-	bottom: 37px;
+div#estate .best{
+	position: relative;
+    color: red;
+    bottom: 47px;
     margin: 10px;
-	
+    padding: 1px;
+    font-size: 70%;
+    background-color: aqua;
 }
 
+/* 추천  */
+div#estate .apart{
+	position: relative;
+    color: #757575;
+    font-size: 70%;
+    bottom: 47px;
+}
+
+/* 일반 */
+div#estate .apart2{
+	position: relative;
+    color: #757575;
+    font-size: 70%;
+    bottom: 47px;
+    margin:10px;
+}
+
+div#estate .price {
+	position: relative;
+    bottom: 90px;
+    left: 154px;
+    font-weight: bold;
+    color: black;
+    font-size: 117%;
+}
+
+div#estate .area{
+	position: relative;
+    color: black;
+    font-size: 120%;
+    bottom: 90px;
+    left: 143px;
+    margin: 10px;
+}
+
+div#estate .address{
+	position: relative;
+    color: black;
+    font-size: 70%;
+    left: 146px;
+    bottom: 70px;
+    margin: 10px;
+}
+
+
 div#sidebar #imgBox {
-	width: 413px;
-	height: 230px;
+	width: 383px;
+	height: 287px;
 	padding: 0px;
 	border: 0px;
 }
 
 div#sidebar #imgBox img {
-	width: 413px;
-	height: 230px;
-	padding: 0px;
-	border: 0px;
+	position: relative;
+    top: 0px;
+    width: 366px;
+    height: 287px;
+    padding: 0px;
+    border: 0px;
 }
 
-div#sidebar #floating button {
-	width: 413px;
-	height: 50px;
+div#sidebar #floating{
+	position: sticky;
+	top:0px;
+	width: 366px;
+	height: 55px;
 	padding: 0px;
 	border: 0px;
-	color: white;
+	background-color:white;
+	color: black;
 	font-size: 20px;
+	border-bottom: 1px solid;
+	z-index: 15;
+}
+
+div#sidebar #floating span{
+	position: relative;
+	font-weight: bold;
+	top:6px;
+}
+div#sidebar #floating .change{
+	position: relative;
+    top: 5px;
+    left: 90px;
+	
 }
 
 div#sidebar #houseDetail {
-	width: 413px;
+	width: 366px;
 	height: 200px;
 	padding: 0px;
 	margin-top: 10px;
@@ -112,12 +191,6 @@ div#sidebar #houseDetail p {
 	font-weight: bold;
 }
 
-div#sidebar #houseDetail .price {
-	color: #3465a6;
-	font-size: 145%;
-	padding: 10px;
-}
-
 div#sidebar #houseDetail .btn-outline-dark {
 	position: relative;
 	float: right;
@@ -129,7 +202,7 @@ div#sidebar #houseDetail .character {
 }
 
 div#sidebar #location {
-	width: 413px;
+	width: 366px;
 	font-size: 115%;
 	font-weight: bold;
 }
@@ -146,7 +219,7 @@ div#sidebar #location .addressName {
 }
 
 div#sidebar #roadview {
-	width: 413px;
+	width: 366px;
 	height: 300px;
 	top: 10px;
 }
