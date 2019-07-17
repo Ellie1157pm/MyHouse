@@ -845,7 +845,7 @@ function searchAddress(obj) {
                     console.log($('#localName').val());
                     $('#estateFrm').submit();
                     }
-                });
+                }); 
             }
         });
     }else {
