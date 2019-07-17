@@ -15,7 +15,7 @@ public interface AdminService {
 
 	String selectMemberEmail(String recipient);
 
-	int insertWarn(String memberNo, String memoContent);
+	int updateReport(Map<String, String> param);
 
 	void newsAllData(String title);
 
@@ -42,4 +42,18 @@ public interface AdminService {
 	int deleteNotice(int noticeNo);
 
 	Map<String, Object> selectOneNotice(int noticeNo);
+
+	int updateNotice(Map<String, Object> param);
+
+	List<Map<String, String>> selectMemberSearchList(String searchKeyword, RowBounds rb);
+
+	int memberSearchTotalpage(String searchKeyword);
+
+	List<Map<String, String>> selectRealtorSearchList(String searchKeyword, RowBounds rb);
+
+	int realtorSearchTotalpage(String searchKeyword);
+
+	List<Map<String, String>> selectReportSearchList(String searchKeyword, RowBounds rb);
+
+	int reportSearchTotalpage(String searchKeyword);
 }

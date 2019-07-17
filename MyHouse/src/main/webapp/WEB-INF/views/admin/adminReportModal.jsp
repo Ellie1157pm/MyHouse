@@ -14,7 +14,8 @@
       </div>
       <div class="modal-body">
         <form id="WarningMsg">
-          <input type="text" id="memberNo" hidden="true"/>
+          <input type="text" id="memberNo1" hidden="true"/>
+          <input type="text" id="memberNo2" hidden="true"/>
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">수신인:</label>
             <input type="text" class="form-control" id="recipient-name">
@@ -37,16 +38,20 @@ $("#WarningBtn").click(function() {
 	if(!confirm("정말 이 경고를 처리하시겠습니까?")) {
 		return;
 	}
-	var memberNo = $("#memberNo").val();
-	var warningReason = $("textarea[name=memoContent]").val();
+	
 	$.ajax({
-		url: "${pageContext.request.contextPath}/admin/warn",
-		data: {
-				memberNo: memberNo,
-				memoContent: memoContent
-		      },
+		url: "${pageContext.request.contextPath}/admin/reportUpdate",
+		type: 'post',
+		data: JSON.stringify({
+				receiver: $("#memberNo1").val(),
+				other: $("#memberNo2").val(),
+				memoContent: $("textarea[name=memoContent]").val()
+		      }),
+		dataType: 'json',
+		contentType: 'application/json; charset=utf-8',
 		success: function(data) {
 			alert(data.msg);
+			location.href='${pageContext.request.contextPath}/admin/list?item=report';
 		},
 		error: function(jqxhr, textStatus, errorThrown) {
 			console.log("ajax 처리실패: " + jqxhr.status);

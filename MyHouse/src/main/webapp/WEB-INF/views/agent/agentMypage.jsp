@@ -7,7 +7,6 @@
 <!-- 사용자 작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/agent/agentMypage.css" />
 <script>
-
 $(function() {
 	$("#agent-set-btn").css("opacity", 0.6);
 	$("#estateList").on("click", function(){
@@ -17,38 +16,11 @@ $(function() {
 		$("#estateListEndFrm").submit();
 	});
 	$("#warning_memo").on("click", function(){
-		location.href="${pageContext.request.contextPath}/agent/warningMemo.do?memberNo=${memberLoggedIn.memberNo}";
+		location.href="${pageContext.request.contextPath}/agent/warningMemo";
 	});
 	
-	var fileTarget = $('input[name=upFile]');
-
-	fileTarget.on('change', function(){
-		var filename = $(this)[0].files[0].name;
-		// 추출한 파일명 삽입 
-		$('.upload-name').val(filename);
-	});
-
-	
-	$("button#agentChangeImg-btn").on("click", function(){
+	$("button#agnetChangeImg-btn").on("click", function(){
 		$("input[type=file]").click();
-	});
-	
-	$("button#agentDeleteImg-btn").on("click", function(){
-		var param = {
-				memberNo : "${memberLoggedIn.memberNo}",
-				renamedFileNamed : "${renamedFileName}"
-		}
-		$.ajax({
-			url : "${pageContext.request.contextPath}/agent/agentDeleteImg",
-			data : param,
-			success : function(data){
-				if(data){
-					$("#agentProfileImg").attr("src", "${pageContext.request.contextPath }/resources/upload/agentprofileimg/basicprofileimg.jpg");
-				} else {
-					alert("업로드된 사진이 없습니다.");
-				}
-			}
-		});
 	});
 	
 	$("input.oldPwd").blur(function(){
@@ -114,8 +86,9 @@ $(function() {
 	});
 	
 	$("button#agentUpdate-btn").on("click", function(){
-		if($("input[name=newPwd]").val()=="" && $('.upload-name').val()=="파일선택"){
-			alert("다시 입력해주세요.");
+		if($("input.oldPwd").val() == "" || $("input.newPwd").val() == "" ||
+				$("input.newPwd").css("color") != "rgb(0, 0, 255)"){
+			alert("정보를 정확히 기입해주세요.");
 			return;
 		}
 		$("input[name=newPwd]").val($("input.newPwd").val());
@@ -130,11 +103,8 @@ $(function() {
 </form>
 <form action="${pageContext.request.contextPath}/agent/updateAgent"
 	  id="updateAgentFrm"
-	  method="post"
-	  enctype="multipart/form-data">
+	  method="post">
 	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
-	<input type="file"  name="upFile" style="display: none">
-	<input type="hidden" name="renamedFileNamed" value="${renamedFileName}" />
 	<input type="hidden" name="newPwd" value="" />
 </form>
 <div id="back-container">
@@ -179,21 +149,11 @@ $(function() {
 					</td>
 				</tr>
 			</table>
-			<div id="agentProfileImg-div">
-				<c:if test="${renamedFileName ne null}">
-					<img src="${pageContext.request.contextPath }/resources/upload/agentprofileimg/${renamedFileName}"
-						width="144px" height="144px" id="agentProfileImg" alt="프로필사진" />
-				</c:if>
-				<c:if test="${renamedFileName eq null}">
-					<img src="${pageContext.request.contextPath }/resources/upload/agentprofileimg/basicprofileimg.jpg"
-						width="144px" height="144px" id="agentProfileImg" alt="프로필사진" />
-				</c:if>
+			<div id="agentProfileImg">
+			
 			</div>
-			<div class="filebox">
-				<input class="upload-name" value="파일선택" disabled="disabled">
-				<button type="button" class="btn btn-info" id="agentChangeImg-btn">업로드</button>
-				<button type="button" class="btn btn-danger" id="agentDeleteImg-btn">삭제</button>
-			</div>
+			<button type="button" class="btn btn-info" id="agnetChangeImg-btn">이미지 변경</button>
+			<input type="file" style="display: none">
 			<input type="hidden" name="memberNo" id="memberNo" value="${memberLoggedIn.memberNo}"/>
 			<div id="agentSet-btnGroup">
 				<button type="button" class="btn btn-secondary" id="agentUpdate-btn">수정</button>

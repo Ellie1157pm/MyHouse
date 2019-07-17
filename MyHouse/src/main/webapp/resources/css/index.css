@@ -63,13 +63,7 @@ div#login-div {
 	margin-top: -47px;
 	right: 130px;
 }
-/*로그인후 중개인아이디*/
-a#mName{
-	color: blue;	
-}
-a#mName:hover{
-	cursor: pointer;	
-}
+
 div#login-div button {
 	padding: 5px;
 	font-size: 12px;
