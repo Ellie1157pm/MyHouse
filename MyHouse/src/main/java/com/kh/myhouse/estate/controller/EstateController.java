@@ -200,14 +200,19 @@ public class EstateController {
 	}
 	
 	@RequestMapping("/filterReset")
-	public ModelAndView resetFilter(ModelAndView mav,@RequestParam String localName,@RequestParam String estateType) {
-		String loc="(37.566826, 126.9786567)";
+	public ModelAndView resetFilter(ModelAndView mav,@RequestParam String address,@RequestParam String coords,@RequestParam String estateType) {
+		String loc=coords;
+		System.out.println("로컬네임?"+coords);
 		mav.addObject("estateType",estateType);
-		mav.addObject("dealType","M");
+		if(estateType.equals("A")||estateType.equals("B")) {
+			mav.addObject("dealType","M");			
+		}else {
+			mav.addObject("dealType","all");	
+		}
 		mav.addObject("structure","all");
-		mav.addObject("localName",localName);
 		mav.addObject("msg","viewFilter();");
 		mav.addObject("loc",loc);
+		mav.addObject("localName",address);
 		mav.addObject("range1","0");
 		mav.addObject("range2","400");
 		mav.addObject("range3","0");
@@ -543,6 +548,7 @@ public class EstateController {
 		System.out.println("거래유 : "+dealType);
 		System.out.println("주소 : " +address);
 		System.out.println("로컬코드 : " +localCode);
+		System.out.println("구조  : "+structure);
 		
 		//아파트가 아닌 경우
 		if(!(estateType.equals("A"))) {

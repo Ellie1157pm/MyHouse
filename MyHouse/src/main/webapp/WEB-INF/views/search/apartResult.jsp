@@ -672,6 +672,206 @@ function monthlyLent(){
     }
 	});//end of 월세
 } 
+//추천매물 가져오는함수
+function getRecommendEstate(cPage,place){
+	   var param={
+	           cPage : cPage,
+	           addressName : place.address_name
+	   }
+	   
+	   $.ajax({
+	       url: "<%=request.getContextPath()%>/estate/getRecommendEstate",
+       data: param,
+       type:"post",
+       dataType:"json",
+       success:function(data){
+    	  console.log(data);
+    	  var html="";
+       	  html+="<div id='estateBar'>";
+       	  html+="<p>매물 목록</p><hr/>";
+       	  html+="<button type='button' class='btn btn-outline-dark change'>단위</button>";
+       	  html+="</div>";
+       	  html+="<p class='estateList'>안심중개사 추천매물</p>";
+	      if(cPage==1){
+	          	$("#sidebar").html(html);
+	      }
+	      html="";
+       	  if(data!=null){
+	          for(var i=0; i<data.length; i++){
+	        	 html+="<div id='estate' onclick=\"getDetailEstate('"+place.road_address.building_name+"','"+place.address_name+"',"+data[i].EstateNo+","+place.x+","+place.y+");\")>"; 	
+	        	 html+="<img src='${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[i].attachList[0].renamedFileName+"'>";
+	        	 html+="<span class='apart'>아파트</span><br>";
+	        	 html+="<span class='apart'>"+data[i].address_detail+"</span>";
+	        	 html+="</div>";  
+	          }
+       		  $("#sidebar").append(html);
+       	  }
+          
+          //추천매물이 10개 미만이면 이제 일반 매물을 가져오기위해서
+          if(data.length < 9){	 
+        	  html="";
+        	  html+="<hr class='line'/>"
+              html+="<p class='estateList'>일반매물</p>";
+              if(cPage2==1){
+	              $("#sidebar").append(html);
+              }
+        	  getNotRecommendEstate(cPage2++,place);
+          }
+           
+       },
+       error:function(jqxhr,text,errorThrown){
+           console.log(jqxhr);
+       }
+   });
+}
+
+//일반매물 가져오는 함수
+function getNotRecommendEstate(cPage2,place){
+	
+   var param={
+           cPage2 : cPage2,
+           addressName : place.address_name
+   }
+   $.ajax({
+       url: "<%=request.getContextPath()%>/estate/getNotRecommendEstate",
+       data: param,
+       type:"post",
+       dataType:"json",
+       success:function(data){
+    	  var html="";
+          for(var i=0; i<data.length; i++){ 
+        	 html+="<div id='estate' onclick=\"getDetailEstate('"+place.road_address.building_name+"','"+place.address_name+"',"+data[i].EstateNo+","+place.x+","+place.y+");\">";	
+        	 html+="<img src='${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[i].attachList[0].renamedFileName+"'>";
+        	 html+="<span class='apart'>아파트</span>";
+        	 html+="</div>";  
+          }
+          $("#sidebar").append(html);
+       },
+       error:function(jqxhr,text,errorThrown){
+           console.log(jqxhr);
+       }
+   });
+}
+
+//매물선택시 상세정보 가져오는함수
+function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
+	
+	//스크롤 걸린거 제거위해
+	$("#sidebar").unbind();
+	
+		var param={
+				estateNo:estateNo
+		}
+	   
+	   //ajax를 사용해서 서블릿에서 해당하는 매물의 상세정보를 가져온다.
+	   $.ajax({
+	   	url:"${pageContext.request.contextPath}/estate/detailEstate",
+	   	data: param,
+	   	contentType:"json",
+	   	type:"get",
+	   	success:function(data){
+	   		var html="";
+	   		html+="<div id='floating'>";
+	   		html+="<a href='http://www.naver.com'><img src='${pageContext.request.contextPath}/resources/images/search/backarrow.PNG'></a>";
+	   		html+="<span>"+placeName+"</span>";
+	   		html+="<button type='button' class='btn btn-outline-dark change'>단위</button>";
+	   		html+="</div>";
+	   		html+="<div id='imgBox'>";
+	   		html+="<div id='carouselExampleControls' class='carousel slide' data-ride='carousel'>";
+	   		html+="<div class='carousel-inner'>";
+	   		html+="<div class='carousel-item active'>";
+	   		html+="<img src=${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[0].attachList[0].renamedFileName+"/>"	   		
+	   		html+="</div>";
+	   		for(var i=1; i<data[0].attachList.length; i++){
+	   			alert(data[0].EstateNo+" : "+data[0].attachList[i].renamedFileName)
+		   		html+="<div class='carousel-item'>";
+		   		html+="<img src=${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[0].attachList[i].renamedFileName+"/>"	   		
+		   		html+="</div>";	   			
+	   		}
+	   		html+="</div>";
+	   		html+="<a class='carousel-control-prev' href='#carouselExampleControls' role='button' data-slide='prev'>";
+	   		html+="<span class='carousel-control-prev-icon' aria-hidden='true'></span>";
+	   		html+="<span class='sr-only'>Previous</span>";
+	   		html+="</a>";
+	   		html+="<a class='carousel-control-next' href='#carouselExampleControls' role='button' data-slide='next'>";
+	   		html+="<span class='carousel-control-next-icon' aria-hidden='true'></span>";
+	   		html+="<span class='sr-only'>Next</span>";
+	   		html+="</a>";
+	   		html+="</div>";
+	   		html+="</div>";
+	   		html+="<div id='location'>";
+	   		html+="<hr class='line'/><p style='margin:10px;'>로드뷰</p><hr/><p class='addressName'>"+placeName+"</p>";
+	   		html+="</div>";
+	   		html+="<div id='roadview'>";
+	   		html+="</div>";
+	   		$("#sidebar").html(html);
+	   		
+	   		
+	   		//기본적으로 크롬을 플래쉬가 차단되있음 그래서 예외처리를 해주어서 플래쉬가 차단되있으면 허용하게할수있는 예외처리를 해줌
+	   		try{
+	       		var roadviewContainer = document.getElementById('roadview'); //로드뷰를 표시할 div
+	       		var roadview = new kakao.maps.Roadview(roadviewContainer); //로드뷰 객체
+	       		var roadviewClient = new kakao.maps.RoadviewClient(); //좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
+	
+	       		var position = new kakao.maps.LatLng(y, x);
+	
+	       		// 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
+	       		roadviewClient.getNearestPanoId(position, 50, function(panoId) {
+	       		    roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
+	       		});
+	   			
+	   		}catch(e){
+	   			$("#roadview").html("<a href='http://get.adobe.com/flashplayer/' target='_blank'>최신버전 다운로드</a>");
+	   			
+	   		}
+	   		
+	   	},
+	   	error: function(jqxhr){
+				console.log("ajax처리실패: "+jqxhr.status);
+			}
+	   	
+	   });         
+}
+
+//리셋
+function filterReset(){
+	//거래 유형(매매,면적 전체,매매가 전체)
+	location.href="${pageContext.request.contextPath}/estate/filterReset?coords="+$('#coords').val()+"&estateType=${estateType}&address="+$('#address').val();
+}
+
+function searchAddress(obj) {
+    console.log('주소찾기');
+    var keyword = obj;
+    console.log('입력값=' + keyword);
+    //키워드로 검색해본다.
+     ps.keywordSearch(keyword, placesSearchCB);
+    
+    //만약, 키워드로 검색이 되지 않는다면 주소로 검색해본다.
+    if($('#address').val() == null || $('#address').val() == ''){
+        geocoder.addressSearch(keyword, function(result, status) {
+            // 정상적으로 검색이 완료됐으면
+             if (status === kakao.maps.services.Status.OK) {
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                console.log('좌표검색 : '+coords);
+                $('#localName').val(coords);
+                searchDetailAddrFromCoords(coords,function(data){
+                    console.log(data); 
+                    if (status === kakao.maps.services.Status.OK) {
+                        alert(result[0].address.address_name)
+                        $('#address').val(result[0].address.address_name.substring(0, 8));
+                        $('#localName').val(coords);
+                    console.log($('#localName').val());
+                    $('#estateFrm').submit();
+                    }
+                }); 
+            }
+        });
+    }else {
+        $('#address').val(keyword.substring(0, 7));
+         $('#estateFrm').submit();
+    }
+}
+>>>>>>> refs/remotes/origin/yerim
 
 
 areaArray = new Array();
