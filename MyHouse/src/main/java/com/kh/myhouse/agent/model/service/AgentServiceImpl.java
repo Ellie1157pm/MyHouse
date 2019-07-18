@@ -102,4 +102,24 @@ public class AgentServiceImpl implements AgentService {
 		return agentDAO.selectOption(estateNo);
 	}
 
+	@Override
+	public int agentDelete(int memberNo) {
+		return agentDAO.agentDelete(memberNo);
+	}
+
+	@Override
+	public int estateUpdate(Estate estate) {
+		return agentDAO.estateUpdate(estate);
+	}
+
+	@Override
+	public int estatePhotoUpdate(Map<String, Object> map) {
+		return agentDAO.estatePhotoUpdate(map);
+	}
+
+	@Override
+	public int estatePhotoDelete(int estateNo) {
+		return agentDAO.estatePhotoDelete(estateNo);
+	}
+
 }

@@ -220,6 +220,13 @@ div.estateListEnd-box img{
     float: left;
     margin-right: 10px;
 }
+/*매물수정버튼*/
+button.modified-btn{
+	position: relative;
+	right: 52px;
+	top: 60px;
+	font-size: 14px;
+}
 /*매물등록버튼*/
 button.update-estate-btn{
     position: relative;

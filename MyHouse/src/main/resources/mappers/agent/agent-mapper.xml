@@ -53,6 +53,10 @@
 		    values(#{memberNo}, #{originalFileName}, #{renamedFileName}, default)
 	</update>
 	
+	<update id="agentDelete">
+		update member set quit_yn = 'Y' where member_no = #{memberNo}
+	</update>
+	
 	<select id="selectProfileImg" resultType="string">
 		select renamed_filename from profile_photo
 		where member_no = #{memberNo}
@@ -103,6 +107,16 @@
         left join power_link l on e.estate_no = l.estate_no
         where business_member_no = #{memberNo}
 	</select>
+	<update id="estateUpdate">
+		update member set
+	</update>
+	<delete id="estatePhotoDelete">
+		delete from estate_photo where estate_no = #{estateNo}
+	</delete>
+	<insert id="estatePhotoUpdate">
+		insert into estate_photo
+		values(seq_estate_photo.nextval,#{estateNo},#{originalFileName},#{renamedFileName},sysdate)
+	</insert>
 	<update id="updateAdvertised">
 		merge into power_link
 		using dual

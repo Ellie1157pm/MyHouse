@@ -102,4 +102,25 @@ public class AgentDAOImpl implements AgentDAO {
 		return sqlSession.selectOne("agent.selectOption", estateNo);
 	}
 
+	@Override
+	public int agentDelete(int memberNo) {
+		return sqlSession.update("agent.agentDelete", memberNo);
+	}
+
+	@Override
+	public int estateUpdate(Estate estate) {
+		return sqlSession.update("agent.estateUpdate", estate);
+	}
+	
+	@Override
+	public int estatePhotoUpdate(Map<String, Object> map) {
+		return sqlSession.insert("agent.estatePhotoUpdate", map);
+	}
+
+	@Override
+	public int estatePhotoDelete(int estateNo) {
+		return sqlSession.delete("agent.estatePhotoDelete", estateNo);
+	}
+
+
 }

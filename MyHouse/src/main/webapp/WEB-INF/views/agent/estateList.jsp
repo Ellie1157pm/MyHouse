@@ -95,33 +95,51 @@ $(function() {
 	$("#agent-set-btn").on("click", function(){
 		$("#agentMypageFrm").submit();
 	});
+	$("#estateRequest").on("click", function(){
+		location.href="${pageContext.request.contextPath}/estate/EnrollTest.do";
+	});
 	$("#estateList-end").on("click", function(){
 		$("#estateListEndFrm").submit();
 	});
 	$("#warning_memo").on("click", function(){
 		location.href="${pageContext.request.contextPath}/agent/warningMemo";
 	});
-	var searchType = "";
-	var searchKeyword = "";
+	
 	$("#estateList-search-btn").on("click", function(){
-		searchType = $("button.btn-info").text().trim();
-		searchKeyword = $("input#estateList-searchKeyword").val().trim();
+		var searchType = $("button.btn-info").text().trim();
+		var searchKeyword = $("input#estateList-searchKeyword").val().trim();
 		
 		location.href="${pageContext.request.contextPath}/agent/estateList?searchType="+searchType+"&searchKeyword="+searchKeyword;
 	});
+	
 	var cPage = 1;
 	$("div#estateList").scroll(function(){
-		if($(this)[0].scrollHeight <= (Math.round($(this).scrollTop()) + $(this).height())){
+		if($(this)[0].scrollHeight-$(this).scrollTop()+10 <= $(this).outerHeight()){
 			param = {
 					cPage: ++cPage,
-					searchType: searchType,
-					searchKeyword: searchKeyword
+					searchType: $("button.btn-info").text().trim(),
+					searchKeyword: $("input#estateList-searchKeyword").val().trim()
 			}
 			$.ajax({
 				url: "${pageContext.request.contextPath}/agent/estateListAdd",
 				data: param,
 				success: function(data){
-					console.log(data);
+					var html = "";
+					var str = "";
+					for(var i=0; i<data.length; i++){
+						html = '<div class="estateList-box" data-toggle="modal" data-target="#estateReqModal" onclick="estateReqView(this);">';
+						html += '<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/'+data[i].RENAMED_FILENAME+'"alt="매물사진"/>';
+						html += '<button type="button" class="btn btn-success update-estate-btn" onclick="updateEstate(this);" id="'+data[i].ESTATE_NO+'">등록</button>';
+						if(data[i].TRANSACTION_TYPE == 'M') str = "매매";
+						else if(data[i].TRANSACTION_TYPE == 'J') str = "전세";
+						else if(data[i].TRANSACTION_TYPE == 'O') str = "월세";
+						html += "<p>"+str +" "+ data[i].ESTATE_PRICE+"</p>";
+						html += "<p>"+data[i].ESTATE_AREA+"㎡</p>";
+						html += "<p>"+data[i].ADDRESS+"</p>";
+						html += "<p>"+data[i].ESTATE_CONTENT+"</p></div>";
+						
+						$("div#estateList").append(html);
+					}
 				}
 			});
 		}
@@ -149,6 +167,7 @@ $(function() {
 	<div id="info-container">
 		<div class="btn-group btn-group-lg" role="group" aria-label="..." id="button-container">
 			<button type="button" class="btn btn-secondary" id="agent-set-btn">설정</button>
+			<button type="button" class="btn btn-secondary" id="estateRequest">매물등록</button>
 			<button type="button" class="btn btn-secondary" id="estateList">매물신청목록</button>
 			<button type="button" class="btn btn-secondary" id="estateList-end">등록된매물</button>
 			<button type="button" class="btn btn-secondary" id="warning_memo">쪽지함</button>
@@ -224,43 +243,7 @@ $(function() {
 		   <span class="sr-only">Next</span>
 		 </a>
 	  </div>
-	  <!-- <div class ="estate-info">
-		  	<div id="estate-info-header">
-		  		<h3>월세 2,000/55(아파트)</h3>
-		  		<p>2019.06.19</p>
-		  	</div>
-		  	<div id="estate-info-area">
-		  		<table>
-		  			<tr>
-		  				<th>면적</th>
-		  				<th>동/호</th>
-		  			</tr>
-		  			<tr>
-		  				<td>79/60m2</td>
-		  				<td>124동13층3호</td>
-		  			</tr>
-		  		</table>
-		  	</div>
-		  	<div id="estate-info-contents">
-		  		<p>고급자재로 인테리어완비. 도배완료했습니다.</p>
-		  	</div>
-		  	<div id="estate-info-managementFee">
-		  		<span>관리비(난방비 제외)</span>
-		  		<p>월 11만원</p>
-		  	</div>
-		  	<div id="estate-info-station">
-		  		<span>주변역</span>
-		  		<p>쌍문역</p>
-		  	</div>
-		  	<div id="estate-info-option">
-		  		<span>옵션정보</span>
-		  		<p>엘리베이터,애완동물</p>
-		  	</div>
-		  	<div id="estate-info-phone">
-		  		<span>매물신청자 번호</span>
-		  		<p>01012341234</p>
-		  	</div>
-	  </div> -->
+	  
 	  </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

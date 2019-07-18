@@ -2,6 +2,7 @@ package com.kh.myhouse.agent.controller;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.myhouse.agent.model.service.AgentService;
 import com.kh.myhouse.agent.model.vo.Agent;
+import com.kh.myhouse.estate.model.service.EstateService;
 import com.kh.myhouse.estate.model.vo.Estate;
 import com.kh.myhouse.estate.model.vo.EstateAttach;
 import com.kh.myhouse.member.model.exception.MemberException;
@@ -38,6 +41,9 @@ public class AgentController {
 	
 	@Autowired
 	private AgentService agentService;
+	
+	@Autowired
+	private EstateService estateService;
 	
 	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;
@@ -283,6 +289,21 @@ public class AgentController {
 		return bool;
 	}
 	
+	@RequestMapping("/agentDelete")
+	public String agentDelete(int memberNo, SessionStatus sessionStatus,Model model){
+		int result = agentService.agentDelete(memberNo);
+		
+		String msg = result>0?"회원탈퇴성공!":"회원탈퇴실패!";
+		
+		if(msg.equals("회원탈퇴성공!")) {
+			if(!sessionStatus.isComplete()) sessionStatus.setComplete();
+		}
+		
+		model.addAttribute("msg", msg);
+		
+		return "common/msg";
+	}
+	
 	@RequestMapping("/estateList")
 	public void estateList(String searchType, String searchKeyword, Model model) {
 		Map<String, Object> map = new HashMap();
@@ -318,9 +339,6 @@ public class AgentController {
 	@RequestMapping("/estateListAdd")
 	@ResponseBody
 	public List<Map<String, Object>> estateListAdd(String searchType, String searchKeyword, int cPage){
-		System.out.println("searchType@controller="+searchType);
-		System.out.println("searchKeyword@controller="+searchKeyword);
-		System.out.println("cPage@controller="+cPage);
 		
 		Map<String, Object> map = new HashMap();
 		int numPerPage = 10;
@@ -388,6 +406,106 @@ public class AgentController {
 		List<Map<String, String>> list = agentService.estateListEnd(memberNo);
 		
 		model.addAttribute("list", list);
+	}
+	
+	@RequestMapping("/estateModified")
+	public void estateModified(int estateNo, Model model) {
+		Estate e = agentService.selectEstate(estateNo);
+		Map<String, String> optMap = agentService.selectOption(estateNo);
+		
+		model.addAttribute("estate", e);
+		model.addAttribute("option", optMap);
+	}
+	
+	@RequestMapping("/estateUpdate")
+	public void estateUpdate(
+			@RequestParam int estateNo,
+			@RequestParam String address1,
+			@RequestParam String address2,
+			@RequestParam String phone1,
+			@RequestParam String phone2,
+			@RequestParam String phone3,
+			@RequestParam char estateType,
+			@RequestParam char transactiontype,
+			@RequestParam int deposit,
+			@RequestParam int[] mon,
+			@RequestParam int ManageMenetFee,
+			@RequestParam int estateArea,
+			@RequestParam String estatecontent,
+			@RequestParam String[] etcoption,
+			@RequestParam String SubwayStation,
+			@RequestParam String[] construction,
+            @RequestParam String[] flooropt,
+			MultipartFile[] upFile,
+			HttpServletRequest request,
+			Model model) {
+		
+		String phone = phone1+phone2+phone3;
+		
+		//지역코드 얻어오기
+		String address= (address1.substring(0,6));	
+		String localCode = estateService.selectLocalCodeFromRegion(address); 
+		System.out.println("localCode 지역코드의 값 =="+localCode);
+
+		//전세 매매 월세 코드에 맞는 ,전세 ,월세 ,매매값 넣기
+		int estateprice= 0;
+		if(transactiontype=='J') {
+			estateprice = mon[1];
+		}
+		else if(transactiontype=='M') {
+			estateprice = mon[0];
+		}
+		else {
+			estateprice = mon[2];
+		}
+		System.out.println("estateNo@controller="+estateNo);
+		Estate estate =new Estate(estateNo, localCode, 0,
+				0, phone, "0",
+				address1, estateType, transactiontype, estateprice, 
+				ManageMenetFee, estateArea, SubwayStation, 
+				estatecontent, null, deposit, address2);
+		
+		Map<String, Object> map = null;
+		
+		try {
+			map = new HashMap();
+			//1. 파일업로드
+			String saveDirectory = request.getSession().getServletContext()
+										  .getRealPath("/resources/upload/estateenroll");
+			
+			//원래 저장된 이미지파일 삭제
+			
+			int result1 = agentService.estatePhotoDelete(estateNo);
+			
+			for(int i=0; i<upFile.length; i++) {
+				if(!upFile[i].isEmpty()) {
+					String originalFileName = upFile[i].getOriginalFilename();
+					String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+					int rndNum = (int)(Math.random()*1000);
+					
+					String renamedFileName = sdf.format(new Date())+"_"+rndNum+"."+ext;
+					
+					map.put("estateNo", estateNo);
+					map.put("originalFileName", originalFileName);
+					map.put("renamedFileName", renamedFileName);
+					
+					int result2 = agentService.estatePhotoUpdate(map);
+					
+					try {
+						//서버 지정위치에 파일 보관
+						upFile[i].transferTo(new File(saveDirectory+"/"+renamedFileName));
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		int result = agentService.estateUpdate(estate);
+		
 	}
 	
 	@RequestMapping("/warningMemo")

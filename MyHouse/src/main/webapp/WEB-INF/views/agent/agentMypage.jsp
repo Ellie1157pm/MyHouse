@@ -10,6 +10,9 @@
 
 $(function() {
 	$("#agent-set-btn").css("opacity", 0.6);
+	$("#estateRequest").on("click", function(){
+		location.href="${pageContext.request.contextPath}/estate/EnrollTest.do";
+	});
 	$("#estateList").on("click", function(){
 		location.href="${pageContext.request.contextPath}/agent/estateList";
 	});
@@ -121,6 +124,13 @@ $(function() {
 		$("input[name=newPwd]").val($("input.newPwd").val());
 		$("#updateAgentFrm").submit();
 	});
+	$("button#agentDelete-btn").on("click", function(){
+		if(confirm("정말로 회원탈퇴 하시겠습니까?")){
+			$("#agentDeleteFrm").submit();
+		} else {
+			
+		}
+	});
 });
 </script>
 <form action="${pageContext.request.contextPath}/agent/estateListEnd"
@@ -137,10 +147,16 @@ $(function() {
 	<input type="hidden" name="renamedFileNamed" value="${renamedFileName}" />
 	<input type="hidden" name="newPwd" value="" />
 </form>
+<form action="${pageContext.request.contextPath}/agent/agentDelete"
+	  id="agentDeleteFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
 <div id="back-container">
 	<div id="info-container">
 		<div class="btn-group btn-group-lg" role="group" aria-label="..." id="button-container">
 			<button type="button" class="btn btn-secondary" id="agent-set-btn">설정</button>
+			<button type="button" class="btn btn-secondary" id="estateRequest">매물등록</button>
 			<button type="button" class="btn btn-secondary" id="estateList">매물신청목록</button>
 			<button type="button" class="btn btn-secondary" id="estateList-end">등록된매물</button>
 			<button type="button" class="btn btn-secondary" id="warning_memo">쪽지함</button>
@@ -197,7 +213,7 @@ $(function() {
 			<input type="hidden" name="memberNo" id="memberNo" value="${memberLoggedIn.memberNo}"/>
 			<div id="agentSet-btnGroup">
 				<button type="button" class="btn btn-secondary" id="agentUpdate-btn">수정</button>
-				<button type="button" class="btn btn-dark">회원탈퇴</button>
+				<button type="button" class="btn btn-dark" id="agentDelete-btn">회원탈퇴</button>
 			</div>
 		</div>	
 	</div>

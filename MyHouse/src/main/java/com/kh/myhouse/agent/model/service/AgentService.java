@@ -43,4 +43,12 @@ public interface AgentService {
 
 	Map<String, String> selectOption(int estateNo);
 
+	int agentDelete(int memberNo);
+
+	int estateUpdate(Estate estate);
+
+	int estatePhotoUpdate(Map<String, Object> map);
+
+	int estatePhotoDelete(int estateNo);
+
 }

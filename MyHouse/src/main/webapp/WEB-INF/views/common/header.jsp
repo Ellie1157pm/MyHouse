@@ -155,7 +155,7 @@
 					id="loginFrm">
 					<div class="modal-body login-modal">
 						<label for="id">아이디(이메일)</label> <input type="text"
-							name="memberEmail" id="id" /><br /> <label for="password">비밀번호</label>
+							name="memberEmail" id="id"/><br /> <label for="password">비밀번호</label>
 						<input type="password" name="memberPwd" id="password" /><br />
 						<button id="id-find-btn" type="button" class="btn btn-link"
 							data-toggle="modal" data-target=".id-find-end">[아이디 찾기]</button>
@@ -291,7 +291,7 @@
 		      <form action="${pageContext.request.contextPath}/agent/insertAgent" id="agent-enrollFrm" method="post">
 		      	  <span id="s-email"></span>
 		      	  <label for="agent-enroll-email">아이디(이메일)</label>
-			      <input type="text" name="memberEmail" id="agent-enroll-email"/><br />
+			      <input type="text" name="memberEmail" id="agent-enroll-email" placeholder="abc@qwe.com"/><br />
 			      <label for="agent-enroll-name">이름</label>
 			      <input type="text" name="memberName" id="agent-enroll-name"/><br />
 			      <label for="agent-enroll-password">비밀번호</label>
@@ -299,10 +299,10 @@
 			      <label for="agent-enroll-password_">비밀번호 확인</label>
 			      <input type="password"  id="agent-enroll-password_"/><br />
 			      <label for="agent-enroll-phone">전화번호</label>
-			      <input type="text" name="phone" id="agent-enroll-phone"/><br />
+			      <input type="text" name="phone" id="agent-enroll-phone" placeholder="-없이 작성"/><br />
 			      <label for="agent-enroll-companyno">사업자 번호</label>
 			      <input type="text" name="companyRegNo" id="agent-enroll-companyno"/><br />
-			      <input type="hidden" name="status" id="agent-enroll-status" value="B"/><br />
+			      <input type="hidden" name="status" id="agent-enroll-status" value="B" placeholder="-없이 작성"/><br />
 			  </form>
 	      </div>
 	      <div class="modal-footer">
@@ -330,7 +330,7 @@
 					<form
 						action="${pageContext.request.contextPath}/member/insertMember.do"
 						id="member-enrollFrm" method="post">
-						<span id="s-email"></span> <label for="member-enroll-email">아이디(이메일)</label>
+						<span id="s-email"></span> <label for="member-enroll-email" placeholder="abc@qwe.com">아이디(이메일)</label>
 						<input type="text" name="memberEmail" id="member-enroll-email" /><br />
 						<label for="member-enroll-name">이름</label> <input type="text"
 							name="memberName" id="member-enroll-name" /><br /> <label
@@ -338,8 +338,8 @@
 							name="memberPwd" id="member-enroll-password" /><br /> <span
 							id="s-password"></span> <label for="member-enroll-password_">비밀번호
 							확인</label> <input type="password" id="member-enroll-password_" /><br />
-						<label for="member-enroll-phone">전화번호</label> <input type="text"
-							name="phone" id="member-enroll-phone" /><br />
+						<label for="member-enroll-phone" >전화번호</label> <input type="text"
+							name="phone" id="member-enroll-phone" placeholder="-없이 작성"/><br />
 					</form>
 				</div>
 				<div class="modal-footer">
