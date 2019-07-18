@@ -21,6 +21,9 @@ $(function() {
 	$("#estateList-end").on("click", function(){
 		$("#estateListEndFrm").submit();
 	});
+	$("#estateRequest").on("click", function(){
+		location.href="${pageContext.request.contextPath}/estate/EnrollTest.do";
+	});
 });
 
 //쪽지관련 스크립트
@@ -74,6 +77,7 @@ function noteDel(){
 	<div id="info-container">
 		<div class="btn-group btn-group-lg" role="group" aria-label="..." id="button-container">
 			<button type="button" class="btn btn-secondary" id="agent-set-btn">설정</button>
+			<button type="button" class="btn btn-secondary" id="estateRequest">매물등록</button>
 			<button type="button" class="btn btn-secondary" id="estateList">매물신청목록</button>
 			<button type="button" class="btn btn-secondary" id="estateList-end">등록된매물</button>
 			<button type="button" class="btn btn-secondary" id="warning_memo">쪽지함</button>

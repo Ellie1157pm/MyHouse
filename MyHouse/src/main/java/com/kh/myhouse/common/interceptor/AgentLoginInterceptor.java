@@ -15,8 +15,9 @@ public class AgentLoginInterceptor extends HandlerInterceptorAdapter {
 			throws Exception {
 		HttpSession session = request.getSession();
 		Agent memberLoggedIn = (Agent)session.getAttribute("memberLoggedIn");
-		
+			
 		if(memberLoggedIn == null) {
+			
 			String reqUrl = request.getRequestURL().toString();
 			
 			if(reqUrl.equals(request.getHeader("Origin")+"/myhouse/agent/loginCheck") ||

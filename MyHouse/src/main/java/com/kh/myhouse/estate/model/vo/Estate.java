@@ -1,9 +1,8 @@
 package com.kh.myhouse.estate.model.vo;
-
 import java.util.Date;
 import java.util.List;
-
 public class Estate {
+
 	private int EstateNo;
 	private String RegionCode;
 	private int MemberNo;
@@ -194,4 +193,5 @@ public class Estate {
 				+ ", SubwayStation=" + SubwayStation + ", EstateContent=" + EstateContent + ", WrittenDate="
 				+ WrittenDate + ", Deposit=" + Deposit +", AddressDetail= "+AddressDetail+", attachList=" + attachList + "]";
 	}
+
 }
