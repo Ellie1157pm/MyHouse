@@ -38,7 +38,6 @@
 
 </div>
 <div id="sidebar">
-<<<<<<< HEAD
 				
 </div>
 <div id="searchArea">
@@ -179,6 +178,7 @@ $(function(){
     });
 	
 });
+
 //옵션 체크시에 실행
 function checkOption(obj){
 	for(var i=0;i<$('input[name=option]').length;i++){
@@ -266,7 +266,8 @@ ps.keywordSearch(gap, placesSearchCB);
 <%}%>
 //이건 아파트 리스트(주소던 아파트 이름이던 알아서 마커 찍고 클러스터링 해줌)
 <%if(list!=null){for(int i=0; i<list.size(); i++) {%>
-var loc = "<%=list.get(i)%>";console.log(loc);
+var loc = "<%=list.get(i)%>";
+console.log(loc);
 geocoder.addressSearch(loc,placesSearchCB2);
 <%}}%>
 
@@ -286,9 +287,9 @@ var  imageSize = new kakao.maps.Size(70, 70); // 마커이미지의 크기입니
 kakao.maps.event.addListener(map, 'dragend', function() {     
 	//법정동 상세주소 얻어오기
 		searchDetailAddrFromCoords(map.getCenter(),function(result,status){
-
+		console.log(result[0])
 	 var localname =$('#estateFrm #coords').val(map.getCenter());
-var add=(result[0].address.address_name).substring(0,8);
+	 var add=(result[0].address.address_name).substring(0,8);
 $('#address').val(add);
 var param = { 
 		address : add,
@@ -386,33 +387,35 @@ function displayMarker(place) {
 //키워드 검색 완료 시 호출되는 콜백함수
 function placesSearchCB (data, status, pagination) {
   if (status === daum.maps.services.Status.OK) {
-	
+
       // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
       // LatLngBounds 객체에 좌표를 추가합니다
       var bounds = new daum.maps.LatLngBounds();
-	
       for (var i=0; i<data.length; i++) {
       	address=data[i].address_name;
   		//서울과 경기권이 우선이므로 서울부터 확인
   		if(address.indexOf('서울')>-1){
-  			$('#locate').val(address.substring(0,8));
+  			$('#address').val(address.substring(0,8));
+  			$('#coords').val('('+data[i].x+','+data[i].y+')');
   			//좌표를 지도 중심으로 옮겨줌.
               bounds.extend(new daum.maps.LatLng(data[i].y, data[i].x));
   			break;
   		}else if(address.indexOf('경기')>-1){
-  			$('#locate').val(address.substring(0,8));
+  			$('#address').val(address.substring(0,8));
+  			$('#coords').val('('+data[i].x+','+data[i].y+')');
   			//좌표를 지도 중심으로 옮겨줌.
               bounds.extend(new daum.maps.LatLng(data[i].y, data[i].x));
   			break;
   		}else{
-  			$('#locate').val(address.substring(0,8));
+  			$('#address').val(address.substring(0,8));
+  			$('#coords').val('('+data[i].x+','+data[i].y+')');
   			//좌표를 지도 중심으로 옮겨줌.
               bounds.extend(new daum.maps.LatLng(data[i].y, data[i].x));
   		}
       }       
    // 검색된 장소 중심 좌표를 기준으로 지도 범위를 재설정
       map.setBounds(bounds);
-  } 
+  }
 }
 //주소로 좌표를 검색하고 마커찍기
 function placesSearchCB2 (data, status, pagination) {
@@ -670,6 +673,9 @@ function monthlyLent(){
 	});//end of 월세
 } 
 
+
+areaArray = new Array();
+
 //추천매물 가져오는함수
 function getRecommendEstate(cPage,place){
 	   var param={
@@ -683,11 +689,17 @@ function getRecommendEstate(cPage,place){
        type:"post",
        dataType:"json",
        success:function(data){
+    	  
     	  console.log(data);
+    	  
+    	  for(var i=0; i<data.length; i++){
+    		  areaArray[i] = data[i].EstateArea;
+    	  }
+    	  
     	  var html="";
        	  html+="<div id='estateBar'>";
        	  html+="<p>매물 목록</p><hr/>";
-       	  html+="<button type='button' class='btn btn-outline-dark change'>단위</button>";
+       	  html+="<button type='button' class='btn btn-outline-dark change' onclick='areaChange();'>단위</button>";
        	  html+="</div>";
        	  html+="<p class='estateList'>안심중개사 추천매물</p>";
 	      if(cPage==1){
@@ -698,8 +710,35 @@ function getRecommendEstate(cPage,place){
 	          for(var i=0; i<data.length; i++){
 	        	 html+="<div id='estate' onclick=\"getDetailEstate('"+place.road_address.building_name+"','"+place.address_name+"',"+data[i].EstateNo+","+place.x+","+place.y+");\")>"; 	
 	        	 html+="<img src='${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[i].attachList[0].renamedFileName+"'>";
+	        	 html+="<span class='best'>추천 </span>";
 	        	 html+="<span class='apart'>아파트</span><br>";
-	        	 html+="<span class='apart'>"+data[i].address_detail+"</span>";
+	        	 var ss = data[i].EstatePrice; // 15000
+	 	   		 var dd = String(ss); // number -> String 변환
+	 	   	 	 var ww = dd.length; //억단위일경우 length : 5  천만일경우 length : 4이하
+	 	   		 var ws = '억';
+	 	   		 var sw = '만원';
+	 	   		 var lastChar = dd.charAt(dd.length-1); //마지막 문자열찾기
+	 	   		 var last =dd.lastIndexOf(lastChar); // 마지막 인데스 찾기
+	 	   		 var str = '';
+	 	   		 if(ww>4){
+	 	   		  	var anum = dd.substring(0,last-3);
+	 	   			var	numf= dd.substring(last-3,last+1);
+	 	   			str = anum+ws+numf+sw;
+	 	   		 }
+	 	   		 else{
+	 	   			str=dd+sw;
+	 	   		 }
+	 	   		 if(data[i].TransActionType == 'M'){
+		        	 html+="<span class='price'>매매 "+str+"</span><br>";	 	   			 	 	   			 
+	 	   		 }
+	 	   		 else if(data[i].TransActionType == 'J'){
+		        	 html+="<span class='price'>전세 "+str+"</span><br>";	 	   			 
+	 	   		 }
+	 	   		 else{
+		        	 html+="<span class='price'>월세 "+str+"</span><br>";	 	   			 	 	   			 
+	 	   		 }
+	        	 html+="<span class='area'>평수 "+data[i].EstateArea+"<span class='unitSpan'>"+(unit==''?'m<sup>2</sup>':unit)+"</span></span><br>";	        	 
+	        	 html+="<span class='address'>"+data[i].AddressDetail+"</span>";
 	        	 html+="</div>";  
 	          }
        		  $("#sidebar").append(html);
@@ -736,11 +775,41 @@ function getNotRecommendEstate(cPage2,place){
        type:"post",
        dataType:"json",
        success:function(data){
+    	   console.log(data)
     	  var html="";
           for(var i=0; i<data.length; i++){ 
         	 html+="<div id='estate' onclick=\"getDetailEstate('"+place.road_address.building_name+"','"+place.address_name+"',"+data[i].EstateNo+","+place.x+","+place.y+");\">";	
         	 html+="<img src='${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[i].attachList[0].renamedFileName+"'>";
-        	 html+="<span class='apart'>아파트</span>";
+        	 html+="<span class='apart2'>아파트</span></br>";
+        	 
+        	 var ss = data[i].EstatePrice; // 15000
+ 	   		 var dd = String(ss); // number -> String 변환
+ 	   	 	 var ww = dd.length; //억단위일경우 length : 5  천만일경우 length : 4이하
+ 	   		 var ws = '억';
+ 	   		 var sw = '만원';
+ 	   		 var lastChar = dd.charAt(dd.length-1); //마지막 문자열찾기
+ 	   		 var last =dd.lastIndexOf(lastChar); // 마지막 인데스 찾기
+ 	   		 var str = '';
+ 	   		 if(ww>4){
+ 	   		  	var anum = dd.substring(0,last-3);
+ 	   			var	numf= dd.substring(last-3,last+1);
+ 	   			str = anum+ws+numf+sw;
+ 	   		 }
+ 	   		 else{
+ 	   			str=dd+sw;
+ 	   		 }
+ 	   		 
+        	 if(data[i].TransActionType == 'M'){
+	        	 html+="<span class='price'>매매 "+str+"</span><br>";	 	   			 	 	   			 
+ 	   		 }
+ 	   		 else if(data[i].TransActionType == 'J'){
+	        	 html+="<span class='price'>전세 "+str+"</span><br>";	 	   			 
+ 	   		 }
+ 	   		 else{
+	        	 html+="<span class='price'>월세 "+str+"</span><br>";	 	   			 	 	   			 
+ 	   		 }
+        	 html+="<span class='area'>평수 "+data[i].EstateArea+"<span class='unitSpan'>"+(unit==''?'m<sup>2</sup>':unit)+"</span></span><br>";
+        	 html+="<span class='address'>"+data[i].AddressDetail+"</span>";
         	 html+="</div>";  
           }
           $("#sidebar").append(html);
@@ -761,51 +830,104 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 				estateNo:estateNo
 		}
 	   
-	   //ajax를 사용해서 서블릿에서 해당하는 매물의 상세정보를 가져온다.
-	   $.ajax({
-	   	url:"${pageContext.request.contextPath}/estate/detailEstate",
-	   	data: param,
-	   	contentType:"json",
-	   	type:"get",
-	   	success:function(data){
-	   		var html="";
-	   		html+="<div id='floating'>";
-	   		html+="<a href='http://www.naver.com'><img src='${pageContext.request.contextPath}/resources/images/search/backarrow.PNG'></a>";
-	   		html+="<span>"+placeName+"</span>";
-	   		html+="<button type='button' class='btn btn-outline-dark change'>단위</button>";
-	   		html+="</div>";
-	   		html+="<div id='imgBox'>";
-	   		html+="<div id='carouselExampleControls' class='carousel slide' data-ride='carousel'>";
-	   		html+="<div class='carousel-inner'>";
-	   		html+="<div class='carousel-item active'>";
-	   		html+="<img src=${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[0].attachList[0].renamedFileName+"/>"	   		
-	   		html+="</div>";
-	   		for(var i=1; i<data[0].attachList.length; i++){
-	   			alert(data[0].EstateNo+" : "+data[0].attachList[i].renamedFileName)
-		   		html+="<div class='carousel-item'>";
-		   		html+="<img src=${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[0].attachList[i].renamedFileName+"/>"	   		
-		   		html+="</div>";	   			
-	   		}
-	   		html+="</div>";
-	   		html+="<a class='carousel-control-prev' href='#carouselExampleControls' role='button' data-slide='prev'>";
-	   		html+="<span class='carousel-control-prev-icon' aria-hidden='true'></span>";
-	   		html+="<span class='sr-only'>Previous</span>";
-	   		html+="</a>";
-	   		html+="<a class='carousel-control-next' href='#carouselExampleControls' role='button' data-slide='next'>";
-	   		html+="<span class='carousel-control-next-icon' aria-hidden='true'></span>";
-	   		html+="<span class='sr-only'>Next</span>";
-	   		html+="</a>";
-	   		html+="</div>";
-	   		html+="</div>";
-	   		html+="<div id='location'>";
-	   		html+="<hr class='line'/><p style='margin:10px;'>로드뷰</p><hr/><p class='addressName'>"+placeName+"</p>";
-	   		html+="</div>";
-	   		html+="<div id='roadview'>";
-	   		html+="</div>";
-	   		$("#sidebar").html(html);
-	   		
-	   		
-	   		//기본적으로 크롬을 플래쉬가 차단되있음 그래서 예외처리를 해주어서 플래쉬가 차단되있으면 허용하게할수있는 예외처리를 해줌
+		 //ajax를 사용해서 서블릿에서 해당하는 매물의 상세정보를 가져온다.
+		   $.ajax({
+		   	url:"${pageContext.request.contextPath}/estate/detailEstate",
+		   	data: param,
+		   	contentType:"json",
+		   	type:"get",
+		   	success:function(data){
+		   		console.log('data테이타는@@@@@@@====='+data[0].attachList[0]);
+		   		var html="";
+		   		html+="<div id='floating'>";
+		   		html+="<a href='http://www.naver.com'><img src='${pageContext.request.contextPath}/resources/images/search/backarrow.PNG'></a>";
+		   		html+="<span>"+placeName+"</span>";
+		   		html+="<button type='button' class='btn btn-outline-dark change'>단위</button>";
+		   		html+="</div>";
+		   		html+="<div id='imgBox'>";
+		   		html+="<div id='carouselExampleControls' class='carousel slide' data-ride='carousel'>";
+		   		html+="<div class='carousel-inner'>";
+		   		html+="<div class='carousel-item active'>";
+		   		html+="<img src=${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[0].attachList[0].renamedFileName+"/>"	   		
+		   		html+="</div>";
+		   		for(var i=1; i<data[0].attachList.length; i++){
+			   		html+="<div class='carousel-item'>";
+			   		html+="<img src=${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[0].attachList[i].renamedFileName+"/>"	   		
+			   		html+="</div>";	   			
+		   		}
+		   		html+="</div>";
+		   		html+="<a class='carousel-control-prev' href='#carouselExampleControls' role='button' data-slide='prev'>";
+		   		html+="<span class='carousel-control-prev-icon' aria-hidden='true'></span>";
+		   		html+="<span class='sr-only'>Previous</span>";
+		   		html+="</a>";
+		   		html+="<a class='carousel-control-next' href='#carouselExampleControls' role='button' data-slide='next'>";
+		   		html+="<span class='carousel-control-next-icon' aria-hidden='true'></span>";
+		   		html+="<span class='sr-only'>Next</span>";
+		   		html+="</a>";
+		   		html+="</div>";
+		   		html+="</div>";
+		   		html+="<div id=optionwrite>";
+		   		var ss = data[0].EstatePrice; // 15000
+		   		var dd = String(ss); // number -> String 변환
+		   		var ww = dd.length; //억단위일경우 length : 5  천만일경우 length : 4이하
+		   		var ws = '억';
+		   		var sw = '만원';
+		   		var lastChar = dd.charAt(dd.length-1); //마지막 문자열찾기
+		   		var last =dd.lastIndexOf(lastChar); // 마지막 인데스 찾기
+		   		var str = '';
+		   		if(ww>4){
+		   		
+		   	    var anum = dd.substring(0,last-3);
+		   		var	numf= dd.substring(last-3,last+1);
+		   		str = anum+ws+numf+sw;
+		   		}
+		   		else{
+		   			str=dd+sw;
+		   		}
+		   		var choice ='';
+		   		var qwew = data[0].TransActionType;
+		   		console.log('qwer@@@@='+qwew);
+		   		if(data[0].TransActionType =='M'){
+		   			choice ='매매';
+		   		}
+		   		else if(data[0].TransActionType =='J'){
+		   			choice = '전세';
+		   		}
+		   		else{
+		   			choice ='월세';
+		   		}
+		   		html+= "<h2>"+choice+":"+str;+"</h2>";
+		   		html+="</div>";
+		   		
+		   		html+="<div id=datilinfor>";
+		   		html+="<div id=A>"
+		   		html+="면적(공급/전용)</br>";
+		   		html+="<div id=font>"
+		   		html+=data[0].EstateArea;
+		   		html+="</div>";
+		   		html+="</div>";
+		   		html+="<div id=B>"
+			   		html+="동</br>";
+			   		html+="<div id=font>"
+			   		html+=data[0].AddressDetail;
+			   		html+="</div>";
+			   		html+="</div>";
+			   		html+="<div id=C>"
+				   		html+="층(해당층)</br>";
+				   		html+="<div id=font>"
+				   		html+=data[0].AddressDetail;
+				   		html+="</div>";
+				   		html+="</div>";
+		   		html+="</div>";
+		   		html+="<div id='location'>";
+		   		html+="</br></br>";
+		   		html+="<hr class='line'/><p style='margin:10px;'>로드뷰</p><hr/><p class='addressName'>"+placeName+"</p>";
+		   		html+="</div>";
+		   		html+="<div id='roadview'>";
+		   		html+="</div>";
+		   	
+		   		$("#sidebar").html(html);
+		   		//기본적으로 크롬을 플래쉬가 차단되있음 그래서 예외처리를 해주어서 플래쉬가 차단되있으면 허용하게할수있는 예외처리를 해줌
 	   		try{
 	       		var roadviewContainer = document.getElementById('roadview'); //로드뷰를 표시할 div
 	       		var roadview = new kakao.maps.Roadview(roadviewContainer); //로드뷰 객체
@@ -851,25 +973,53 @@ function searchAddress(obj) {
              if (status === kakao.maps.services.Status.OK) {
                 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
                 console.log('좌표검색 : '+coords);
-                $('#localName').val(coords);
+                $('#coords').val(coords);
                 searchDetailAddrFromCoords(coords,function(data){
-                    console.log(data); 
+                    console.log(data);
                     if (status === kakao.maps.services.Status.OK) {
-                        alert(result[0].address.address_name)
+                        alert(result[0].address.address_name);
                         $('#address').val(result[0].address.address_name.substring(0, 8));
-                        $('#localName').val(coords);
-                    console.log($('#localName').val());
+                        $('#coords').val(coords);
                     $('#estateFrm').submit();
                     }
-                }); 
+                });
             }
         });
     }else {
         $('#address').val(keyword.substring(0, 7));
-         $('#estateFrm').submit();
+        if($('#coords').val()==='(37.566826, 126.9786567)'){
+        	setTimeout(function(){
+        		 console.log($('#coords').val());
+        		 $('#estateFrm').submit();
+        		   }, 500);
+        }
+         
     }
 }
 
+//단위클릭시 면적 바꾸기위해서
+function areaChange(){
+	console.log('unit@areaChange='+unit);
+	$.ajax({
+		url: '${pageContext.request.contextPath}/estate/unitChange?unit='+unit,
+		type: 'get',
+		contentType: 'application/json; charset=utf-8',
+		success: function(data) {
+			console.log("msg: "+data.msg);
+
+			$('span.unitSpan').html(data.unit);
+			unit=data.unit;
+		},
+		error: function(jqxhr, textStatus, errorThrown) {
+			console.log("ajax 처리 에러: "+jqxhr.status);
+			console.log(textStatus);
+			console.log(errorThrown);
+		}
+	});
+}
+
+var unit = '';
 </script>
+
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

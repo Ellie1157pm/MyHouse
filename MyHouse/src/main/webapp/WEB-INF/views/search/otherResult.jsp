@@ -297,11 +297,11 @@ var map=new daum.maps.Map(mapContainer,mapOption);
  });
 //controller에서 가져온 검색값 사용하기.
 if('${estateType}'==='B'){
-	var imageSrc = '${pageContext.request.contextPath/resources/images/search/bilar.png}'; // 마커이미지의 주소입니다
+	var imageSrc = '${pageContext.request.contextPath}/resources/images/search/bilar.png'; // 마커이미지의 주소입니다
 }else if('${estateType}'==='O'){
-	var imageSrc = '${pageContext.request.contextPath/resources/images/search/oneRoom.png}'; // 마커이미지의 주소입니다
+	var imageSrc = '${pageContext.request.contextPath}/resources/images/search/oneRoom.png'; // 마커이미지의 주소입니다
 }else{
-	var imageSrc = '${pageContext.request.contextPath/resources/images/search/office.png}'; // 마커이미지의 주소입니다
+	var imageSrc = '${pageContext.request.contextPath}/resources/images/search/office.png'; // 마커이미지의 주소입니다
 }
 
 var imageSize = new kakao.maps.Size(40, 50), // 마커이미지의 크기입니다

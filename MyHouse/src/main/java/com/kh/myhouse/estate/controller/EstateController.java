@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -345,10 +346,10 @@ public class EstateController {
 			estateprice = mon[1];
 		}
 		else if(transactiontype=='M') {
-			estateprice = mon[0];
+			estateprice = mon[2];
 		}
 		else {
-			estateprice = mon[2];
+			estateprice = mon[0];
 		}
 
 
@@ -629,6 +630,8 @@ public class EstateController {
 				}
 				//평형대가 전체고 옵션 선택 안했을때
 				else if(structure.equals("all")&&(option==null)) {
+					System.out.println("평형대가 전체고 옵션 선택 안했을때");
+					System.out.println(map);
 					list=estateService.selectApartListForAll(map);
 				}
 				//평형대 선택을 했고 옵션이 없을떄
@@ -677,5 +680,25 @@ public class EstateController {
 		}
 		
 		return mav;
+	}
+	
+	@RequestMapping("/unitChange")
+	@ResponseBody
+	public Object unitChange(@RequestParam(value="unit", required=false, defaultValue="m<sup>2</sup>") String unit) {
+		Map<String, String> map = new HashMap<>();
+		
+		logger.info("unit1@unitChange="+unit);
+		
+		if("m<sup>2</sup>".equals(unit))
+			unit = "평";
+		else
+			unit = "m<sup>2</sup>";
+		
+		logger.info("unit2@unitChange="+unit);
+		
+		map.put("unit", unit);
+		map.put("msg", "unit="+unit);
+
+		return map;
 	}
 }
