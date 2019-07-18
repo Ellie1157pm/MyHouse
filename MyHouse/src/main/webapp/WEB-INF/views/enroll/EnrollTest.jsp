@@ -12,6 +12,8 @@
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
  function validate(){
+	
+	 
 	  var estateType = $(':input[name=estateType]:radio:checked').val();
 	  var transactiontype = $(':input[name=transactiontype]:radio:checked').val();
    var etcoption = $(':input[name=etcoption]:checkbox:checked').val(); 
@@ -114,6 +116,24 @@ enctype="multipart/form-data">
 		<td><input type="text" name="BusinessMemberNo" id="BusinessMemberNo" value="${memberLoggedIn.status eq'B'.charAt(0)?memberLoggedIn.memberNo:'0'}" /></td>
 		</tr>
 
+	<tr>
+			<th>매물정보</th>
+			<td><input type="radio" name="estateType" id="apt" value="A" />
+			<label for="apt">아파트</label> 
+			<input type="radio" name="estateType" id="raidovilla" value="V" />
+			<label for="villa">빌라</label> 
+			
+			<input type="radio" name="estateType" id="radiooneroom" value="O" />
+			<label for="oneroom">원룸</label>
+				
+				
+				<input type="radio" name="estateType" id="radioopi" value="P"/>
+				<label for="opi">오피스텔</label>
+
+			</td>
+		</tr>
+
+
 		<tr>
 			<th>주소</th>
 			<td><input type="text" name="taddress1" id="taddress1" class="addr"
@@ -127,8 +147,9 @@ enctype="multipart/form-data">
 		</tr>
 		<tr>
 			<th>상세정보</th>
-			<td><input type="text" name="address2" id="address2" class="addr" required
-			    placeholder="124동15층4호 공백없이 이력하세요"></td>
+			<td><input type="number" name="address2" id="address2" class="addr" required>동
+			<input type="number" name="address3" id="address3" class="addr" required>층
+			</td>
 		</tr>
 		
 		 <tr>
@@ -145,31 +166,16 @@ enctype="multipart/form-data">
                
            </td>
           </tr>
-		<tr>
-			<th>매물정보</th>
-			<td><input type="radio" name="estateType" id="apt" value="A" />
-			<label for="apt">아파트</label> 
-			<input type="radio" name="estateType" id="raidovilla" value="V" />
-			<label for="villa">빌라</label> 
-			
-			<input type="radio" name="estateType" id="radiooneroom" value="O" />
-			<label for="oneroom">원룸</label>
-				
-				
-				<input type="radio" name="estateType" id="radioopi" value="P"/>
-				<label for="opi">오피스텔</label>
-
-			</td>
-		</tr>
+	
 		<tr>
 			<th>매물정보2</th>
 			<td>
 			
 			<input type="radio" name="transactiontype" id="charter" value="J"/>
 			<label for="charter" >전세</label> 
-			<input type="radio" name="transactiontype" id="monthly"  value="M" />
+			<input type="radio" name="transactiontype" id="monthly"  value="O" />
 			<label for="monthly"  >월세</label>
-			<input type="radio" name="transactiontype" id="For-Sale" value="O" />
+			<input type="radio" name="transactiontype" id="For-Sale" value="M" />
 			<label for="For-Sale">매물</label>
 				
 	</td>

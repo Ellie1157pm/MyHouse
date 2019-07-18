@@ -1,3 +1,4 @@
+
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="com.kh.myhouse.estate.model.vo.Estate"%>
@@ -16,7 +17,7 @@
     String[] options=(String[])request.getAttribute("option");
     List<String>option=new ArrayList<>();
     if(options!=null){
-    option=Arrays.asList(options);    	
+    option=Arrays.asList(options);
     }
     String msg=(String)request.getAttribute("msg");
     
@@ -167,9 +168,9 @@
 		</c:if>
 		<p class="filterSubTitle" style="margin:0;">옵션</p>
 		&nbsp;
-			&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= option.contains("엘레베이터")?"checked":"" %><%} %> /><label for="elevator">엘리베이터</label>
-			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= option.contains("애완동물")?"checked":"" %><%} %> /><label for="animal">반려동물 가능</label>
-			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(option!=null){%><%= option.contains("지하주차장")?"checked":"" %><%} %>  /><label for="parking">주차 가능</label>
+			&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= option.contains("엘레베이터")?"checked":"" %><%} %> /><label for="엘레베이터">엘리베이터</label>
+			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= option.contains("애완동물")?"checked":"" %><%} %> /><label for="애완동물">반려동물 가능</label>
+			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(option!=null){%><%= option.contains("지하주차장")?"checked":"" %><%} %>  /><label for="지하주차장">주차 가능</label>
 		</c:if> <!-- end of 빌라 -->
 		
 		
@@ -197,7 +198,6 @@
 					  <input type="text" class="js-range-slider3" name="range2" value="" />
 					</div>
 					<br />
-					<input type="checkbox" onchange="checkOption(this)" value="maintenanceCost" <%=option.contains("maintenanceCost")?"checked":"" %> name="option" id="maintenanceCost" style="width:20px;height: 20px;margin-left:10px;" />
 				<hr />
 			</c:if><!-- end of 거래유형이 전체 일 때  -->
 			<c:if test="${dealType eq 'J' }">
@@ -213,14 +213,14 @@
 					<p class="filterSubTitle" style="margin:0;">구조</p>
 					<p class="filterTitle button" style="margin-bottom:4px;">전체</p>
 					<table id="areaTbl">
-						<tr>
+						<tr >
 							<td <%=structure.equals("all")?"style='background:#6c757d;'":"" %> ><button type="button" data-type="전체"<%=structure.equals("all")?"style='background:#6c757d;color:wthie;width:150px;'":"" %> class="btn btn-secondary second" value="all" onclick="changeARea(this);">전체</button></td>
-							<td <%=structure.equals("오픈형(방1)")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second"  data-type="오픈형(방 1)" value="오픈형(방1)" <%=structure.equals("오픈형(방1)")?"style='background:#6c757d;color:wthie;width:150px;'":"" %>  onclick="changeARea(this);">오픈형(방 1)</button></td>
+							<td style="width:175px;" <%=structure.equals("오픈형(방1)")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second"  data-type="오픈형(방 1)" value="오픈형(방1)" <%=structure.equals("오픈형(방1)")?"style='background:#6c757d;color:wthie;width:150px;'":"" %>  onclick="changeARea(this);">오픈형(방 1)</button></td>
 						</tr>
 						
-						<tr>
+						<tr >
 							<td  <%=structure.equals("분리형(방1,거실1)")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형(방 1,거실 1)" value="분리형(방1,거실1)" <%=structure.equals("분리형(방1,거실1)")?"style='background:#6c757d;color:wthie;width:150px;'":"" %> onclick="changeARea(this);">분리형(방 1,거실 1)</button></td>
-							<td <%=structure.equals("복층형")?"style='background:#6c757d;'":"" %>><button type="button" class="btn btn-secondary second" data-type="복층형" value="복층형" <%=structure.equals("복층형")?"style='background:#6c757d;color:wthie;width:150px;'":"" %> onclick="changeARea(this);">복층형</button></td>
+							<td style="width:175px;" <%=structure.equals("복층형")?"style='background:#6c757d;'":"" %>><button type="button" class="btn btn-secondary second" data-type="복층형" value="복층형" <%=structure.equals("복층형")?"style='background:#6c757d;color:wthie;width:150px;'":"" %> onclick="changeARea(this);">복층형</button></td>
 						</tr>
 					</table>
 					<hr />
@@ -236,12 +236,12 @@
 					<p class="filterSubTitle" style="margin:0;">구조</p>
 					<p class="filterTitle button" style="margin-bottom:4px;">전체</p>
 					<table id="areaTbl">
-						<tr>
+						<tr >
 							<td <%=structure.equals("all")?"style='background:#6c757d;'":"" %>><button type="button" data-type="전체" class="btn btn-secondary second" <%=structure.equals("all")?"style='background:#6c757d;color:white;'":"" %> value="all" onclick="changeARea(this);">전체</button></td>
 							<td  <%=structure.equals("오픈형원룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="오픈형원룸"  <%=structure.equals("오픈형원룸")?"style='background:#6c757d;color:white;'":"" %> value="오픈형원룸" onclick="changeARea(this);">오픈형 원룸</button></td>
 							<td  <%=structure.equals("분리형원룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형원룸" value="분리형원룸"  <%=structure.equals("분리형원룸")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">분리형 원룸</button></td>
 						</tr>
-						<tr>
+						<tr >
 							<td <%=structure.equals("복층형원룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="복층형원룸" value="복층형원룸" <%=structure.equals("복층형원룸")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">복층형 원룸</button></td>
 							<td <%=structure.equals("투룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="투룸" value="투룸" <%=structure.equals("투룸")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">투룸</button></td>
 							<td <%=structure.equals("쓰리룸")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="쓰리룸+" value="쓰리룸+" <%=structure.equals("쓰리룸")?"style='background:#6c757d;color:white;'":"" %> onclick="changeARea(this);">쓰리룸+</button></td>
@@ -256,9 +256,9 @@
 				
 					<p class="filterSubTitle" style="margin:0;">옵션</p>
 					&nbsp;
-				&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(options!=null){%><%= option.contains("엘레베이터")?"checked":"" %><%} %> /><label for="elevator">엘리베이터</label>
-			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(options!=null){%><%= option.contains("애완동물")?"checked":"" %><%} %> /><label for="animal">반려동물 가능</label>
-			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(options!=null){%><%= option.contains("지하주차장")?"checked":"" %><%} %>  /><label for="parking">주차 가능</label>
+				&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(options!=null){%><%= option.contains("엘레베이터")?"checked":"" %><%} %> /><label for="엘레베이터">엘리베이터</label>
+			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(options!=null){%><%= option.contains("애완동물")?"checked":"" %><%} %> /><label for="애완동물">반려동물 가능</label>
+			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(options!=null){%><%= option.contains("지하주차장")?"checked":"" %><%} %>  /><label for="지하주차장">주차 가능</label>
 		</c:if><!--원룸 or 오피스텔 끝  -->
 	</div>
 	

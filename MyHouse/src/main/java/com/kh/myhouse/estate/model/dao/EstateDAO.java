@@ -27,9 +27,9 @@ public interface EstateDAO {
 
 	List<String> selectApartListForAllSelectOption(Map<String, Object> map);
 	
-	List<Map<String, String>> showRecommendEstate(int cPage, int numPerPage, String roadAddressName);
+	List<Map<String, String>> showRecommendEstate(int cPage, int numPerPage,String roadAddressName, String addressName);
 	
-	List<Map<String, String>> showNotRecommendEstate(int cPage2, int numPerPage, String roadAddressName);
+	List<Map<String, String>> showNotRecommendEstate(int cPage2, int numPerPage, String roadAddressName, String addressName);
 	
 
 	List<String> selectApartListSelectStructureNotOption(Map<String, Object> map);

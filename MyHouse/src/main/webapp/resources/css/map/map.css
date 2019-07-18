@@ -243,6 +243,31 @@ div#searchArea input[type=search] {
 	border: 1px solid gray;
 	width: 150px;
 }
+
+/*면접(공급/전용) 동 층(해당층)*/
+div#datilinfor{
+ 
+}
+div#A{
+	width: 33%;
+	float: left;	
+}
+div#B{	
+	width: 33%;
+	float: left;	
+}
+div#C{
+	width: 33%;
+	float: left;		
+}
+div#font{
+	text-align: center;
+	 color: #2d60a3;
+ 	font-weight: bold;
+     font-size: 20px;
+}
+
+
 /*지도 및 사이드바 css 종료 */
 /* ---------------- ------------------ */
 

@@ -260,11 +260,13 @@ public class EstateController {
         
         System.out.println("클릭페이지="+cPage);
         
+        String roadAddressName=request.getParameter("roadAddressName");
         String addressName=request.getParameter("addressName");
-        System.out.println("도로명 : "+addressName);
+        System.out.println("도로명 : "+roadAddressName);
+        System.out.println("번지명 : "+addressName);
         
         
-        List<Map<String,String>> showRecommendEstate = estateService.showRecommendEstate(cPage,numPerPage,addressName);
+        List<Map<String,String>> showRecommendEstate = estateService.showRecommendEstate(cPage,numPerPage,roadAddressName,addressName);
         
         response.setContentType("application/json; charset=utf-8");
         new Gson().toJson(showRecommendEstate,response.getWriter());
@@ -279,11 +281,13 @@ public class EstateController {
     	
     	System.out.println("클릭페이지="+cPage2);
     	
-    	String addressName=request.getParameter("addressName");
-    	System.out.println("도로명 : "+addressName);
+    	 String roadAddressName=request.getParameter("roadAddressName");
+         String addressName=request.getParameter("addressName");
+         System.out.println("도로명 : "+roadAddressName);
+         System.out.println("번지명 : "+addressName);
     	
     	
-    	List<Map<String,String>> showNotRecommendEstate = estateService.showNotRecommendEstate(cPage2,numPerPage,addressName);
+    	List<Map<String,String>> showNotRecommendEstate = estateService.showNotRecommendEstate(cPage2,numPerPage,roadAddressName,addressName);
     	
     	System.out.println("제발 나와라="+showNotRecommendEstate.size());
     	
@@ -352,10 +356,10 @@ public class EstateController {
 			estateprice = mon[1];
 		}
 		else if(transactiontype=='M') {
-			estateprice = mon[0];
+			estateprice = mon[2];
 		}
 		else {
-			estateprice = mon[2];
+			estateprice = mon[0];
 		}
 
 
@@ -633,6 +637,8 @@ public class EstateController {
 				}
 				//평형대가 전체고 옵션 선택 안했을때
 				else if(structure.equals("all")&&(option==null)) {
+					System.out.println("평형대가 전체고 옵션 선택 안했을때");
+					System.out.println(map);
 					list=estateService.selectApartListForAll(map);
 				}
 				//평형대 선택을 했고 옵션이 없을떄
@@ -682,7 +688,7 @@ public class EstateController {
 		
 		return mav;
 	}
-
+	
 	@RequestMapping("/unitChange")
 	@ResponseBody
 	public Object unitChange(@RequestParam(value="unit", required=false, defaultValue="m<sup>2</sup>") String unit) {

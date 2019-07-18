@@ -31,9 +31,9 @@ public interface EstateService {
 
 	List<String> selectApartListSelectStructureSelectOption(Map<String, Object> map);
 	
-	List<Map<String, String>> showRecommendEstate(int cPage, int numPerPage, String addressName);
+	List<Map<String, String>> showRecommendEstate(int cPage, int numPerPage,String roadAddressName, String addressName);
 	
-	List<Map<String, String>> showNotRecommendEstate(int cPage2, int numPerPage, String addressName);
+	List<Map<String, String>> showNotRecommendEstate(int cPage2, int numPerPage, String roadAddressName, String addressName);
 	
 	List<String> selectApartListForAllSelectOptionAndMontlyFee(Map<String, Object> map);
 
