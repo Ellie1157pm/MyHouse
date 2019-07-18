@@ -168,9 +168,9 @@
 		</c:if>
 		<p class="filterSubTitle" style="margin:0;">옵션</p>
 		&nbsp;
-			&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= option.contains("엘레베이터")?"checked":"" %><%} %> /><label for="elevator">엘리베이터</label>
-			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= option.contains("애완동물")?"checked":"" %><%} %> /><label for="animal">반려동물 가능</label>
-			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(option!=null){%><%= option.contains("지하주차장")?"checked":"" %><%} %>  /><label for="parking">주차 가능</label>
+			&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(option!=null){%><%= option.contains("엘레베이터")?"checked":"" %><%} %> /><label for="엘레베이터">엘리베이터</label>
+			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(option!=null){%><%= option.contains("애완동물")?"checked":"" %><%} %> /><label for="애완동물">반려동물 가능</label>
+			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(option!=null){%><%= option.contains("지하주차장")?"checked":"" %><%} %>  /><label for="지하주차장">주차 가능</label>
 		</c:if> <!-- end of 빌라 -->
 		
 		
@@ -257,9 +257,9 @@
 				
 					<p class="filterSubTitle" style="margin:0;">옵션</p>
 					&nbsp;
-				&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(options!=null){%><%= option.contains("엘레베이터")?"checked":"" %><%} %> /><label for="elevator">엘리베이터</label>
-			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(options!=null){%><%= option.contains("애완동물")?"checked":"" %><%} %> /><label for="animal">반려동물 가능</label>
-			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(options!=null){%><%= option.contains("지하주차장")?"checked":"" %><%} %>  /><label for="parking">주차 가능</label>
+				&nbsp;<input type="checkbox" name="option" value="엘레베이터" id="엘레베이터" onchange="checkOption(this)"  <%if(options!=null){%><%= option.contains("엘레베이터")?"checked":"" %><%} %> /><label for="엘레베이터">엘리베이터</label>
+			<input type="checkbox" name="option" value="애완동물" id="애완동물" onchange="checkOption(this)" <%if(options!=null){%><%= option.contains("애완동물")?"checked":"" %><%} %> /><label for="애완동물">반려동물 가능</label>
+			<input type="checkbox" name="option" value="지하주차장" id="지하주차장" onchange="checkOption(this)"<%if(options!=null){%><%= option.contains("지하주차장")?"checked":"" %><%} %>  /><label for="지하주차장">주차 가능</label>
 		</c:if><!--원룸 or 오피스텔 끝  -->
 	</div>
 	
@@ -884,5 +884,4 @@ function filterReset(){
 }
 </script>
 
->>>>>>> refs/remotes/origin/yerim
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
