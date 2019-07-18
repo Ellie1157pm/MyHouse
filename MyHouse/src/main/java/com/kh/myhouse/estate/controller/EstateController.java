@@ -485,12 +485,9 @@ public class EstateController {
 		map.put("topOption", topOption);}
         
         mav=returnResult(map);
-        
-        
-        
-        System.out.println("파인드list@@@@@=="+list);
+
          response.setContentType("application/json; charset=utf-8");
-            new Gson().toJson(list,response.getWriter());
+            new Gson().toJson(mav,response.getWriter());
     }
 	
 
@@ -669,6 +666,7 @@ public class EstateController {
 					list=estateService.selectApartListForAllNotOptionAndMontlyFee(map);
 				}
 			}
+			System.out.println("리스트");
 			System.out.println(list);
 			 
 			//view단 처리

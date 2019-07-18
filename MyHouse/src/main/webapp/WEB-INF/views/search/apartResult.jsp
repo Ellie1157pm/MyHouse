@@ -312,11 +312,13 @@ var param = {
 		       contentType:"json",
 		       type:"get",
 		       success: function(data){
-		    	   
-		    if(data !=null){
+		    	   console.log('에이작스');
+		    	   console.log(data.model.list);
+		    if(data.model.list !=null){
 		    
-		     for(var i=0; i<data.length; i++){
-		    	var dataloc= data[i].Address;
+		     for(var i=0; i<data.model.list.length; i++){
+		    	 console.log(data.model.list[i]);
+		    	var dataloc= data.model.list[i];
 		    	console.log('dataloc====='+dataloc);
 		    	 clusterer.clear();
 		    	geocoder.addressSearch(dataloc,placesSearchCB2);
@@ -986,8 +988,9 @@ function searchAddress(obj) {
                 searchDetailAddrFromCoords(coords,function(data){
                     console.log(data);
                     if (status === kakao.maps.services.Status.OK) {
-                        alert(result[0].address.address_name);
-                        $('#address').val(result[0].address.address_name.substring(0, 8));
+                        console.log(result[0].address_name);
+                    	//alert(result[0].address.address_name);
+                        $('#address').val(result[0].address_name.substring(0, 8));
                         $('#coords').val(coords);
                     $('#estateFrm').submit();
                     }
@@ -1028,7 +1031,6 @@ function areaChange(){
 }
 
 var unit = '';
->>>>>>> refs/remotes/origin/yerim
 </script>
 
 
