@@ -834,7 +834,7 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 //리셋
 function filterReset(){
 	//거래 유형(매매,면적 전체,매매가 전체)
-	location.href="${pageContext.request.contextPath}/estate/filterReset?localName="+$('#localName').val()+"&estateType=${estateType}";
+	location.href="${pageContext.request.contextPath}/estate/filterReset?coords="+$('#coords').val()+"&estateType=${estateType}&address="+$('#address').val();
 }
 
 function searchAddress(obj) {
