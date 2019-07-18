@@ -17,7 +17,7 @@
     String[] options=(String[])request.getAttribute("option");
     List<String>option=new ArrayList<>();
     if(options!=null){
-    option=Arrays.asList(options);    	
+    option=Arrays.asList(options);    	 
     }
     String msg=(String)request.getAttribute("msg");
     
