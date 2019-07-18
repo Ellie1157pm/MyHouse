@@ -20,7 +20,7 @@
 	<select id="showRecommendEstate" resultMap="estateAttchmentMap">
 		 select *  from estate e join power_link pl using(estate_no) join 
          (select e.*from( select * from  estate_photo)e where rowid in(select max(rowid) from  estate_photo group by estate_no))using(estate_no)
-         where address=#{address} order by start_date desc
+         where address=#{address} or address=#{roadAddressName} order by start_date desc
 	</select>
 	<resultMap type="estate" id="estateAttchmentMap">
 		<id column="ESTATE_NO" property="EstateNo"/>
@@ -53,10 +53,9 @@
 	
 	
 	<select id="showNotRecommendEstate" resultMap="estateAttchmentMap">
-		 select * 
-       		 from estate e join estate_photo p using(estate_no)
-    	 where estate_no not in (select estate_no from estate e join power_link pl using(estate_no) join estate_photo p using(estate_no)) and address=#{addressName}
-    	 order by written_date desc
+		 select *  from estate e join 
+         (select e.*from( select * from  estate_photo)e where rowid in(select max(rowid) from  estate_photo group by estate_no))using(estate_no)
+         where address=#{address} or address=#{roadAddressName} order by written_date desc
 	</select>
 	
 	
