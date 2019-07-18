@@ -36,7 +36,18 @@
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=52628547fe813f9f2accb85c95efcde3&libraries=services,clusterer"></script>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/css/member.css" />
-
+<script>
+//chat띄우기
+function openAgentChat(){
+	var url = "${pageContext.request.contextPath}/chat/agentChatList.do";
+	var title = "문의채팅";
+	var specs="width=700px, height=700px, left=600px, top=200px";
+	
+	window.open(url, title,specs);	//팝업의 최상위 윈도우 객체를 리턴함
+	self.resizeTo(20,20);
+	
+}
+</script>
 </head>
 <body>
 	<div id="container">

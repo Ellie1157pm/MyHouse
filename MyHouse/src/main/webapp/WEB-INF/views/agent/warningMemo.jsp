@@ -118,6 +118,7 @@ function noteDel(){
 			<button type="button" id="" class="btn btn-secondary" id="estateList">매물신청목록</button>
 			<button type="button" id="" class="btn btn-secondary" id="estateList-end">등록된매물</button>
 			<button type="button" id="" class="btn btn-secondary" id="warning_memo">쪽지함</button>
+			<button type="button" id="" class="btn btn-secondary" id="chat" onclick="openAgentChat()">채팅목록</button>
 		</div>
 		<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
   Launch demo modal

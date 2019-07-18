@@ -15,8 +15,15 @@ import lombok.ToString;
 @ToString
 public class Chat {
 	
-	private String chatId; //채팅방ID
-	private int memberNo; //일반회원
-	private int agentMemberNo; //중개자
-	private int estateNo; //매물번호
+//	private String chatId; //채팅방ID
+//	private int memberNo; //일반회원
+//	private int agentMemberNo; //중개자
+//	private int estateNo; //매물번호
+	
+	private String chatId;
+	private String memberId; //접속ID
+	private long lastCheck;
+	private String status;
+	private Date startDate;
+	private Date endDate;
 }

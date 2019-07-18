@@ -18,8 +18,8 @@ public class ChatDAOImpl implements ChatDAO {
 	SqlSessionTemplate sqlSession;
 	
 	@Override
-	public String findChatIdByMemberNo(Map<String, Integer> map) {
-		return sqlSession.selectOne("chat.findChatIdByMemberNo",map);
+	public String findChatIdByMemberId(Map<String,String> map) {
+		return sqlSession.selectOne("chat.findChatIdByMemberId",map);
 	}
 
 	@Override
@@ -40,6 +40,12 @@ public class ChatDAOImpl implements ChatDAO {
 	@Override
 	public int updateLastCheck(Msg fromMessage) {
 		return sqlSession.update("chat.updateLastCheck", fromMessage);
+	}
+
+	@Override
+	public List<Map<String, String>> findRecentList() {
+		System.out.println("findRecentList DAOImpl작동");
+		return sqlSession.selectList("chat.findRecentList");
 	}
 
 

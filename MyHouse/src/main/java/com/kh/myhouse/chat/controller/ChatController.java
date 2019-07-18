@@ -25,13 +25,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.kh.myhouse.agent.model.vo.Agent;
 import com.kh.myhouse.chat.model.service.ChatService;
 import com.kh.myhouse.chat.model.vo.Chat;
 import com.kh.myhouse.chat.model.vo.Msg;
 import com.kh.myhouse.member.model.vo.Member;
 
 @Controller
-@RequestMapping("/chat")
 public class ChatController {
 	
 /*	@RequestMapping("/chatMain.do")
@@ -46,45 +46,32 @@ public class ChatController {
 	ChatService chatService;
 	
 	
-	@GetMapping("/chatMain.do")
-	public void websocket(Model model,@RequestParam int agentNo, 
+	@GetMapping("/chat/chatMain.do")
+	public void websocket(Model model,
 						  HttpSession session, 
-						  @SessionAttribute(value="memberLoggedIn", required=false) Member memberLoggedIn){
-		int memberNo =memberLoggedIn.getMemberNo();
+						  @SessionAttribute(value="memberLoggedIn", required=false) Agent memberLoggedIn){
+		String memberId = Optional.ofNullable(memberLoggedIn).map(Agent::getMemberEmail).orElse(session.getId());
 		String chatId = null;
 		
 		
-		Map<String, Integer> map=new HashMap<>();
-		map.put("memberNo", memberNo);
-		map.put("agentNo", agentNo);
+		Map<String, String> map=new HashMap<>();
+		map.put("memberId", memberId);
+		
 		
 		//chatId조회
 		//1.memberId로 등록한 chatroom존재여부 검사. 있는 경우 chatId 리턴.
-		chatId = chatService.findChatIdByMemberNo(map);
+		chatId = chatService.findChatIdByMemberId(map);
 		
-		//2.로그인을 하지 않았거나, 로그인을 해도 최초접속인 경우 chatId를 발급하고 db에 저장한다.
-		if(chatId == null){
-			chatId = getRandomChatId(15);//chat_randomToken -> jdbcType=char(20byte)
-			
-			List<Chat> list = new ArrayList<>();
-			//memberNo 1번은 관리자
-			list.add(new Chat(chatId, 1, 0, 0));
-			list.add(new Chat(chatId, memberNo, 0, 0));
-			chatService.insertChatRoom(list);
-		}
-		//chatId가 존재하는 경우, 채팅내역 조회
-		else{
-			List<Msg> chatList = chatService.findChatListByChatId(chatId);
-			model.addAttribute("chatList", chatList);
-		}
 		
-		logger.info("memberNo=[{}], chatId=[{}]",memberNo, chatId);
+		List<Msg> chatList = chatService.findChatListByChatId(chatId);
+		model.addAttribute("chatList", chatList);
+		
+		logger.info("memberNo=[{}], chatId=[{}]",memberId, chatId);
 		
 		
 		//비회원일 경우, httpSessionId값을 memberId로 사용한다. 
 		//클라이언트에서는 httpOnly-true로 설정된 cookie값은 document.cookie로 가져올 수 없다.
-		model.addAttribute("memberNo", memberNo);
-		model.addAttribute("agentNo", agentNo);
+		model.addAttribute("memberId", memberId);
 		model.addAttribute("chatId", chatId);
 	}
 	private String getRandomChatId(int len){
@@ -105,9 +92,35 @@ public class ChatController {
 	}
 	
 	
+	@MessageMapping("/hello")
+	@SendTo("/hello")
+	public Msg stomp(Msg fromMessage,
+					 @Header("simpSessionId") String sessionId,//WesocketSessionId값을 가져옴.
+					 SimpMessageHeaderAccessor headerAccessor//HttpSessionHandshakeInterceptor빈을 통해 httpSession의 속성에 접근 가능함.
+					 ){
+		logger.info("fromMessage={}",fromMessage);
+		logger.info("@Header sessionId={}",sessionId);
+		
+		//httpSession속성 가져오기
+		String sessionIdFromHeaderAccessor = headerAccessor.getSessionId();//@Header sessionId와 동일
+		Map<String,Object> httpSessionAttr = headerAccessor.getSessionAttributes();
+		Member member = (Member)httpSessionAttr.get("memberLoggedIn");
+		String httpSessionId = (String)httpSessionAttr.get("HTTP.SESSION.ID");//비회원인 경우 memberId로 사용함.
+		logger.info("sessionIdFromHeaderAccessor={}",sessionIdFromHeaderAccessor);
+		logger.info("httpSessionAttr={}",httpSessionAttr);
+		logger.info("memberLoggedIn={}",member);
+		
+		return fromMessage; 
+	}
+	
+	
+	
+	
+	
+	
 	
 	@MessageMapping("/chat/{chatId}")
-	@SendTo(value={"/chat/{chatId}", "/chat/admin"})
+	@SendTo(value={"/chat/{chatId}"})
 	public Msg sendEcho(Msg fromMessage, 
 						@DestinationVariable String chatId, 
 						@Header("simpSessionId") String sessionId){
@@ -121,17 +134,15 @@ public class ChatController {
 	}
 	
 	//chatList
-/*	@GetMapping("/ws/admin.do")
-	public void admin(Model model, 
+	@GetMapping("/chat/agentChatList.do")
+	public void agentList(Model model, 
 					  HttpSession session, 
-					  @SessionAttribute(value="memberLoggedIn", required=false) Member memberLoggedIn){
-		String memberId = Optional.ofNullable(memberLoggedIn).map(Member::getMemberId)
-															 .orElseThrow(IllegalStateException::new);
-		String chatId = null;
+					  @SessionAttribute(value="memberLoggedIn", required=false) Agent memberLoggedIn){
+		String memberId = Optional.ofNullable(memberLoggedIn).map(Agent::getMemberEmail).orElse(session.getId());
 		
-		if(!"admin".equals(memberId)) throw new IllegalStateException("로그인 후 이용하세요.");
 		
-		List<Map<String, String>> recentList = stompService.findRecentList();
+		
+		List<Map<String, String>> recentList = chatService.findRecentList();
 		logger.info("recentList={}",recentList);
 		
 		model.addAttribute("recentList", recentList);
@@ -139,15 +150,7 @@ public class ChatController {
 	}
 	
 	
-	@GetMapping("/ws/adminChat.do/{chatId}")
-	public String adminChat(@PathVariable("chatId") String chatId, Model model){
-		
-		List<Msg> chatList = stompService.findChatListByChatId(chatId);
-		model.addAttribute("chatList", chatList);
-		
-		logger.info("chatList={}",chatList);
-		return "ws/adminChat";
-	}*/
+
 	
 	
 }

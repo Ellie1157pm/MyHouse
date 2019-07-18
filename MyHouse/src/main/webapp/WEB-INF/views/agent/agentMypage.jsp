@@ -95,6 +95,7 @@ $(function() {
 		$("#updateAgentFrm").submit();
 	});
 });
+
 </script>
 <form action="${pageContext.request.contextPath}/agent/estateListEnd"
 	  id="estateListEndFrm"
@@ -114,6 +115,8 @@ $(function() {
 			<button type="button" class="btn btn-secondary" id="estateList">매물신청목록</button>
 			<button type="button" class="btn btn-secondary" id="estateList-end">등록된매물</button>
 			<button type="button" class="btn btn-secondary" id="warning_memo">쪽지함</button>
+			<button type="button" class="btn btn-secondary" id="chat" onclick="openAgentChat()">채팅목록</button>
+			
 		</div>
 		<div id="list-container">
 			<table>
