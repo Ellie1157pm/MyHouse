@@ -266,8 +266,7 @@ ps.keywordSearch(gap, placesSearchCB);
 <%}%>
 //이건 아파트 리스트(주소던 아파트 이름이던 알아서 마커 찍고 클러스터링 해줌)
 <%if(list!=null){for(int i=0; i<list.size(); i++) {%>
-var loc = "<%=list.get(i)%>";
-console.log(loc);
+var loc = "<%=list.get(i)%>";console.log(loc);
 geocoder.addressSearch(loc,placesSearchCB2);
 <%}}%>
 
