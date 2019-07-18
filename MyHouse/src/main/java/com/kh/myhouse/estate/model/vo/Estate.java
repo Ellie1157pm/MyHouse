@@ -58,6 +58,31 @@ public class Estate {
 		Deposit = deposit;
 		AddressDetail =addressDetail;
 	}
+	public Estate(int estateNo, String regionCode, int memberNo, int businessMemberNo, String phone,
+			String businessPhone, String address, char estateType, char transActionType, int estatePrice,
+			int manageMenetFee, int estateArea, String subwayStation, String estateContent, Date writtenDate,
+			int deposit, String addressDetail, List<EstateAttach> attachList) {
+		super();
+		EstateNo = estateNo;
+		RegionCode = regionCode;
+		MemberNo = memberNo;
+		BusinessMemberNo = businessMemberNo;
+		Phone = phone;
+		BusinessPhone = businessPhone;
+		Address = address;
+		EstateType = estateType;
+		TransActionType = transActionType;
+		EstatePrice = estatePrice;
+		ManageMenetFee = manageMenetFee;
+		EstateArea = estateArea;
+		SubwayStation = subwayStation;
+		EstateContent = estateContent;
+		WrittenDate = writtenDate;
+		Deposit = deposit;
+		AddressDetail = addressDetail;
+		this.attachList = attachList;
+	}
+
 	public int getEstateNo() {
 		return EstateNo;
 	}

@@ -20,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -487,11 +489,7 @@ public class EstateController {
             new Gson().toJson(list,response.getWriter());
     }
 	
-	
-	
-	
-	
-	
+
 	
 	
 	public ModelAndView returnResult(Map<String,Object> map) {
@@ -683,5 +681,25 @@ public class EstateController {
 		}
 		
 		return mav;
+	}
+
+	@RequestMapping("/unitChange")
+	@ResponseBody
+	public Object unitChange(@RequestParam(value="unit", required=false, defaultValue="m<sup>2</sup>") String unit) {
+		Map<String, String> map = new HashMap<>();
+		
+		logger.info("unit1@unitChange="+unit);
+		
+		if("m<sup>2</sup>".equals(unit))
+			unit = "평";
+		else
+			unit = "m<sup>2</sup>";
+		
+		logger.info("unit2@unitChange="+unit);
+		
+		map.put("unit", unit);
+		map.put("msg", "unit="+unit);
+
+		return map;
 	}
 }

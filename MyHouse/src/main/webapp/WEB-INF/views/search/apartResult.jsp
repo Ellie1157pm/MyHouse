@@ -38,7 +38,6 @@
 
 </div>
 <div id="sidebar">
-<<<<<<< HEAD
 				
 </div>
 <div id="searchArea">
@@ -136,7 +135,7 @@
 		<input type="hidden" name="range_3" id="range_3" value="${range3 eq '0'?'0':range3 }" />
 		<input type="hidden" name="range_4" id="range_4" value="${range4 eq '0'?'300':range4 }" />
 		<input type="hidden" name="address" id="address" value="${localName }" />
-		<input type="hidden" name="coords" id="coords" value="${loc }" />
+		<input type="hidden" name="localName" id="localName" value="${loc }" />
 		
 		<div>
 			<input type="checkbox" name="optionResult" id="optionResult1" value="<%=option!=null&&option.contains("지하주차장")?"지하주차장":"" %>" <%=option.contains("지하주차장")?"checked":"" %> />
@@ -266,17 +265,10 @@ ps.keywordSearch(gap, placesSearchCB);
 <%}%>
 //이건 아파트 리스트(주소던 아파트 이름이던 알아서 마커 찍고 클러스터링 해줌)
 <%if(list!=null){for(int i=0; i<list.size(); i++) {%>
-var loc = "<%=list.get(i)%>";console.log(loc);
+var loc = "<%=list.get(i)%>";
+console.log(loc);
 geocoder.addressSearch(loc,placesSearchCB2);
 <%}}%>
-
-
-//이미지 마커 올리기
-var imageSrc = '${pageContext.request.contextPath}/resources/images/search/oneRoom.png'; // 마커이미지의 주소입니다    
-var  imageSize = new kakao.maps.Size(70, 70); // 마커이미지의 크기입니다
-  var  imageOption = {offset: new kakao.maps.Point(30, 40)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-      
-  
 
 //사용자가 지도상에서 이동시 해당 매물 뿌려주는 부분
  //1.좌표=>주소 변환 객체 생성
@@ -287,23 +279,16 @@ kakao.maps.event.addListener(map, 'dragend', function() {
 	//법정동 상세주소 얻어오기
 		searchDetailAddrFromCoords(map.getCenter(),function(result,status){
 
-	 var localname =$('#estateFrm #coords').val(map.getCenter());
+	 var localname =$('#estateFrm #localName').val(map.getCenter());
+>>>>>>> refs/remotes/origin/hosang
 var add=(result[0].address.address_name).substring(0,8);
-$('#address').val(add);
-var param = { 
-		address : add,
-		coords : $('#coords').val(),
-		estateType : $('#estateType').val(),
-		range1:$('#range_1').val(),
-		range2:$('#range_2').val(),
-		range3:$('#range_3').val(),
-		range4:$('#range_4').val(),
-		structure:$('#structure').val(),
-		dealType:$('#dealType').val()
-		
+
+var param = {
+		address : add
 };
 
 
+console.log("add==="+add); 
 		  
 		  $.ajax({
 		       url:"${pageContext.request.contextPath }/estate/findApartTermsTest",
@@ -343,12 +328,12 @@ function searchDetailAddrFromCoords(coords, callback) {
 //지도에 마커-클러스터링 하는 함수
 function displayMarker(place) {
 	var markerPosition  = new kakao.maps.LatLng(place.y, place.x); 
-	markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+	
         // 데이터에서 좌표 값을 가지고 마커를 표시합니다
         var markers = $(this).map(function(markerPosition) {
             return new kakao.maps.Marker({
-                position : new kakao.maps.LatLng(place.y, place.x),
-           		 image:markerImage
+                position : new kakao.maps.LatLng(place.y, place.x)
+          
             });
         });       
        
@@ -666,9 +651,11 @@ function monthlyLent(){
 	    	$('#range_3').val(fromValue);
 	    	$('#range_4').val(toValue);
 	    	$('#estateFrm').submit();
+
     }
-	});//end of 월세
-} 
+}
+
+areaArray = new Array();
 
 //추천매물 가져오는함수
 function getRecommendEstate(cPage,place){
@@ -683,11 +670,17 @@ function getRecommendEstate(cPage,place){
        type:"post",
        dataType:"json",
        success:function(data){
-    	  console.log(data);
+    	  
+    	  
+    	  
+    	  for(var i=0; i<data.length; i++){
+    		  areaArray[i] = data[i].EstateArea;
+    	  }
+    	  
     	  var html="";
        	  html+="<div id='estateBar'>";
        	  html+="<p>매물 목록</p><hr/>";
-       	  html+="<button type='button' class='btn btn-outline-dark change'>단위</button>";
+       	  html+="<button type='button' class='btn btn-outline-dark change' onclick='areaChange();'>단위</button>";
        	  html+="</div>";
        	  html+="<p class='estateList'>안심중개사 추천매물</p>";
 	      if(cPage==1){
@@ -698,8 +691,27 @@ function getRecommendEstate(cPage,place){
 	          for(var i=0; i<data.length; i++){
 	        	 html+="<div id='estate' onclick=\"getDetailEstate('"+place.road_address.building_name+"','"+place.address_name+"',"+data[i].EstateNo+","+place.x+","+place.y+");\")>"; 	
 	        	 html+="<img src='${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[i].attachList[0].renamedFileName+"'>";
+	        	 html+="<span class='best'>추천 </span>";
 	        	 html+="<span class='apart'>아파트</span><br>";
-	        	 html+="<span class='apart'>"+data[i].address_detail+"</span>";
+	        	 var ss = data[i].EstatePrice; // 15000
+	 	   		 var dd = String(ss); // number -> String 변환
+	 	   	 	 var ww = dd.length; //억단위일경우 length : 5  천만일경우 length : 4이하
+	 	   		 var ws = '억';
+	 	   		 var sw = '만원';
+	 	   		 var lastChar = dd.charAt(dd.length-1); //마지막 문자열찾기
+	 	   		 var last =dd.lastIndexOf(lastChar); // 마지막 인데스 찾기
+	 	   		 var str = '';
+	 	   		 if(ww>4){
+	 	   		  	var anum = dd.substring(0,last-3);
+	 	   			var	numf= dd.substring(last-3,last+1);
+	 	   			str = anum+ws+numf+sw;
+	 	   		 }
+	 	   		 else{
+	 	   			str=dd+sw;
+	 	   		 }
+	        	 html+="<span class='price'>매매 "+str+"</span><br>";
+	        	 html+="<span class='area'>평수 "+data[i].EstateArea+"<span class='unitSpan'>"+(unit==''?'m<sup>2</sup>':unit)+"</span></span><br>";	        	 
+	        	 html+="<span class='address'>"+data[i].AddressDetail+"</span>";
 	        	 html+="</div>";  
 	          }
        		  $("#sidebar").append(html);
@@ -736,11 +748,15 @@ function getNotRecommendEstate(cPage2,place){
        type:"post",
        dataType:"json",
        success:function(data){
+    	   console.log(data)
     	  var html="";
           for(var i=0; i<data.length; i++){ 
         	 html+="<div id='estate' onclick=\"getDetailEstate('"+place.road_address.building_name+"','"+place.address_name+"',"+data[i].EstateNo+","+place.x+","+place.y+");\">";	
         	 html+="<img src='${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[i].attachList[0].renamedFileName+"'>";
-        	 html+="<span class='apart'>아파트</span>";
+        	 html+="<span class='apart2'>아파트</span></br>";
+        	 html+="<span class='price'>매매 "+data[i].EstatePrice+"</span><br>";
+        	 html+="<span class='area'>평수 "+data[i].EstateArea+"<span class='unitSpan'>"+(unit==''?'m<sup>2</sup>':unit)+"</span></span><br>";
+        	 html+="<span class='address'>"+data[i].AddressDetail+"</span>";
         	 html+="</div>";  
           }
           $("#sidebar").append(html);
@@ -797,6 +813,25 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 	   		html+="</a>";
 	   		html+="</div>";
 	   		html+="</div>";
+	   		html+="<div id=optionwrite>";
+	   		var ss = data[0].EstatePrice; // 15000
+	   		var dd = String(ss); // number -> String 변환
+	   		var ww = dd.length; //억단위일경우 length : 5  천만일경우 length : 4이하
+	   		var ws = '억';
+	   		var sw = '만원';
+	   		var lastChar = dd.charAt(dd.length-1); //마지막 문자열찾기
+	   		var last =dd.lastIndexOf(lastChar); // 마지막 인데스 찾기
+	   		var str = '';
+	   		if(ww>4){
+	   		
+	   	    var anum = dd.substring(0,last-3);
+	   		var	numf= dd.substring(last-3,last+1);
+	   		str = anum+ws+numf+sw;
+	   		}
+	   		else{
+	   			str=dd+sw;
+	   		}
+	   		html+= "<span>매매:</span>"+str;
 	   		html+="<div id='location'>";
 	   		html+="<hr class='line'/><p style='margin:10px;'>로드뷰</p><hr/><p class='addressName'>"+placeName+"</p>";
 	   		html+="</div>";
@@ -834,7 +869,7 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 //리셋
 function filterReset(){
 	//거래 유형(매매,면적 전체,매매가 전체)
-	location.href="${pageContext.request.contextPath}/estate/filterReset?coords="+$('#coords').val()+"&estateType=${estateType}&address="+$('#address').val();
+	location.href="${pageContext.request.contextPath}/estate/filterReset?localName="+$('#localName').val()+"&estateType=${estateType}";
 }
 
 function searchAddress(obj) {
@@ -853,7 +888,7 @@ function searchAddress(obj) {
                 console.log('좌표검색 : '+coords);
                 $('#localName').val(coords);
                 searchDetailAddrFromCoords(coords,function(data){
-                    console.log(data); 
+                    console.log(data);
                     if (status === kakao.maps.services.Status.OK) {
                         alert(result[0].address.address_name)
                         $('#address').val(result[0].address.address_name.substring(0, 8));
@@ -861,7 +896,7 @@ function searchAddress(obj) {
                     console.log($('#localName').val());
                     $('#estateFrm').submit();
                     }
-                }); 
+                });
             }
         });
     }else {
@@ -870,6 +905,30 @@ function searchAddress(obj) {
     }
 }
 
+//단위클릭시 면적 바꾸기위해서
+function areaChange(){
+	console.log('unit@areaChange='+unit);
+	$.ajax({
+		url: '${pageContext.request.contextPath}/estate/unitChange?unit='+unit,
+		type: 'get',
+		contentType: 'application/json; charset=utf-8',
+		success: function(data) {
+			console.log("msg: "+data.msg);
+
+			$('span.unitSpan').html(data.unit);
+			unit=data.unit;
+		},
+		error: function(jqxhr, textStatus, errorThrown) {
+			console.log("ajax 처리 에러: "+jqxhr.status);
+			console.log(textStatus);
+			console.log(errorThrown);
+		}
+	});
+}
+
+var unit = '';
+>>>>>>> refs/remotes/origin/hosang
 </script>
+
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
