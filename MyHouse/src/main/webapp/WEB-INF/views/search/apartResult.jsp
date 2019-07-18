@@ -871,7 +871,6 @@ function searchAddress(obj) {
          $('#estateFrm').submit();
     }
 }
->>>>>>> refs/remotes/origin/yerim
 
 
 areaArray = new Array();
