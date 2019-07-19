@@ -138,9 +138,10 @@ enctype="multipart/form-data">
 			<td><input type="hidden" name="address1" id="address1" class="addr"></td>
 		</tr>
 		<tr>
-			<th>상세정보</th>
-			<td><input type="text" name="address2" id="address2" class="addr" required pattern="^[1-9][0-9][0-9][동][1-2][1-9][층][1-4][호]"
-			    value="${estate.getAddressDetail()}"></td>
+			<th>상세정보</th>																			
+			<td><input type="number" name="address2" id="address2" class="addr" value="${estate.getAddressDetail().substring(0, estate.getAddressDetail().indexOf('동'))}" required>동
+			<input type="number" name="address3" id="address3" class="addr" value="${estate.getAddressDetail().substring(estate.getAddressDetail().indexOf('동')+1, estate.getAddressDetail().indexOf('층'))}" required>층
+			</td>
 		</tr>
 		
 		 <tr>
@@ -198,8 +199,8 @@ enctype="multipart/form-data">
 		</tr>
 		<tr>
 			<th>관리비</th>
-			<td><input type="number" name="ManageMenetFee" id="ManageMenetFee"  min="0"
-				required value="${estate.getManageMenetFee()}"/>만원</td>
+			<td><input type="number" name="manageMentFee" id="manageMentFee"  min="0"
+				required value="${estate.getManageMentFee()}"/>만원</td>
 		</tr>
 	
 		<tr>
@@ -213,7 +214,7 @@ enctype="multipart/form-data">
 		<tr>
 			<th>주변환경</th>
 			<td><input type="text" name="estatecontent" id="estatecontent"
-				value="${estate.getEstateContent()}" /></td>
+				placeholder="주변환경에 대해 적어주세요" value="${estate.getEstateContent()}" /></td>
 		</tr>
 		<tr >
 			<th>아파트옵션</th>
@@ -284,7 +285,7 @@ enctype="multipart/form-data">
 
 		<tr>
 			<th>인근전철역</th>
-			<td><input type='text' name='SubwayStation' value="${estate.getSubwayStation()}" ></td>
+			<td><input type='text' name='SubwayStation' placeholder="수유역" value="${estate.getSubwayStation()}" ></td>
 			
 			
 		</tr>

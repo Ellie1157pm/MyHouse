@@ -29,7 +29,6 @@ public interface AgentService {
 
 	int checkCompany(int memberNo);
 
-
 	int updateAgent(Map<String, Object> map);
 
 	int updateAgentProfileImg(Map<String, Object> map);

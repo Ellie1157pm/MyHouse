@@ -37,7 +37,6 @@
 	<select id="checkCompanyCount" resultType="_int">
 		select count(*) from company_info where company_reg_no = #{companyRegNo}
 	</select>
-
 	
 	<update id="updateAgent">
 		update member set member_pwd = #{newPwd} where member_no = #{memberNo}
@@ -69,7 +68,6 @@
 	
 	<resultMap type="map" id="estate"></resultMap>
 	<select id="estateList" resultType="map">
-
 		  select B.*
  		  from (select rownum as rnum, A.*
              from (select e.estate_no, e.business_member_no, e.transaction_type, e.estate_price, e.estate_area, e.address, e.estate_content,
@@ -79,7 +77,6 @@
                                                     on e.estate_no = p.estate_no
                     where e.business_member_no = 0) A) B
 		  where rnum between #{pageStart} and #{pageEnd}
-
 		<if test="searchType != null">
 			and estate_type like #{searchType}
 		</if>
@@ -92,6 +89,15 @@
 		set business_member_no = #{memberNo}, business_phone = #{phone}
 		where estate_no = #{estateNo}
 	</update>
+	<select id="selectEstate" resultType="estate">
+		select * from estate where estate_no = #{estateNo}
+	</select>
+	<select id="selectEstateAttach" resultType="estateAttach">
+		select * from estate_photo where estate_no = #{estateNo}
+	</select>
+	<select id="selectOption" resultType="map">
+		select * from tbl_option where estate_no = #{estateNo}
+	</select>
 	<select id="estateListEnd" resultMap="estate">
 		select e.estate_no, e.transaction_type, e.estate_price, e.estate_area, e.address, e.estate_content,
          p.renamed_filename, nvl(l.period-sysdate, 0) as adate
@@ -102,7 +108,13 @@
         where business_member_no = #{memberNo}
 	</select>
 	<update id="estateUpdate">
-		update member set
+		update estate set region_code = #{RegionCode}, phone = #{Phone}, address = #{Address},
+						estate_type = #{EstateType}, transaction_type = #{TransActionType},
+						estate_price = #{EstatePrice}, management_fee = #{ManageMentFee},
+						estate_area = #{EstateArea}, subway_station = #{SubwayStation},
+						estate_content = #{EstateContent}, deposit = #{Deposit},
+						address_detail =  #{AddressDetail}
+		where estate_no = #{EstateNo}
 	</update>
 	<delete id="estatePhotoDelete">
 		delete from estate_photo where estate_no = #{estateNo}

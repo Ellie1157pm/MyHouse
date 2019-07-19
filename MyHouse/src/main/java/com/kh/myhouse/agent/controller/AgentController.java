@@ -1,6 +1,5 @@
 package com.kh.myhouse.agent.controller;
 
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -21,14 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.myhouse.agent.model.service.AgentService;
 import com.kh.myhouse.agent.model.vo.Agent;
-
 import com.kh.myhouse.estate.model.service.EstateService;
 import com.kh.myhouse.estate.model.vo.Estate;
 import com.kh.myhouse.estate.model.vo.EstateAttach;
@@ -53,9 +50,7 @@ public class AgentController {
 
 	@RequestMapping("/insertAgent")
 	public String insertAgent(Agent agent, Model model) {
-		
 		//0.비밀번호 암호화 처리(random salt값을 이용해서 해싱처리됨)
-		System.out.println("agent.getMemberPwd()="+agent.getMemberPwd());
 		String rawPassword = agent.getMemberPwd();
 		System.out.println("rawPassword="+rawPassword);
 		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
@@ -138,7 +133,6 @@ public class AgentController {
 			logger.debug("로그인 요청!");
 		
 		String encodedPassword = bcryptPasswordEncoder.encode(memberPwd);
-		System.out.println("암호화후: "+encodedPassword);
 		
 		try {
 
@@ -187,9 +181,9 @@ public class AgentController {
 		model.addAttribute("list", list);
 	}
 	
-	@RequestMapping("advertisedReq")
+	@RequestMapping("/advertisedReq")
 	@ResponseBody
-	public String advertisedReq(@RequestParam(value="advertiseDate") int advertiseDate,
+	public void advertisedReq(@RequestParam(value="advertiseDate") int advertiseDate,
 								@RequestParam(value="estateNo") int estateNo) {
 		Map<String, Integer> map = new HashMap();
 		int price = 0;
@@ -202,18 +196,74 @@ public class AgentController {
 		map.put("price", price);
 		
 		int result = agentService.updateAdvertised(map);
-		
-		return "";
 	}
 	
 	@RequestMapping("/agentMypage")
-	public void agentMypage() {
+	public void agentMypage(int memberNo, Model model) {
+		String renamedFileName = agentService.selectProfileImg(memberNo);
+		
+		model.addAttribute("renamedFileName", renamedFileName);
 	}
 	
 	@RequestMapping("/updateAgent")
-	public String updateAgent(int memberNo, String newPwd) {
-		System.out.println("memberNo@controller="+memberNo);
-		System.out.println("newPwd@controller="+newPwd);
+	public String updateAgent(int memberNo, String newPwd, String renamedFileNamed,
+			HttpServletRequest request,
+			MultipartFile upFile, Model model) { 
+		
+			Map<String, Object> map = new HashMap();
+			map.put("memberNo", memberNo);
+			
+			String msg = "";
+		
+			if(!newPwd.equals("")) {
+				
+				String encodedPassword = bcryptPasswordEncoder.encode(newPwd);
+				map.put("newPwd", encodedPassword);
+				
+				int result = agentService.updateAgent(map);
+				
+				msg = result>0?"비밀번호변경 성공! ":"비밀번호 변경 실패! ";
+			}
+		
+		try {
+			//1. 파일업로드
+			String saveDirectory = request.getSession().getServletContext()
+										  .getRealPath("/resources/upload/agentprofileimg");
+			
+			if(!renamedFileNamed.equals("")) {
+				File f = new File(saveDirectory+"/"+renamedFileNamed);
+				if(f.exists()) f.delete();
+			}
+			
+			if(!upFile.isEmpty()) {
+				String originalFileName = upFile.getOriginalFilename();
+				String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+				int rndNum = (int)(Math.random()*1000);
+				
+				String renamedFileName = sdf.format(new Date())+"_"+rndNum+"."+ext;
+				
+				map.put("originalFileName", originalFileName);
+				map.put("renamedFileName", renamedFileName);
+				
+				int result = agentService.updateAgentProfileImg(map);
+				
+				msg += result>0?"이미지 업로드성공!":"이미지 업로드실패!";
+				
+				try {
+					//서버 지정위치에 파일 보관
+					upFile.transferTo(new File(saveDirectory+"/"+renamedFileName));
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("msg", msg);
+		
 		return "common/msg";
 	}
 	
@@ -253,7 +303,7 @@ public class AgentController {
 		
 		return "common/msg";
 	}
-
+	
 	@RequestMapping("/estateList")
 	public void estateList(String searchType, String searchKeyword, Model model) {
 		Map<String, Object> map = new HashMap();
@@ -286,7 +336,6 @@ public class AgentController {
 		model.addAttribute("list", list);
 	}
 	
-
 	@RequestMapping("/estateListAdd")
 	@ResponseBody
 	public List<Map<String, Object>> estateListAdd(String searchType, String searchKeyword, int cPage){
@@ -332,7 +381,7 @@ public class AgentController {
 		
 		return map;
 	}
-
+	
 	@RequestMapping("/updateEstate")
 	public String updateEstate(int estateNo, int memberNo, String phone
 								,Model model) {
@@ -350,7 +399,7 @@ public class AgentController {
 		
 		return "common/msg";
 	}
-	
+	 
 	@RequestMapping("/estateListEnd")
 	public void estateListEnd(int memberNo, Model model) {
 		
@@ -369,10 +418,11 @@ public class AgentController {
 	}
 	
 	@RequestMapping("/estateUpdate")
-	public void estateUpdate(
+	public String estateUpdate(
 			@RequestParam int estateNo,
 			@RequestParam String address1,
-			@RequestParam String address2,
+			@RequestParam int address2,
+			@RequestParam int address3,
 			@RequestParam String phone1,
 			@RequestParam String phone2,
 			@RequestParam String phone3,
@@ -380,7 +430,7 @@ public class AgentController {
 			@RequestParam char transactiontype,
 			@RequestParam int deposit,
 			@RequestParam int[] mon,
-			@RequestParam int ManageMenetFee,
+			@RequestParam int manageMentFee,
 			@RequestParam int estateArea,
 			@RequestParam String estatecontent,
 			@RequestParam String[] etcoption,
@@ -391,10 +441,23 @@ public class AgentController {
 			HttpServletRequest request,
 			Model model) {
 		
+		System.out.println("address1 주소명=="+address1);
+		System.out.println("address2 주소상세=="+address2);
 		String phone = phone1+phone2+phone3;
+		System.out.println("phone 폰번호=="+phone);
+		System.out.println("estateType 빌라,아파트,오피스텔=="+estateType);
+		System.out.println("transactiontype 전세,매매,월세 라디오버튼값=="+transactiontype);
+		System.out.println("deposit 보증금=="+deposit);
+		System.out.println("mon 전세,매매,월세 가격입력값=="+Arrays.toString(mon));//mon[0]:월세 /mon[1]:전세 /mon[2]:매물가 
+		System.out.println("ManageMenetFee 관리비=="+manageMentFee);
+		System.out.println("estateArea 평수=="+estateArea);
+		System.out.println("estatecontent 주변환경=="+estatecontent);
+		System.out.println("etcoption 엘레베이터,애완동물 등=="+Arrays.toString(etcoption));
+		System.out.println("SubwayStation 전철역=="+SubwayStation);
+		System.out.println("upFile 파일명=="+Arrays.toString(upFile));
 		
 		//지역코드 얻어오기
-		String address= (address1.substring(0,6));	
+		String address= (address1.substring(0,6));
 		String localCode = estateService.selectLocalCodeFromRegion(address); 
 		System.out.println("localCode 지역코드의 값 =="+localCode);
 
@@ -413,20 +476,27 @@ public class AgentController {
 		Estate estate =new Estate(estateNo, localCode, 0,
 				0, phone, "0",
 				address1, estateType, transactiontype, estateprice, 
-				ManageMenetFee, estateArea, SubwayStation, 
-				estatecontent, null, deposit, address2);
+				manageMentFee, estateArea, SubwayStation, 
+				estatecontent, null, deposit, address2+"동"+address3+"층");
 		
 		Map<String, Object> map = null;
-		
+		int result1 = 0;
+		int result2 = 0;
 		try {
 			map = new HashMap();
 			//1. 파일업로드
 			String saveDirectory = request.getSession().getServletContext()
 										  .getRealPath("/resources/upload/estateenroll");
 			
-			//원래 저장된 이미지파일 삭제
+			List<EstateAttach> ea = agentService.selectEstateAttach(estateNo);
 			
-			int result1 = agentService.estatePhotoDelete(estateNo);
+			//원래 저장된 이미지파일 삭제
+			for(int i=0; i<ea.size(); i++) {
+				File f = new File(saveDirectory+"/"+ea.get(i).getRenamedFileName());
+				if(f.exists()) f.delete();			
+			}
+			
+			result1 = agentService.estatePhotoDelete(estateNo);
 			
 			for(int i=0; i<upFile.length; i++) {
 				if(!upFile[i].isEmpty()) {
@@ -441,7 +511,7 @@ public class AgentController {
 					map.put("originalFileName", originalFileName);
 					map.put("renamedFileName", renamedFileName);
 					
-					int result2 = agentService.estatePhotoUpdate(map);
+					result2 = agentService.estatePhotoUpdate(map);
 					
 					try {
 						//서버 지정위치에 파일 보관
@@ -455,8 +525,13 @@ public class AgentController {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		int result = agentService.estateUpdate(estate);
 		
+		int result3 = agentService.estateUpdate(estate);
+		
+		String msg = (result1>0&&result2>0&&result3>0)?"매물수정성공!":"매물수정실패!";
+		model.addAttribute("msg", msg);
+		
+		return "common/msg";
 	}
 	
 	@RequestMapping("/warningMemo")

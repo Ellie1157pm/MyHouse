@@ -19,7 +19,6 @@ function updateEstate(e){
 		return;
 	}
 }
-
 /*신청목록 클릭했을때 정보창*/
 function estateReqView(e){
 	var estateNo = $(e).children("button").attr("id");
@@ -94,7 +93,7 @@ $(function() {
 	if("${searchKeyword}".length != 0) $("input#estateList-searchKeyword").val("${searchKeyword}");
 	
 	$("#agent-set-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/agent/agentMypage";
+		$("#agentMypageFrm").submit();
 	});
 	$("#estateRequest").on("click", function(){
 		location.href="${pageContext.request.contextPath}/estate/EnrollTest.do";
@@ -147,6 +146,11 @@ $(function() {
 	});
 });
 </script>
+<form action="${pageContext.request.contextPath}/agent/agentMypage"
+	  method="post"
+	  id="agentMypageFrm">
+	  <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
 <form action="${pageContext.request.contextPath}/agent/estateListEnd"
 	  id="estateListEndFrm"
 	  method="post">
@@ -189,9 +193,9 @@ $(function() {
 			</div>
 			<div id="estateList">
 				<c:forEach var="e" items="${list}">
-					<div class="estateList-box">
+					<div class="estateList-box" data-toggle="modal" data-target="#estateReqModal" onclick="estateReqView(this);">
 						<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/${e.RENAMED_FILENAME}" alt="매물사진"/>
-						<button type="button" class="btn btn-info update-estate-btn" onclick="updateEstate(this);" id="${e.ESTATE_NO}">등록</button>
+						<button type="button" class="btn btn-success update-estate-btn" onclick="updateEstate(this);" id="${e.ESTATE_NO}">등록</button>
 						<p>
 							<c:choose>
 								<c:when test="${e.TRANSACTION_TYPE eq 'M'}">
@@ -215,7 +219,6 @@ $(function() {
 		</div>	
 	</div>
 </div>
-
 <!-- Modal -->
 <div class="modal fade" id="estateReqModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document" style="max-width: 802px;">
@@ -248,5 +251,4 @@ $(function() {
     </div>
   </div>
 </div>
->>>>>>> refs/remotes/origin/jaemin
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
