@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.myhouse.agent.model.vo.Agent;
+import com.kh.myhouse.estate.model.vo.Estate;
+import com.kh.myhouse.estate.model.vo.EstateAttach;
 
 @Repository
 public class AgentDAOImpl implements AgentDAO {
@@ -36,7 +38,7 @@ public class AgentDAOImpl implements AgentDAO {
 	}
 
 	@Override
-	public List<Map<String, String>> estateList(Map map) {
+	public List<Map<String, Object>> estateList(Map map) {
 		return sqlSession.selectList("agent.estateList", map);
 	}
 
@@ -64,5 +66,61 @@ public class AgentDAOImpl implements AgentDAO {
 	public int checkCompany(int memberNo) {
 		return sqlSession.selectOne("agent.checkCompany", memberNo);
 	}
+
+	@Override
+	public int updateAgent(Map<String, Object> map) {
+		return sqlSession.update("agent.updateAgent", map);
+	}
+
+	@Override
+	public int updateAgentProfileImg(Map<String, Object> map) {
+		return sqlSession.update("agent.updateAgentProfileImg", map);
+	}
+
+	@Override
+	public String selectProfileImg(int memberNo) {
+		return sqlSession.selectOne("agent.selectProfileImg", memberNo);
+	}
+
+	@Override
+	public int agentDeleteImg(int memberNo) {
+		return sqlSession.delete("agent.agentDeleteImg", memberNo);
+	}
+
+	@Override
+	public Estate selectEstate(int estateNo) {
+		return sqlSession.selectOne("agent.selectEstate", estateNo);
+	}
+
+	@Override
+	public List<EstateAttach> selectEstateAttach(int estateNo) {
+		return sqlSession.selectList("agent.selectEstateAttach", estateNo);
+	}
+
+	@Override
+	public Map<String, String> selectOption(int estateNo) {
+		return sqlSession.selectOne("agent.selectOption", estateNo);
+	}
+
+	@Override
+	public int agentDelete(int memberNo) {
+		return sqlSession.update("agent.agentDelete", memberNo);
+	}
+
+	@Override
+	public int estateUpdate(Estate estate) {
+		return sqlSession.update("agent.estateUpdate", estate);
+	}
+	
+	@Override
+	public int estatePhotoUpdate(Map<String, Object> map) {
+		return sqlSession.insert("agent.estatePhotoUpdate", map);
+	}
+
+	@Override
+	public int estatePhotoDelete(int estateNo) {
+		return sqlSession.delete("agent.estatePhotoDelete", estateNo);
+	}
+
 
 }

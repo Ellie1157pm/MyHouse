@@ -76,15 +76,15 @@ public class EstateDAOImpl implements EstateDAO{
 	}
 	
 	@Override
-	public List<Map<String, String>> showRecommendEstate(int cPage, int numPerPage, String addressName) {
+	public List<Map<String, String>> showRecommendEstate(int cPage, int numPerPage, Map<String, String> param) {
 		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage, numPerPage);
-		return sqlSession.selectList("estate.showRecommendEstate",addressName,rowBounds);
+		return sqlSession.selectList("estate.showRecommendEstate",param,rowBounds);
 	}
 	
 	@Override
-	public List<Map<String, String>> showNotRecommendEstate(int cPage2, int numPerPage, String addressName) {
+	public List<Map<String, String>> showNotRecommendEstate(int cPage2, int numPerPage, Map<String, String> param) {
 		RowBounds rowBounds = new RowBounds((cPage2-1)*numPerPage, numPerPage);
-		return sqlSession.selectList("estate.showNotRecommendEstate",addressName,rowBounds);
+		return sqlSession.selectList("estate.showNotRecommendEstate",param,rowBounds);
 	}
 
 	@Override

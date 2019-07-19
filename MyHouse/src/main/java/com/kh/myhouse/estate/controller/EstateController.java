@@ -20,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -110,6 +112,7 @@ public class EstateController {
 			mav.setViewName("search/apartResult");
 		}else {
 			//나머지 매물들은 동일한 jsp에서 처리한다.
+			System.out.println("나머지 매물인데");
 			mav.addObject("estateType",estateType);
 			//default값(매매 등등등) 지정
 			if(estateType.equals("B")) {
@@ -143,128 +146,26 @@ public class EstateController {
 		String structure=req.getParameter("structure");	//all인 경우와 아닌 경우로 나눔
 		String[] option=req.getParameterValues("optionResult");
 		String topOption=req.getParameter("topOption");
-		//지도위치를 그쪽으로 고정하기 위한 localName =>searchKeyword로 view단에 보냄.
-		String localName=req.getParameter("localName");
+		//지도위치를 그쪽으로 고정하기 위한 localName =>좌표
+		String coords=req.getParameter("coords");
 		//지역코드를 얻기위한 address
 		String address=req.getParameter("address");
 
-		System.out.println("좌표"+localName);
-		
-		//관리비 포함해서 찾기 옵션 있음
-		//List로 변환 후 contains로 확인할것.
-		
-		if(dealType.equals("O")) {
-			map.put("range3", range3);
-			map.put("range4", range4);
-		}
-		if(structure==null) {
-			structure="all";
-		}
-		if(option==null) {
-			String[] option2= {"a","a","a"};
-			mav.addObject("option",option2);
-		}else{
-			mav.addObject("option",option);
-			map.put("option", option);
-		}
-		if(topOption==null||topOption.trim().length()==0) {			
-			topOption="all";
-		}
-		
-		
-		String localCode=estateService.selectLocalCodeFromRegion(address);
-		
-		
 		map.put("estateType", estateType);
-		map.put("dealType", dealType);
 		map.put("range1", range1);
 		map.put("range2", range2);
-		map.put("localCode", localCode);
+		map.put("range3", range3);
+		map.put("range4", range4);
+		map.put("dealType", dealType);
+		map.put("structure", structure);
+		map.put("option", option);
+		map.put("address", address);
+		map.put("coords",coords);
+		map.put("topOption", topOption);
+		mav=returnResult(map);
 		
-
-		
-			//빌라 매매/전세인 경우
-			if(dealType.equals("M")||dealType.equals("J")) {
-				//구조가 all이고 옵션이 없을때
-				if(structure.equals("all")&&option==null) {
-					list=estateService.selectEstateListForAllNotOption(map);
-				}else if(structure.equals("all")&&option!=null) {
-					map.put("option", option);
-					list=estateService.selectEstateListForAllSelectOption(map);
-				}else if(!structure.equals("all")&&option==null) {
-					map.put("structure", structure);
-					list=estateService.selectEstateListSelectStructureNotOption(map);
-				}else {
-					//구조가 전체가 아니고 옵션이 있을때
-					map.put("structure", structure);
-					map.put("option", option);
-					list=estateService.selectEstateListSelectStructureNotOptoin(map);
-				}
-			}
-			//월세 혹은 전체인 경우 =>range3,4 추가해야되므로 나눠줌
-			else {
-				map.put("range3", range3);
-				map.put("range4", range4);
-
-				//층수 옵션도 같이 비교해야함.
-				//구조가 전체일 때-option의 null여부와 topOption이 all인지 아닌지로 비교
-				if(structure.equals("all")&&option==null&&topOption.equals("all")) {
-					list=estateService.selectEstateListForAllNotOptionForMontlyFee(map);
-				}else if(structure.equals("all")&&option==null&&!topOption.equals("all")) {
-					map.put("topOption", topOption);
-					list=estateService.selectEstateListForAllNotOptionSelectFloorOptionForMontlyFee(map);
-				}
-				
-				else if(structure.equals("all")&&option!=null&&topOption.equals("all")) {
-					map.put("option", option);
-					list=estateService.selectEstateListForAllSelectOptionNotFloorOpionForMontlyFee(map);
-				}else if(structure.equals("all")&&option!=null&&!topOption.equals("all")) {
-					map.put("option", option);
-					map.put("topOption", topOption);
-					list=estateService.selectEstateListForAllSelectOptionSelectFloorOptionMontlyFee(map);
-				}
-				
-				//구조가 전체가 아닐 때-option의 null여부와 topOption이 all인지 아닌지로 비교
-				else if(!structure.equals("all")&&option==null&&topOption.equals("all")) {
-					map.put("structure", structure);
-					list=estateService.selectEstateListSelectStructureNotOpionNotFloorOptionMontlyFee(map);
-				}else if(!structure.equals("all")&&option==null&&!topOption.equals("all")) {
-					map.put("structure", structure);
-					map.put("topOption", topOption);
-					list=estateService.selectEstateListSelectStructureNotOpionSelectFloorOptionMontlyFee(map);
-				}
-				
-				
-				else if(!structure.equals("all")&&option!=null&&topOption.equals("all")) {
-					map.put("structure", structure);
-					map.put("option",option);
-					list=estateService.selectEstateListSelectStructureSelectOptionNotFloorOptionMontlyFee(map);
-				}else{
-					map.put("structure", structure);
-					map.put("option",option);
-					map.put("topOption",topOption);
-					list=estateService.selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee(map);
-				}
-				
-			}
-		
-		//원룸인 경우=>옵션 다수
-
-		mav.addObject("dealType",dealType);
-		mav.addObject("loc",localName);
-		mav.addObject("estateType",estateType);
-		mav.addObject("range1",range1);
-		mav.addObject("range2",range2);
-		mav.addObject("range3",range3);
-		mav.addObject("range4",range4);
-		mav.addObject("topOption",topOption);
-		mav.addObject("structure",structure);
-		mav.addObject("option",option);
-		mav.addObject("list",list);
-		mav.addObject("msg","viewFilter();");
-		
-		mav.setViewName("search/otherResult");
 		return mav;
+	
 	}
 	
 	//아파트 필터링
@@ -283,104 +184,36 @@ public class EstateController {
 		String[] option=req.getParameterValues("optionResult");
 		String address=req.getParameter("address");	
 		//좌표
-		String localName=req.getParameter("localName");	
-		System.out.println("좌표"+localName);
-		//nullPointException 방지
-		if(option==null) {
-			String[] option2= {"a","a","a"};
-			mav.addObject("option",option2);
-		}else{
-				map.put("option", option);	
-				mav.addObject("option",option);
-		}
+		String coords=req.getParameter("coords");	
 		
-		//주소로 지역코드 가져오기
-		String localCode=estateService.selectLocalCodeFromRegion(address);
-		
-		
-		//=====================================매물 가져오기
-		
-		//매물 종류 아파트
 		map.put("estateType", estateType);
-		//거래 타입 M,J,O
-		map.put("dealType",dealType);
+		map.put("range1", range1);
+		map.put("range2", range2);
+		map.put("range3", range3);
+		map.put("range4", range4);
+		map.put("dealType", dealType);
 		map.put("structure", structure);
-		if(dealType.equals("M")||dealType.equals("J")) {
-			System.out.println("매매/전세");
-			//매매 or 전세일 경우
-			map.put("range1", range1);//최소금액	=>보증금/매매금액
-			map.put("range2", range2);//최대금액
-			map.put("localCode", localCode);//지역코드
-			//all 이면 전체 검색
-			//평형대가 전체이고 옵션이 있을때
-			if(structure.equals("all")&&option!=null) {
-				list=estateService.selectApartListForAllSelectOption(map);					
-			}
-			//평형대가 전체고 옵션 선택 안했을때
-			else if(structure.equals("all")&&(option==null)) {
-				list=estateService.selectApartListForAll(map);
-			}
-			//평형대 선택을 했고 옵션이 없을떄
-			else if(!structure.equals("all")&&option==null) {
-				map.put("structure", structure);
-				list=estateService.selectApartListSelectStructureNotOption(map);
-			}
-			//평형대 선택을 했고 옵션이 있을때.
-			else if(!structure.equals("all")&&option!=null) {
-				list=estateService.selectApartListSelectStructureSelectOption(map);
-			}
-		}
-		//월세일 때
-		else {
-			map.put("range1", range1);//최소금액
-			map.put("range2", range2);//최대금액
-			map.put("localCode", localCode);//지역코드
-			map.put("range3", range3);//월세 최소금액
-			map.put("range4", range4);//월세 최대금액
-			//구조가 전체고 옵션이 있을때
-			if(structure.equals("all")&&option!=null) {
-				map.put("option", option);
-				list=estateService.selectApartListForAllSelectOptionAndMontlyFee(map);
-			}else if(!structure.equals("all")&&option!=null) {
-				//구조가 전체가 아니고 옵션이 있을때
-				map.put("option", option);
-				list=estateService.selectApartListForSelectStructureSelectOptionAndMontlyFee(map);
-			}else if(!structure.equals("all")&&option==null) {
-				//구조가 전체가 아니고 옵션이 없을때
-				list=estateService.selectApartListForSelectStructureNotOptionAndMontlyFee(map);
-			}else if(structure.equals("all")&&option==null) {
-				//구조가 전체고 옵션이 없을때
-				list=estateService.selectApartListForAllNotOptionAndMontlyFee(map);
-			}
-		}
-		System.out.println(list);
-		 
-		//view단 처리
-		mav.addObject("dealType",dealType);
-		mav.addObject("loc",localName);
-		mav.addObject("estateType",estateType);
-		mav.addObject("range1",range1);
-		mav.addObject("range2",range2);
-		mav.addObject("range3",range3);
-		mav.addObject("range4",range4);
-		mav.addObject("structure",structure);
-		mav.addObject("list",list);
-		mav.addObject("localName",address);
-		mav.addObject("msg","viewFilter();");
-		
-		mav.setViewName("search/apartResult");
+		map.put("option", option);
+		map.put("address", address);
+		map.put("coords",coords);
+		mav=returnResult(map);
 		return mav;
 	}
 	
 	@RequestMapping("/filterReset")
-	public ModelAndView resetFilter(ModelAndView mav,@RequestParam String localName,@RequestParam String estateType) {
-		String loc="(37.566826, 126.9786567)";
+	public ModelAndView resetFilter(ModelAndView mav,@RequestParam String address,@RequestParam String coords,@RequestParam String estateType) {
+		String loc=coords;
+		System.out.println("로컬네임?"+coords);
 		mav.addObject("estateType",estateType);
-		mav.addObject("dealType","M");
+		if(estateType.equals("A")||estateType.equals("B")) {
+			mav.addObject("dealType","M");			
+		}else {
+			mav.addObject("dealType","all");	
+		}
 		mav.addObject("structure","all");
-		mav.addObject("localName",localName);
 		mav.addObject("msg","viewFilter();");
 		mav.addObject("loc",loc);
+		mav.addObject("localName",address);
 		mav.addObject("range1","0");
 		mav.addObject("range2","400");
 		mav.addObject("range3","0");
@@ -427,11 +260,17 @@ public class EstateController {
         
         System.out.println("클릭페이지="+cPage);
         
+        String roadAddressName=request.getParameter("roadAddressName");
         String addressName=request.getParameter("addressName");
-        System.out.println("도로명 : "+addressName);
+        System.out.println("도로명 : "+roadAddressName);
+        System.out.println("번지명 : "+addressName);
+        
+        Map<String, String> param=new HashMap<>();
+        param.put("roadAddressName", roadAddressName);
+        param.put("addressName", addressName);
         
         
-        List<Map<String,String>> showRecommendEstate = estateService.showRecommendEstate(cPage,numPerPage,addressName);
+        List<Map<String,String>> showRecommendEstate = estateService.showRecommendEstate(cPage,numPerPage,param);
         
         response.setContentType("application/json; charset=utf-8");
         new Gson().toJson(showRecommendEstate,response.getWriter());
@@ -446,11 +285,16 @@ public class EstateController {
     	
     	System.out.println("클릭페이지="+cPage2);
     	
-    	String addressName=request.getParameter("addressName");
-    	System.out.println("도로명 : "+addressName);
+    	 String roadAddressName=request.getParameter("roadAddressName");
+         String addressName=request.getParameter("addressName");
+         System.out.println("도로명 : "+roadAddressName);
+         System.out.println("번지명 : "+addressName);
+         
+         Map<String, String> param=new HashMap<>();
+         param.put("roadAddressName", roadAddressName);
+         param.put("addressName", addressName);
     	
-    	
-    	List<Map<String,String>> showNotRecommendEstate = estateService.showNotRecommendEstate(cPage2,numPerPage,addressName);
+    	List<Map<String,String>> showNotRecommendEstate = estateService.showNotRecommendEstate(cPage2,numPerPage,param);
     	
     	System.out.println("제발 나와라="+showNotRecommendEstate.size());
     	
@@ -519,10 +363,10 @@ public class EstateController {
 			estateprice = mon[1];
 		}
 		else if(transactiontype=='M') {
-			estateprice = mon[0];
+			estateprice = mon[2];
 		}
 		else {
-			estateprice = mon[2];
+			estateprice = mon[0];
 		}
 
 
@@ -616,18 +460,262 @@ public class EstateController {
 	}
 	
 	@RequestMapping("/findApartTermsTest")
-    public void findApartTermsTest(HttpServletRequest request, HttpServletResponse response) throws JsonIOException, IOException {
-        String address =request.getParameter("address");
-        System.out.println("addressnumber@@@@의 값은 ????"+address);
-    
-        String localCode=estateService.selectLocalCodeFromRegion(address);
+    public void findApartTermsTest( ModelAndView mav, HttpServletRequest request, HttpServletResponse response) throws JsonIOException, IOException {
+        String coords=request.getParameter("coords");
+        String estateType=request.getParameter("estateType");//건물 유형(빌라,원룸,오피스텔)
+		String dealType=request.getParameter("dealType");//거래유형
+		String range1=request.getParameter("range1");	//가격범위
+		String range2=request.getParameter("range2"); //가격범위
+		String range3=request.getParameter("range3");	//가격범위(보증-월세로 나눠질때)
+		String range4=request.getParameter("range4"); //가격범위(보증-월세로 나눠질때)
+		String structure=request.getParameter("structure");	//all인 경우와 아닌 경우로 나눔
+		String[] option=request.getParameterValues("optionResult");
+		String topOption=request.getParameter("topOption");
+		String address=request.getParameter("address");
+		
 
-        System.out.println("로컬 코드 파이트 아파트 @controller = " +localCode);
         
         List<Estate> list =new ArrayList<>();
-        list = estateService.selectlocalList(localCode);
-        System.out.println("파인드list@@@@@=="+list);
+        Map<String, Object> map=new HashMap<>();
+        
+        map.put("estateType", estateType);
+		map.put("range1", range1);
+		map.put("range2", range2);
+		map.put("range3", range3);
+		map.put("range4", range4);
+		map.put("dealType", dealType);
+		map.put("structure", structure);
+		map.put("option", option);
+		map.put("address", address);
+		map.put("coords",coords);
+		if(topOption!=null) {
+		map.put("topOption", topOption);}
+        
+        mav=returnResult(map);
+
          response.setContentType("application/json; charset=utf-8");
-            new Gson().toJson(list,response.getWriter());
+            new Gson().toJson(mav,response.getWriter());
     }
+	
+
+	
+	
+	public ModelAndView returnResult(Map<String,Object> map) {
+		List<String>list=new ArrayList<>();
+		ModelAndView mav = new ModelAndView();
+		String estateType=(String) map.get("estateType");
+		String range1=(String)map.get("range1");
+		String range2=(String)map.get("range2");
+		String range3=(String)map.get("range3");
+		String range4=(String)map.get("range4");
+		String dealType=(String)map.get("dealType");
+		String structure=(String)map.get("structure");
+		String[] option=(String[])map.get("option");
+		String address=(String)map.get("address");
+		String coords=(String)map.get("coords");
+		String topOption=(String)map.get("topOption");
+	
+		
+
+		if(structure==null) {
+			structure="all";
+			map.put("structure", structure);
+			System.out.println("구조 : "+structure);
+		}
+		if(option==null) {
+			String[] option2= {"a","a","a"};
+			for(int i=0;i<option2.length;i++) {
+				System.out.println(option2[i]);
+			}
+			mav.addObject("option",option2);
+		}else{
+			System.out.println("옵션 : "+option);
+			mav.addObject("option",option);
+			map.put("option", option);
+		}
+		if(topOption==null||topOption.trim().length()==0) {			
+			topOption="all";
+			map.put("topOption", topOption);
+		}
+		if(range1.equals("0")&&(range2.equals("300")||range2.equals("400")||range2.equals("200"))){
+			range2="100000000";
+		}
+		map.put("range2", range2);
+		
+		
+		String localCode=estateService.selectLocalCodeFromRegion(address);
+		
+		map.put("localCode", localCode);
+		
+		System.out.println("매물유형 : "+estateType);
+		System.out.println("좌표 : "+coords);
+		System.out.println("거래유 : "+dealType);
+		System.out.println("주소 : " +address);
+		System.out.println("로컬코드 : " +localCode);
+		System.out.println("구조  : "+structure);
+		
+		//아파트가 아닌 경우
+		if(!(estateType.equals("A"))) {
+			System.out.println("아파트 아님 ");
+			//빌라 매매/전세인 경우
+			if(dealType.equals("M")||dealType.equals("J")) {
+				//구조가 all이고 옵션이 없을때
+				if(structure.equals("all")&&option==null) {
+					list=estateService.selectEstateListForAllNotOption(map);
+				}else if(structure.equals("all")&&option!=null) {
+					list=estateService.selectEstateListForAllSelectOption(map);
+				}else if(!structure.equals("all")&&option==null) {
+					list=estateService.selectEstateListSelectStructureNotOption(map);
+				}else {
+					//구조가 전체가 아니고 옵션이 있을때
+					list=estateService.selectEstateListSelectStructureNotOptoin(map);}
+			}
+			//월세 혹은 전체인 경우 =>range3,4 추가해야되므로 나눠줌
+			else {
+				//구조가 전체일 때-option의 null여부와 topOption이 all인지 아닌지로 비교
+				if(structure.equals("all")&&option==null&&topOption.equals("all")) {
+					list=estateService.selectEstateListForAllNotOptionForMontlyFee(map);
+				}else if(structure.equals("all")&&option==null&&!topOption.equals("all")) {
+					map.put("topOption", topOption);
+					list=estateService.selectEstateListForAllNotOptionSelectFloorOptionForMontlyFee(map);
+				}
+				
+				else if(structure.equals("all")&&option!=null&&topOption.equals("all")) {
+					map.put("option", option);
+					list=estateService.selectEstateListForAllSelectOptionNotFloorOpionForMontlyFee(map);
+				}else if(structure.equals("all")&&option!=null&&!topOption.equals("all")) {
+					map.put("option", option);
+					map.put("topOption", topOption);
+					list=estateService.selectEstateListForAllSelectOptionSelectFloorOptionMontlyFee(map);
+				}
+				
+				//구조가 전체가 아닐 때-option의 null여부와 topOption이 all인지 아닌지로 비교
+				else if(!structure.equals("all")&&option==null&&topOption.equals("all")) {
+					map.put("structure", structure);
+					list=estateService.selectEstateListSelectStructureNotOpionNotFloorOptionMontlyFee(map);
+				}else if(!structure.equals("all")&&option==null&&!topOption.equals("all")) {
+					map.put("structure", structure);
+					map.put("topOption", topOption);
+					list=estateService.selectEstateListSelectStructureNotOpionSelectFloorOptionMontlyFee(map);
+				}
+				
+				
+				else if(!structure.equals("all")&&option!=null&&topOption.equals("all")) {
+
+					list=estateService.selectEstateListSelectStructureSelectOptionNotFloorOptionMontlyFee(map);
+				}else{
+					list=estateService.selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee(map);
+				}
+				
+			}
+		
+		//원룸인 경우=>옵션 다수
+
+		mav.addObject("dealType",dealType);
+		mav.addObject("loc",coords);
+		mav.addObject("estateType",estateType);
+		mav.addObject("range1",range1);
+		mav.addObject("range2",range2);
+		mav.addObject("range3",range3);
+		mav.addObject("range4",range4);
+		mav.addObject("topOption",topOption);
+		mav.addObject("structure",structure);
+		mav.addObject("option",option);
+		mav.addObject("list",list);
+		mav.addObject("msg","viewFilter();");
+		
+		mav.setViewName("search/otherResult");
+		}
+		//아파트인 경우
+		else {
+			System.out.println("아파트임");
+			if(dealType.equals("M")||dealType.equals("J")) {
+				//all 이면 전체 검색
+				//평형대가 전체이고 옵션이 있을때
+				if(structure.equals("all")&&option!=null) {
+					list=estateService.selectApartListForAllSelectOption(map);					
+				}
+				//평형대가 전체고 옵션 선택 안했을때
+				else if(structure.equals("all")&&(option==null)) {
+					System.out.println("평형대가 전체고 옵션 선택 안했을때");
+					System.out.println(map);
+					list=estateService.selectApartListForAll(map);
+				}
+				//평형대 선택을 했고 옵션이 없을떄
+				else if(!structure.equals("all")&&option==null) {
+					map.put("structure", structure);
+					list=estateService.selectApartListSelectStructureNotOption(map);
+				}
+				//평형대 선택을 했고 옵션이 있을때.
+				else if(!structure.equals("all")&&option!=null) {
+					list=estateService.selectApartListSelectStructureSelectOption(map);
+				}
+			}
+			//월세일 때
+			else {
+				//구조가 전체고 옵션이 있을때
+				if(structure.equals("all")&&option!=null) {
+					map.put("option", option);
+					list=estateService.selectApartListForAllSelectOptionAndMontlyFee(map);
+				}else if(!structure.equals("all")&&option!=null) {
+					//구조가 전체가 아니고 옵션이 있을때
+					map.put("option", option);
+					list=estateService.selectApartListForSelectStructureSelectOptionAndMontlyFee(map);
+				}else if(!structure.equals("all")&&option==null) {
+					//구조가 전체가 아니고 옵션이 없을때
+					list=estateService.selectApartListForSelectStructureNotOptionAndMontlyFee(map);
+				}else if(structure.equals("all")&&option==null) {
+					//구조가 전체고 옵션이 없을때
+					list=estateService.selectApartListForAllNotOptionAndMontlyFee(map);
+				}
+			}
+			System.out.println("리스트");
+			System.out.println(list);
+			 
+			//view단 처리
+			mav.addObject("dealType",dealType);
+			mav.addObject("loc",coords);
+			mav.addObject("estateType",estateType);
+			mav.addObject("range1",range1);
+			mav.addObject("range2",range2);
+			mav.addObject("range3",range3);
+			mav.addObject("range4",range4);
+			mav.addObject("structure",structure);
+			mav.addObject("list",list);
+			mav.addObject("msg","viewFilter();");
+			
+			mav.setViewName("search/apartResult");
+		}
+		
+		return mav;
+	}
+	
+	@RequestMapping("/unitChange")
+	@ResponseBody
+	public Object unitChange(@RequestParam(value="unit", required=false, defaultValue="m<sup>2</sup>") String unit,
+							 @RequestParam(value="unitNum", required=false, defaultValue="1") String unitNum) {
+		Map<String, String> map = new HashMap<>();
+		
+		
+		logger.info("unit1@unitChange="+unit);
+		logger.info("unitNum1@unitChange="+unitNum);
+		// 1 or 3
+		if("m<sup>2</sup>".equals(unit)) {
+			unit = "평";
+			unitNum="3";
+		}
+		else {
+			unit = "m<sup>2</sup>";
+			unitNum="1";
+		}
+		
+		logger.info("unit2@unitChange="+unit);
+		logger.info("unitNum2@unitChange="+unitNum);
+		
+		map.put("unit", unit);
+		map.put("unitNum", unitNum);
+		map.put("msg", "unit="+unit+", unitNum="+unitNum);
+
+		return map;
+	}
 }

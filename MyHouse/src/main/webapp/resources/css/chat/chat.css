@@ -1,0 +1,26 @@
+@charset "UTF-8";
+
+.chatHeader-container{
+	text-align: center;
+	background-color: rgb(133, 186, 221);
+}
+
+
+
+/*채팅창 컨테이너*/
+div#chat-container{
+	width:580px;
+	height:516px;
+	background-color: rgb(133, 186, 221);
+}
+
+/*채팅 입력칸*/
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 95%;
+    margin-left: 2%;
+    margin-top: 1%;
+}

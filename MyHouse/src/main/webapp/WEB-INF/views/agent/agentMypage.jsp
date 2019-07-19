@@ -7,8 +7,12 @@
 <!-- 사용자 작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/agent/agentMypage.css" />
 <script>
+
 $(function() {
 	$("#agent-set-btn").css("opacity", 0.6);
+	$("#estateRequest").on("click", function(){
+		location.href="${pageContext.request.contextPath}/estate/EnrollTest.do";
+	});
 	$("#estateList").on("click", function(){
 		location.href="${pageContext.request.contextPath}/agent/estateList";
 	});
@@ -16,11 +20,38 @@ $(function() {
 		$("#estateListEndFrm").submit();
 	});
 	$("#warning_memo").on("click", function(){
-		location.href="${pageContext.request.contextPath}/agent/warningMemo";
+		location.href="${pageContext.request.contextPath}/agent/warningMemo.do?memberNo=${memberLoggedIn.memberNo}";
 	});
 	
-	$("button#agnetChangeImg-btn").on("click", function(){
+	var fileTarget = $('input[name=upFile]');
+
+	fileTarget.on('change', function(){
+		var filename = $(this)[0].files[0].name;
+		// 추출한 파일명 삽입 
+		$('.upload-name').val(filename);
+	});
+
+	
+	$("button#agentChangeImg-btn").on("click", function(){
 		$("input[type=file]").click();
+	});
+	
+	$("button#agentDeleteImg-btn").on("click", function(){
+		var param = {
+				memberNo : "${memberLoggedIn.memberNo}",
+				renamedFileNamed : "${renamedFileName}"
+		}
+		$.ajax({
+			url : "${pageContext.request.contextPath}/agent/agentDeleteImg",
+			data : param,
+			success : function(data){
+				if(data){
+					$("#agentProfileImg").attr("src", "${pageContext.request.contextPath }/resources/upload/agentprofileimg/basicprofileimg.jpg");
+				} else {
+					alert("업로드된 사진이 없습니다.");
+				}
+			}
+		});
 	});
 	
 	$("input.oldPwd").blur(function(){
@@ -86,13 +117,19 @@ $(function() {
 	});
 	
 	$("button#agentUpdate-btn").on("click", function(){
-		if($("input.oldPwd").val() == "" || $("input.newPwd").val() == "" ||
-				$("input.newPwd").css("color") != "rgb(0, 0, 255)"){
-			alert("정보를 정확히 기입해주세요.");
+		if($("input[name=newPwd]").val()=="" && $('.upload-name').val()=="파일선택"){
+			alert("다시 입력해주세요.");
 			return;
 		}
 		$("input[name=newPwd]").val($("input.newPwd").val());
 		$("#updateAgentFrm").submit();
+	});
+	$("button#agentDelete-btn").on("click", function(){
+		if(confirm("정말로 회원탈퇴 하시겠습니까?")){
+			$("#agentDeleteFrm").submit();
+		} else {
+			
+		}
 	});
 });
 </script>
@@ -103,14 +140,23 @@ $(function() {
 </form>
 <form action="${pageContext.request.contextPath}/agent/updateAgent"
 	  id="updateAgentFrm"
+	  method="post"
+	  enctype="multipart/form-data">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+	<input type="file"  name="upFile" style="display: none">
+	<input type="hidden" name="renamedFileNamed" value="${renamedFileName}" />
+	<input type="hidden" name="newPwd" value="" />
+</form>
+<form action="${pageContext.request.contextPath}/agent/agentDelete"
+	  id="agentDeleteFrm"
 	  method="post">
 	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
-	<input type="hidden" name="newPwd" value="" />
 </form>
 <div id="back-container">
 	<div id="info-container">
 		<div class="btn-group btn-group-lg" role="group" aria-label="..." id="button-container">
 			<button type="button" class="btn btn-secondary" id="agent-set-btn">설정</button>
+			<button type="button" class="btn btn-secondary" id="estateRequest">매물등록</button>
 			<button type="button" class="btn btn-secondary" id="estateList">매물신청목록</button>
 			<button type="button" class="btn btn-secondary" id="estateList-end">등록된매물</button>
 			<button type="button" class="btn btn-secondary" id="warning_memo">쪽지함</button>
@@ -149,15 +195,25 @@ $(function() {
 					</td>
 				</tr>
 			</table>
-			<div id="agentProfileImg">
-			
+			<div id="agentProfileImg-div">
+				<c:if test="${renamedFileName ne null}">
+					<img src="${pageContext.request.contextPath }/resources/upload/agentprofileimg/${renamedFileName}"
+						width="144px" height="144px" id="agentProfileImg" alt="프로필사진" />
+				</c:if>
+				<c:if test="${renamedFileName eq null}">
+					<img src="${pageContext.request.contextPath }/resources/upload/agentprofileimg/basicprofileimg.jpg"
+						width="144px" height="144px" id="agentProfileImg" alt="프로필사진" />
+				</c:if>
 			</div>
-			<button type="button" class="btn btn-info" id="agnetChangeImg-btn">이미지 변경</button>
-			<input type="file" style="display: none">
+			<div class="filebox">
+				<input class="upload-name" value="파일선택" disabled="disabled">
+				<button type="button" class="btn btn-info" id="agentChangeImg-btn">업로드</button>
+				<button type="button" class="btn btn-danger" id="agentDeleteImg-btn">삭제</button>
+			</div>
 			<input type="hidden" name="memberNo" id="memberNo" value="${memberLoggedIn.memberNo}"/>
 			<div id="agentSet-btnGroup">
 				<button type="button" class="btn btn-secondary" id="agentUpdate-btn">수정</button>
-				<button type="button" class="btn btn-dark">회원탈퇴</button>
+				<button type="button" class="btn btn-dark" id="agentDelete-btn">회원탈퇴</button>
 			</div>
 		</div>	
 	</div>

@@ -1,4 +1,5 @@
 @CHARSET "UTF-8";
+@import url('https://fonts.googleapis.com/css?family=Lobster|Pacifico|Source+Sans+Pro');
 
 div#ggg {
 	height: 1500px;
@@ -63,7 +64,17 @@ div#login-div {
 	margin-top: -47px;
 	right: 130px;
 }
-
+/*로그인후 사용자이름 span*/
+div#login-div span{
+	font-size: 12px;
+}
+div#login-div span a{
+	text-decoration: none;
+}
+a#mName{
+	color: blue;
+	cursor: pointer;
+}
 div#login-div button {
 	padding: 5px;
 	font-size: 12px;

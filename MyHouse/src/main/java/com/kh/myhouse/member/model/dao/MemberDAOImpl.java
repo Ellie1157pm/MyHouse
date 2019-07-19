@@ -1,11 +1,13 @@
 package com.kh.myhouse.member.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.myhouse.interest.model.vo.Interest;
 import com.kh.myhouse.member.model.vo.Member;
 
 @Repository
@@ -25,8 +27,8 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public int updateMember(Member member) {
-		return sqlSession.update("member.updateMember", member);
+	public int updateMember(Map map) {
+		return sqlSession.update("member.updateMember", map);
 	}
 
 	@Override
@@ -40,6 +42,11 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 	
 	@Override
+	public int findPwd(Member member) {
+		return sqlSession.selectOne("member.findPwd", member);
+	}
+	
+	@Override
 	public int deleteMember(String memberNo) {
 		return sqlSession.update("member.deleteMember", memberNo);
 	}
@@ -48,15 +55,34 @@ public class MemberDAOImpl implements MemberDAO {
 	public Member selectOneMember(int memberNo) {
 		return sqlSession.selectOne("member.selectOneMember_", memberNo);
 	}
-
+	
 	@Override
 	public int insertInterest(Member member) {
 		return sqlSession.insert("member.insertInterest", member);
 	}
+	
+	@Override
+	public Interest selectInterest(int memberNo) {
+		return sqlSession.selectOne("member.selectInterest", memberNo);
+	}
 
 	@Override
-	public int updateInterest(int memberNo) {
-		return sqlSession.update("member.updateInterest", memberNo);
+	public int updateInterest(Interest interest) {
+		return sqlSession.update("member.updateInterest", interest);
 	}
+
+	@Override
+	public List<Map<String, String>> forSaleList(int memberNo) {
+		return sqlSession.selectList("member.forSaleList", memberNo);
+	}
+
+	@Override
+	public List<Map<String, String>> cartList(int memberNo) {
+		return sqlSession.selectList("member.cartList", memberNo);
+	}
+
+	
+	
+	
 
 }

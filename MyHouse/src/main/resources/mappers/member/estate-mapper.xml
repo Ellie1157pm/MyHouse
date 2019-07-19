@@ -9,6 +9,7 @@
 	
 	<select id="selectApartmentname" resultType="string"> select address from
 		estate where region_code= #{localCode} and estate_type=#{estateType}
+
 	</select>
 
 	<select id="selectDetailEstate" resultMap="estateAttchmentMap">
@@ -19,7 +20,7 @@
 	<select id="showRecommendEstate" resultMap="estateAttchmentMap">
 		 select *  from estate e join power_link pl using(estate_no) join 
          (select e.*from( select * from  estate_photo)e where rowid in(select max(rowid) from  estate_photo group by estate_no))using(estate_no)
-         where address=#{address} order by start_date desc
+         where address=#{address} or address=#{roadAddressName} order by start_date desc
 	</select>
 	<resultMap type="estate" id="estateAttchmentMap">
 		<id column="ESTATE_NO" property="EstateNo"/>
@@ -52,13 +53,10 @@
 	
 	
 	<select id="showNotRecommendEstate" resultMap="estateAttchmentMap">
-		 select * 
-       		 from estate e join estate_photo p using(estate_no)
-    	 where estate_no not in (select estate_no from estate e join power_link pl using(estate_no) join estate_photo p using(estate_no)) and address=#{addressName}
-    	 order by written_date desc
+		 select *  from estate e join 
+         (select e.*from( select * from  estate_photo)e where rowid in(select max(rowid) from  estate_photo group by estate_no))using(estate_no)
+         where address=#{address} or address=#{roadAddressName} order by written_date desc
 	</select>
-	
-	
 	
 	<select id="selectEstateAttach" resultType="estateAttach">
 		select * from
@@ -78,15 +76,17 @@
 			typeHandler="strArrTypeHandler" />
 	</resultMap>
 
-	<insert id="EstateInsert">
-		insert into estate
-		(estate_no,region_code,member_no,business_member_no,phone,business_phone,
-		address,estate_type,transaction_type,estate_price,management_fee,estate_area,subway_station,
-		estate_content,written_date,deposit,address_detail)
-		values(seq_estate_no.nextval,#{RegionCode},#{MemberNo},#{BusinessMemberNo},#{Phone},#{BusinessPhone},#{Address},
-		#{EstateType},#{TransActionType},#{EstatePrice},#{ManageMenetFee},#{EstateArea},#{SubwayStation},#{EstateContent},
-		sysdate,#{Deposit},#{AddressDetail})
-	</insert>
+	 <insert id="EstateInsert">
+        insert into estate
+        (estate_no,region_code,member_no,business_member_no,phone,business_phone,
+        address,estate_type,transaction_type,estate_price,management_fee,estate_area,subway_station,
+        estate_content,written_date,deposit,address_detail)
+        values(seq_estate_no.nextval,#{RegionCode},#{MemberNo},#{BusinessMemberNo},#{Phone},#{BusinessPhone},#{Address},
+        #{EstateType},#{TransActionType},#{EstatePrice},#{ManageMenetFee},#{EstateArea},#{SubwayStation},#{EstateContent},
+        sysdate,#{Deposit},#{AddressDetail})
+    </insert>
+	
+
 	<insert id="insertattach">
 		insert into
 		estate_photo

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -12,6 +12,8 @@
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
  function validate(){
+	
+	 
 	  var estateType = $(':input[name=estateType]:radio:checked').val();
 	  var transactiontype = $(':input[name=transactiontype]:radio:checked').val();
    var etcoption = $(':input[name=etcoption]:checkbox:checked').val(); 
@@ -50,6 +52,8 @@ $(document).ready(function() {
 		$("#oneroom").hide();
 		 $("#villa").hide();
 		 $("#officetel").hide();
+		  $("#adressdetail").show();
+		  $("#adressdetail2").hide();
 	 });
 	
  $("input:radio[id='raidovilla']").on('click',function(){
@@ -57,6 +61,9 @@ $(document).ready(function() {
 	 $("#oneroom").hide();
 	 $("#villa").show();
 	 $("#officetel").hide();
+	 $("#adressdetail").hide();
+	  $("#adressdetail2").show();
+	 
  });
  
  $("input:radio[id='radiooneroom']").on('click',function(){
@@ -64,6 +71,8 @@ $(document).ready(function() {
 	 $("#oneroom").show();
 	 $("#villa").hide();
 	 $("#officetel").hide();
+	 $("#adressdetail").hide();
+	  $("#adressdetail2").show();
  });
  
  $("input:radio[id='radioopi']").on('click',function(){
@@ -71,6 +80,8 @@ $(document).ready(function() {
 	 $("#oneroom").hide();
 	 $("#villa").hide();
 	 $("#officetel").show();
+	 $("#adressdetail").hide();
+	  $("#adressdetail2").show();
  });
  
 	
@@ -114,38 +125,7 @@ enctype="multipart/form-data">
 		<td><input type="text" name="BusinessMemberNo" id="BusinessMemberNo" value="${memberLoggedIn.status eq'B'.charAt(0)?memberLoggedIn.memberNo:'0'}" /></td>
 		</tr>
 
-		<tr>
-			<th>주소</th>
-			<td><input type="text" name="taddress1" id="taddress1" class="addr"
-				disabled="disabled" style="width: 250px">
-				<button type="button" onclick='searchAddr();'>주소검색</button>
-				</td>
-
-		</tr>
-		<tr>
-			<td><input type="hidden" name="address1" id="address1" class="addr"></td>
-		</tr>
-		<tr>
-			<th>상세정보</th>
-			<td><input type="text" name="address2" id="address2" class="addr" required
-			    placeholder="124동15층4호 공백없이 이력하세요"></td>
-		</tr>
-		
-		 <tr>
-          <th>핸드폰 번호</th>
-           <td><input type="text"name="phone1" pattern="01(0|1)" required> -
-               <input type="text" name="phone2" pattern="\d{4}" required> -
-               <input type="text" name="phone3"  pattern="\d{4}"required>
-           </td>
-          </tr>
-          	 <tr style="display:none;">
-          <th>중개인핸드폰 번호</th>
-           <td>
-           <input type="text"name="agentphone" value="${memberLoggedIn.status eq'B'.charAt(0)?memberLoggedIn.phone:'0'}"> 
-               
-           </td>
-          </tr>
-		<tr>
+	<tr>
 			<th>매물정보</th>
 			<td><input type="radio" name="estateType" id="apt" value="A" />
 			<label for="apt">아파트</label> 
@@ -161,15 +141,59 @@ enctype="multipart/form-data">
 
 			</td>
 		</tr>
+
+
+		<tr>
+			<th>주소</th>
+			<td><input type="text" name="taddress1" id="taddress1" class="addr"
+				disabled="disabled" style="width: 250px">
+				<button type="button" onclick='searchAddr();'>주소검색</button>
+				</td>
+
+		</tr>
+		<tr>
+			<td><input type="hidden" name="address1" id="address1" class="addr"></td>
+		</tr>
+		<tr id="adressdetail" style="display:none;">
+			<th>상세정보</th>
+			<td><input type="number" name="address2" id="address2" class="addr" required value="0">동
+			<input type="number" name="address3" id="address3" class="addr" value="0" required>층
+			</td>	
+		</tr>
+		
+			<tr id="adressdetail2" style="display:none;">
+			<th>상세정보</th>
+			<td>
+			<input type="number" name="address4" id="address4" class="addr" required value="0">층
+			</td>	
+		</tr>
+		
+		
+		
+		 <tr>
+          <th>핸드폰 번호</th>
+           <td><input type="text"name="phone1" pattern="01(0|1)" required> -
+               <input type="text" name="phone2" pattern="\d{4}" required> -
+               <input type="text" name="phone3"  pattern="\d{4}"required>
+           </td>
+          </tr>
+          	 <tr style="display:none;">
+          <th>중개인핸드폰 번호</th>
+           <td>
+           <input type="text"name="agentphone" value="${memberLoggedIn.status eq'B'.charAt(0)?memberLoggedIn.phone:'0'}"> 
+               
+           </td>
+          </tr>
+	
 		<tr>
 			<th>매물정보2</th>
 			<td>
 			
 			<input type="radio" name="transactiontype" id="charter" value="J"/>
 			<label for="charter" >전세</label> 
-			<input type="radio" name="transactiontype" id="monthly"  value="M" />
+			<input type="radio" name="transactiontype" id="monthly"  value="O" />
 			<label for="monthly"  >월세</label>
-			<input type="radio" name="transactiontype" id="For-Sale" value="O" />
+			<input type="radio" name="transactiontype" id="For-Sale" value="M" />
 			<label for="For-Sale">매물</label>
 				
 	</td>
@@ -198,9 +222,9 @@ enctype="multipart/form-data">
 		</tr>
 	
 		<tr>
-			<th>평수</th>
+			<th>면적</th>
 			<td><input type="number" name="estateArea" id="estateArea"  min="0"
-			required />평</td>
+			required />㎡</td>
 		</tr>
 		
 		

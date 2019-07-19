@@ -10,21 +10,16 @@
 $(function() {
 	$("#update-member-btn").css("opacity", 0.6);
 	$("#cart-list-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/cartList";
+		$("#cartListFrm").submit();
 	});
 	$("#interest-list-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/interestList?memberNo=" + ${member.memberNo};
+		$("#interestListFrm").submit();
 	});
 	$("#for-sale-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/forSaleList";
+		$("#forSaleListFrm").submit();
 	});
 	$("#warning_memo").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/memoList";
-	});
-	
-	/* updateMember submit */
-	$("button#member-update-btn").on("click", function() {
-		$("#memberUpdateFrm").submit();
+		location.href="${pageContext.request.contextPath}/member/warningMemo.do?memberNo=${memberLoggedIn.memberNo}";
 	});
 
 	/* 입력한 기존 비밀번호가 맞는지 검사 */
@@ -57,8 +52,7 @@ $(function() {
 			}
 		});
 	});
-
-		
+	
 	/*비밀번호 유효성검사*/
 	$("input#newPwd").blur(function() {
 		var regExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/;
@@ -93,13 +87,49 @@ $(function() {
 
 	});
 	
-	function deleteMember(memberNo){
-		if(!confirm("정말로 탈퇴하시겠습니까?")) return;
-		location.href = "${pageContext.request.contextPath}/member/deleteMember.do?memberNo="+memberNo;
-	}
+	/* updateMember submit */
+	$("button#member-update-btn").on("click", function() {
+		if($("input#oldPwd").val() == ""){
+			alert("비밀번호가 입력되지 않았습니다.");
+			return;
+		}
+		else if($("input#newPwd").val() == ""){
+			alert("새로운 비밀번호가 입력되지 않았습니다.");
+			return;
+		}
+		else $("#memberUpdateFrm").submit();
+	});
 	
 });
+
+/* delete member */
+function deleteMember(memberNo){
+	console.log(memberNo);
+	if(!confirm("정말로 탈퇴하시겠습니까?")) return;
+	location.href = "${pageContext.request.contextPath}/member/deleteMember.do?memberNo=" + memberNo;
+}
+
 </script>
+<form action="${pageContext.request.contextPath}/member/cartList"
+	  id="cartListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/member/interestList"
+	  id="interestListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/member/forSaleList"
+	  id="forSaleListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/member/deleteMember.do"
+	  id="deleteMemberFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
 
 <div id="back-container">
 	<div id="info-container">
@@ -111,21 +141,21 @@ $(function() {
 			<button type="button" class="btn btn-secondary" id="warning_memo">쪽지함</button>
 		</div>
 		<div id="list-container">
-		<form name="memberUpdateFrm" action="${pageContext.request.contextPath}/member/memberUpdate.do" method="post">
-			<input type="hidden" name="memberNo" id="memberNo" value="${member.memberNo}"/>
+		<form name="memberUpdateFrm" action="${pageContext.request.contextPath}/member/memberUpdate.do?memberNo="+${member.memberNo } method="post">
+			<input type="hidden" name="memberNo" id="memberNo" value="${memberLoggedIn.memberNo}"/>
 			<table>
 				<tr>
 					<th>이름</th>
-					<td><input type="text" name="memberName" id="memberName" value="${member.memberName}"/></td>
+					<td><input type="text" name="memberName" id="memberName" value="${memberLoggedIn.memberName}"/></td>
 				</tr>
 				<tr>
 					<th>아이디(이메일)</th>
-					<td>${member.memberEmail}</td>
+					<td>${memberLoggedIn.memberEmail}</td>
 				</tr>
 				<tr>
 					<th>기존비밀번호</th>
 					<td>
-						<input type="text" name="oldPwd" id="oldPwd"/>
+						<input type="password" name="oldPwd" id="oldPwd"/>
 						<span id="oldPwdSpan"></span>
 					</td>
 				</tr>
@@ -140,16 +170,15 @@ $(function() {
 					<th>알림서비스 수신여부</th>
 					<td>
 						<label for="receiveMemo">동의</label>
-						<input type="radio" name="receiveMemoYN" value="Y" ${member.receiveMemoYN=='Y'.charAt(0)?'selected':'' }/>
+						<input type="radio" name="receiveMemoYN" value="Y" ${memberLoggedIn.receiveMemoYN=='Y'.charAt(0)?'checked':'' }/>
 						<label for="receiveMemo">비동의</label>
-						<input type="radio" name="receiveMemoYN" value="N" ${member.receiveMemoYN=='N'.charAt(0)?'selected':'' }/>		
+						<input type="radio" name="receiveMemoYN" value="N" ${memberLoggedIn.receiveMemoYN=='N'.charAt(0)?'checked':'' }/>		
 					</td>
 				</tr>
 			</table>
 			<div id="agentSet-btnGroup">
-				<input type="submit" class="btn btn-outline-success" id="member-update-btn" value="수정" >&nbsp;
-				<input type="button" class="btn btn-outline-success" id="member-delete-btn" value="회원탈퇴"
-				       onclick="deleteMember(${member.memberNo})">
+				<input type="submit" class="btn btn-outline-success" id="member-update-btn" value="수정" />&nbsp;
+				<input type="button" class="btn btn-outline-success" id="member-delete-btn" value="회원탈퇴" onclick="deleteMember(${memberLoggedIn.memberNo});"/>
 			</div>
 		</form>
 		</div>	
