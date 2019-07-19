@@ -35,7 +35,7 @@
 <!--다음 지도 api : 예림 api key -->
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=52628547fe813f9f2accb85c95efcde3&libraries=services,clusterer"></script>
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath }/resources/css/member.css" />
+	href="${pageContext.request.contextPath }/resources/css/member/member.css" />
 
 </head>
 <body>
@@ -113,14 +113,11 @@
 							<span><a href="${pageContext.request.contextPath }/agent/agentMypage">${memberLoggedIn.memberName }</a>님 환영합니다.</span>
 						</c:if>
 						<c:if test="${memberLoggedIn.status eq 'U'.charAt(0)}">
-							<c:if test="${memberLoggedIn.memberNo ne 1}">
-								<span><a href="${pageContext.request.contextPath }/member/memberView.do?memberNo=${memberLoggedIn.memberNo}">${memberLoggedIn.memberName }</a>님
-									환영합니다.</span>
-							</c:if>
-							<c:if test="${memberLoggedIn.memberNo eq 1}">
-								<span><a href="${pageContext.request.contextPath }/admin/list">${memberLoggedIn.memberName }</a>님
-									환영합니다.</span>
-							</c:if>
+
+							<span><a href="${pageContext.request.contextPath }/member/memberView.do">${memberLoggedIn.memberName }</a>님	환영합니다.</span>
+						</c:if>
+						<c:if test="${memberLoggedIn.memberNo eq 1}">
+							<span><a href="${pageContext.request.contextPath }/admin/list">${memberLoggedIn.memberName }</a>님 환영합니다.</span>
 						</c:if>
 			    	&nbsp;
 				    <button type="button" class="btn btn-outline-success"
@@ -221,8 +218,8 @@
 						id="findPwdFrm" method="post">
 						<p>아이디와 전화번호를 입력하시면 비밀번호를 리셋합니다.</p>
 						<p>리셋한 후에 새로운 비밀번호를 설정하실 수 있습니다.</p>
-						<label for="member-enroll-name">아이디</label> <input type="text"
-							name="memberId" id="find-pwd-email" /><br /> <label
+						<label for="member-enroll-name">아이디</label> <input type="email"
+							name="memberEmail" id="find-pwd-email" /><br /> <label
 							for="member-enroll-phone">전화번호</label> <input type="text"
 							name="phone" id="find-pwd-phone" /><br />
 					</form>
@@ -242,7 +239,40 @@
 	<!-- 비밀번호 찾기 modal 끝 -->
 
 	<!-- 비밀번호 재설정 modal -->
-
+	<div class="modal fade pwd-reset-end" id="resetPwdModal" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+		onclick="">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">비밀번호 재설정</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body pwd-reset-modal" id="enroll-division">
+					<form action="${pageContext.request.contextPath}/member/resetPwd.do"
+						id="resetPwdFrm" method="post">
+						<p>새로 사용할 비밀번호를 입력해주세요.</p> 
+						<p>8~15자로 영문/숫자/특수기호 하나 이상 반드시 포함</p>
+						<label for="member-enroll-name">새로운 비밀번호</label> <input type="password"
+							name="newPwd" id="newPwd" /><br /> <label
+							for="member-enroll-phone">비밀번호 확인</label> <input type="password"
+							name="newPwd" id="newPwd_" /><br />
+					</form>
+				</div>
+				<div class="modal-footer">
+					<!-- 입력한 아이디와 전화번호가 유효(해당 정보를 모두 포함한 멤버데이터가 있는 경우)한 경우에만 비밀번호 리셋 버튼을 누르면
+		      새로운 모달창이 나오게 됨(새로운 비밀번호 입력과 비밀번호 확인 입력창이 있음, 확인과 취소도 있음) 
+		      만약 유효하지 않다면 경고창을 띄움 -->
+					<button type="button" id="pwd-find-end-btn" class="btn btn-primary">비밀번호 변경</button>
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- 비밀번호 재설정 modal 끝 -->
 
@@ -322,19 +352,22 @@
 					</button>
 				</div>
 				<div class="modal-body member-enroll-modal" id="enroll-division">
-					<form
-						action="${pageContext.request.contextPath}/member/insertMember.do"
-						id="member-enrollFrm" method="post">
-						<span id="s-email"></span> <label for="member-enroll-email">아이디(이메일)</label>
-						<input type="text" name="memberEmail" id="member-enroll-email" /><br />
-						<label for="member-enroll-name">이름</label> <input type="text"
-							name="memberName" id="member-enroll-name" /><br /> <label
-							for="member-enroll-password">비밀번호</label> <input type="password"
-							name="memberPwd" id="member-enroll-password" /><br /> <span
-							id="s-password"></span> <label for="member-enroll-password_">비밀번호
-							확인</label> <input type="password" id="member-enroll-password_" /><br />
-						<label for="member-enroll-phone">전화번호</label> <input type="text"
-							name="phone" id="member-enroll-phone" /><br />
+					<form action="${pageContext.request.contextPath}/member/insertMember.do"
+						  id="member-enrollFrm" method="post">
+						<span id="s-email"></span> 
+						<label for="member-enroll-email">아이디(이메일)</label>
+						<input type="text" name="memberEmail" id="member-enroll-email" required/><br />
+						
+						<label for="member-enroll-name">이름</label>
+						<span id="s-name"></span> 
+						<input type="text" name="memberName" id="member-enroll-name"  required/><br /> 
+						<label for="member-enroll-password">비밀번호</label> 
+						<input type="password" name="memberPwd" id="member-enroll-password"  required/><br /> 
+						<span id="s-password"></span> 
+						<label for="member-enroll-password_">비밀번호 확인</label> 
+						<input type="password" id="member-enroll-password_"  required/><br />
+						<label for="member-enroll-phone">전화번호</label> 
+						<input type="text" name="phone" id="member-enroll-phone" required/><br />
 					</form>
 				</div>
 				<div class="modal-footer">

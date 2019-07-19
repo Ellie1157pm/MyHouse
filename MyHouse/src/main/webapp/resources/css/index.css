@@ -237,3 +237,12 @@ span#s-email {
 	top: 23px;
 	font-size: 11px;
 }
+
+span#s-name {
+	position: absolute;
+    text-align: left;
+    width: 142px;
+    right: -135px;
+    top: 65px;
+    font-size: 11px;
+}

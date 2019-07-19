@@ -57,20 +57,20 @@ div#list-container td{
     padding-left: 20px;
 }
 /*중개인 설정페이지 버튼그룹*/
-div#agentSet-btnGroup{
+div#memberSet-btnGroup{
 	max-width: 560px;
     margin-top: 40px;
     text-align: right;
 }
 
-/*중개인 매물신청목록*/
-div#estateList{
+/*찜한 목록*/
+div#cartList{
 	width: 100%;
     height: 100%;
 	background: lightgray;
 	overflow: scroll;
 }
-div.estateList-box{
+div.cartList-box{
 	float: left;
 	width: 270px;
 	height: 100px;
@@ -80,12 +80,13 @@ div.estateList-box{
 	text-align: left;
 	background: white;
 }
-div.estateList-box img{
+div.cartList-box img{
 	width: 111px;
+	height: 90px;
     float: left;
     margin-right: 10px;
 }
-div.estateList-box p{
+div.cartList-box p{
 	margin: 0;
 	float: left;
     width: 138px;
@@ -93,22 +94,23 @@ div.estateList-box p{
     white-space: nowrap;
 	text-overflow: ellipsis;
 }
-div.estateList-box p:nth-child(2){
-	margin-top: 10px;
+div.cartList-box p:nth-child(3){
+	margin-top: -22px;
 	font-size: 16px;
 	font-weight: bold;
 }
-div.estateList-box p:nth-child(5){
+div.cartList-box p:nth-child(6){
 	color: gray;
 }
+
 /*등록된매물*/
-div#estateListEnd{
+div#forSaleList{
 	width: 100%;
     height: 100%;
 	background: lightgray;
 	overflow: scroll;
 }
-div.estateListEnd-box{
+div.forSaleList-box{
 	float: left;
 	width: 440px;
 	height: 131px;
@@ -118,10 +120,22 @@ div.estateListEnd-box{
 	text-align: left;
 	background: white;
 }
-div.estateListEnd-box img{
+div.forSaleList-box:hover{
+	cursor: pointer;
+	border: 2px solid rgb(0, 0, 0, 0.3);
+}
+div.forSaleList-box img{
 	width: 150px;
+	height: 120px;
     float: left;
     margin-right: 10px;
+}
+/*매물등록버튼*/
+button.update-estate-btn{
+    position: relative;
+	width: 48px !important;
+    padding: 2px;
+    margin-left: 90px;
 }
 div.estateListEnd-box p{
 	margin: 0;
@@ -132,6 +146,7 @@ div.estateListEnd-box p{
 	text-overflow: ellipsis;
 }
 div.estateListEnd-box p:nth-child(3){
+	width: 87px;
 	margin-top: -7px;
 	font-size: 20px;
 	font-weight: bold;

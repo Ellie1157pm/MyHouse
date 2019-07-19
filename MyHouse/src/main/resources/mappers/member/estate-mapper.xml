@@ -241,10 +241,9 @@
 		and o.construction =#{structure}  and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
 		and o.flooroption=#{topOption}
 	</select>
-	
+
 	<select id="selectlocalList" resultType="estate">
-    select * from
+    	select * from
         estate where region_code=#{localCode}
     </select>
-	
 </mapper> 

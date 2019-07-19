@@ -22,7 +22,21 @@ $(function() {
 	$("button#member-enroll-end-btn").on("click", function() {
 		$("#member-enrollFrm").submit();
 	});
-
+	
+	/* 이름에 '관리자'사용금지 */
+	$("input#member-enroll-name").blur(function(){
+		var memberName = $("input#member-enroll-name").val();
+		
+		if (memberName == "관리자") {
+			$("span#s-name").text("사용할 수 없는 이름입니다.");
+			$("span#s-name").css("color", "red");
+			$("button#member-enroll-end-btn").attr("disabled",true);
+		} else {
+			$("span#s-name").text("");
+			$("button#member-enroll-end-btn").attr("disabled",false);
+		}
+	});
+	
 	/*아이디 유효성검사,중복확인*/
 	$("input#member-enroll-email").blur(function() {
 		var param = {
@@ -99,13 +113,14 @@ $(function() {
 		}
 
 	});
-
+	
 	/* 아이디 찾기 */
-	$("id-find-end-btn").on("click",function() {
+	$("button#id-find-end-btn").on("click",function() {
 		var param = {
-			memberEmail : $("input#find-id-name").val(),
+			memberName : $("input#find-id-name").val(),
 			phone : $("input#find-id-phone").val()
 		}
+		console.log(param);
 
 		$.ajax({
 			url : "${pageContext.request.contextPath}/member/findId.do",
@@ -120,12 +135,8 @@ $(function() {
 				var emailfind = emailLists
 						.substring(1,
 								emailLength - 1);
-				/* $("span#emailList").append("<h1>"+"회원님의 정보로 등록된 이메일은 : "+emailfind+" 입니다.</h1>"); */
-				alert("찾으시는 아이디(이메일은)"
+				alert("찾으시는 이메일은 "
 						+ emailfind + "입니다.")
-				/* $("span#s-email").text("이미 사용중인 이메일입니다.");
-				$("span#s-email").css("color", "red"); */
-
 			},
 			error : function(jqxhr, textStatus,
 					errorThrown) {
@@ -135,8 +146,42 @@ $(function() {
 				alert('정보를 다시 입력해주시길 바랍니다.');
 			}
 		});
+	});
+	
+	/* 비밀번호 리셋(실제로 리셋하지는 않고 변경화면으로 넘어감) */
+	$("button#pwd-find-end-btn").on("click",function() {
+			var param = {
+				memberEmail : $("input#find-pwd-email").val(),
+				phone : $("input#find-pwd-phone").val()
+			}
+			console.log(param);
+			
+			$.ajax({
+				url : "${pageContext.request.contextPath}/member/findPwd.do",
+				type : "POST",
+				data : param,
+				contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+				dataType : "json",
 
+				success : function(data) {
+					console.log(data);
+					if (data > 0) {
+						alert("비밀번호 변경가능!");
+					} else {
+						alert("정보를 다시 입력해주시길 바랍니다.");
+					}
+				},
+				error : function(jqxhr, textStatus,
+						errorThrown) {
+					console.log("ajax처리실패: "
+							+ jqxhr.status);
+					console.log(errorThrown);
+					alert('정보를 다시 입력해주시길 바랍니다.');
+				}
+			})
 	});
 });
-</script>
+
+
+
 </script>
