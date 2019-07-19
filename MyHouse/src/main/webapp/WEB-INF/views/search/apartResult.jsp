@@ -680,7 +680,7 @@ areaArray = new Array();
 
 //추천매물 가져오는함수
 function getRecommendEstate(cPage,place){
-
+		console.log(cPage);
 		console.log(place);
 	   var param={
 	           cPage : cPage,
@@ -773,7 +773,8 @@ function getRecommendEstate(cPage,place){
 
 //일반매물 가져오는 함수
 function getNotRecommendEstate(cPage2,place){
-	
+	console.log(cPage2);
+	console.log(place);
    var param={
            cPage2 : cPage2,
            roadAddressName : place.address_name,

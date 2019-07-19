@@ -516,7 +516,6 @@ public class EstateController {
 			System.out.println("구조 : "+structure);
 		}
 		if(option==null) {
-			System.out.println("옵션 없다");
 			String[] option2= {"a","a","a"};
 			for(int i=0;i<option2.length;i++) {
 				System.out.println(option2[i]);
@@ -562,13 +561,10 @@ public class EstateController {
 					list=estateService.selectEstateListSelectStructureNotOption(map);
 				}else {
 					//구조가 전체가 아니고 옵션이 있을때
-					list=estateService.selectEstateListSelectStructureNotOptoin(map);
-				}
+					list=estateService.selectEstateListSelectStructureNotOptoin(map);}
 			}
 			//월세 혹은 전체인 경우 =>range3,4 추가해야되므로 나눠줌
 			else {
-
-				//층수 옵션도 같이 비교해야함.
 				//구조가 전체일 때-option의 null여부와 topOption이 all인지 아닌지로 비교
 				if(structure.equals("all")&&option==null&&topOption.equals("all")) {
 					list=estateService.selectEstateListForAllNotOptionForMontlyFee(map);
