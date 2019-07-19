@@ -1,6 +1,9 @@
 package com.kh.myhouse.member.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +26,8 @@ import com.kh.myhouse.interest.model.vo.Interest;
 import com.kh.myhouse.member.model.exception.MemberException;
 import com.kh.myhouse.member.model.service.MemberService;
 import com.kh.myhouse.member.model.vo.Member;
+
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/member")
@@ -119,41 +124,32 @@ public class MemberController {
 	public ModelAndView memberView(@RequestParam int memberNo) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("member", memberService.selectOneMember(memberNo));
+		System.out.println("member@cont: " + memberService.selectOneMember(memberNo));
 		mav.setViewName("member/memberView");
 		return mav;
 	}
 	
 	
 	@RequestMapping("/memberUpdate.do")
-	public ModelAndView memberUpdate(Member member) {
-		ModelAndView mav = new ModelAndView();
-		System.out.println(member);
-		member = memberService.selectOneMember(member.getMemberNo());
-		System.out.println(member);
-		String rawPassword = member.getMemberPwd();
-		System.out.println("패스워드 변경 암호화 전: " + rawPassword);
-		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
-		System.out.println("패스워드 변경 암호화 후: " + encodedPassword);
-		member.setMemberPwd(encodedPassword);
-
-		// 1.비지니스로직 실행
-		int result = memberService.updateMember(member);
-
-		// 2.처리결과에 따라 view단 분기처리
-		String loc = "/";
+	public String memberUpdate(int memberNo, String newPwd, Model model) {
+		Map<String, Object> map = new HashMap();
+		map.put("memberNo", memberNo);
+		
 		String msg = "";
-		if (result > 0) {
-			msg = "회원정보수정성공!";
-			mav.addObject("member", member);
-			System.out.println("수정후 회원정보:" + member);
-		} else
-			msg = "회원정보수정실패!";
-
-		mav.addObject("msg", msg);
-		mav.addObject("loc", loc);
-		mav.setViewName("common/msg");
-
-		return mav;
+	
+		if(!newPwd.equals("")) {
+			
+			String encodedPassword = bcryptPasswordEncoder.encode(newPwd);
+			map.put("newPwd", encodedPassword);
+			
+			int result = memberService.updateMember(map);
+			
+			msg = result>0?"비밀번호변경 성공! ":"비밀번호 변경 실패! ";
+		}
+		
+		model.addAttribute("msg", msg);
+		
+		return "common/msg";
 	}
 
 	@RequestMapping("/checkMemberEmail.do")
@@ -194,12 +190,32 @@ public class MemberController {
 		return str;
 	}
 	
-	/* 관심매물 설정 */
+	/* 관심매물 리스트 */
 	@RequestMapping("/interestList")
-	public ModelAndView interestList(@RequestParam int memberNo, Interest interest) {
+	public ModelAndView interestList(@RequestParam int memberNo) {
+		logger.debug("관심매물 요청!");
 		ModelAndView mav = new ModelAndView();
-
-		int result = memberService.updateInterest(memberNo);
+		System.out.println("interest@cont=" + memberService.selectInterest(memberNo));
+		logger.debug("interest", memberService.selectInterest(memberNo));
+		mav.addObject("interest", memberService.selectInterest(memberNo));
+		mav.setViewName("member/interestList");
+	
+		return mav;
+	}
+	
+/*	 지역코드 가져오기 
+	@RequestMapping("/getRegionCode")
+	public String getRegionCode(@RequestParam String addr1, String addr2) {
+		return addr1 + " " + addr2;
+	}*/
+	
+	/* 관심매물 설정(수정) */
+	@RequestMapping("/updateInterestList")
+	public void updateInterestList(int memberNo) {
+		ModelAndView mav = new ModelAndView();
+		Interest interest = memberService.selectInterest(memberNo);
+		
+		int result = memberService.updateInterest(interest);
 
 		String loc = "/member/interestList?memberNo="+memberNo;
 		String msg = "";
@@ -212,15 +228,71 @@ public class MemberController {
 		mav.addObject("msg", msg);
 		mav.addObject("loc", loc);
 		mav.setViewName("common/msg");
-
-		
-		return mav;
 	}
 	
 	@RequestMapping("/deleteMember.do")
-	public void deleteMember(@RequestParam String memberNo) {
-
+	public ModelAndView deleteMember(@RequestParam String memberNo) {
+		ModelAndView mav = new ModelAndView();
 		int result = memberService.deleteMember(memberNo);
+		String msg = "";
+		String loc = "";
+		if (result > 0) {
+			msg = "회원탈퇴 성공!";
+			loc = "/";
+		}
+		else {
+			msg = "회원탈퇴 실패!";
+			loc = "/member/memberView?memberNo=" + memberNo;
+		}
+		
+		mav.addObject("msg", msg);
+		mav.addObject("loc", loc);
+		mav.setViewName("common/msg");
 
+		return mav;
 	}
+	
+	@RequestMapping("/forSaleList")
+	public void forSaleList(@RequestParam int memberNo, Model model) {
+		List<Map<String, String>> list = memberService.forSaleList(memberNo);
+		System.out.println("forSaleList@cont=" + list);
+		
+		model.addAttribute("list", list);
+	}
+	
+	@RequestMapping("/cartList")
+	public void cartList(@RequestParam int memberNo, Model model) {
+		logger.debug("찜리스트 페이지");
+		System.out.println("memberNo@cartList=" + memberNo);
+		List<Map<String, String>> list = memberService.cartList(memberNo);
+		logger.debug("list", list);
+		System.out.println("cartList@cont=" + list);
+		
+		model.addAttribute("list", list);
+	}
+	
+	//추가, 삭제 판단은 매퍼에서 select count(*) from cart where member_no = 37 and estate_no = 143
+	//이런식으로 찍어봐서 있으면 삭제, 없으면 추가?
+	//찜목록에 추가
+	/*@RequestMapping("/insertCart")
+	public String insertCart(int estateNo, int memberNo) {
+		JSONObject obj = new JSONObject();
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("estateNo", estateNo);
+		map.put("memberNo", memberNo);
+		
+		Cart cart = memberService.cartCheck(map);
+		
+		int like_check = 0;
+		like_check = cart.getCartCheck();
+		
+		if()
+	}*/
+	
+	//찜목록에서 삭제
+	/*@RequestMapping("/deleteCart")
+	public String deleteCart(int cartNo) {
+		return "";
+	}*/
 }

@@ -24,7 +24,7 @@
 		order by chat_no
 	 </select> -->
 	 <select id="findRecentList" resultType="map">
-	 	select *
+	 	<!-- select *
 		from (
 		    select chat_no,
 		           A.chat_id, 
@@ -51,6 +51,14 @@
 		    from chatlog A left join chat B
 			        on A.chat_id = B.chat_id and A.member_id = B.member_id
 			order by time desc)A
-		where rank = 1 and time <![CDATA[ <= ]]> (select lastcheck from chat C where C.chat_id = A.chat_id and member_id = 'admin@naver.com')
+		where rank = 1 and time <![CDATA[ <= ]]> (select lastcheck from chat C where C.chat_id = A.chat_id and member_id = 'admin@naver.com') -->
+		<!-- select chat_no,
+			   chat_id,
+			   member_id,
+			   msg,
+			   to_char(time,'YY-MM-DD/HH:MI:SS') 
+		from chatlog
+		where receive_id = #{memberId} -->
+		select * from chatlog
 	 </select>
  </mapper>

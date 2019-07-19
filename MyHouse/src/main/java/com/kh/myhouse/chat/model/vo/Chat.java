@@ -22,6 +22,7 @@ public class Chat {
 	
 	private String chatId;
 	private String memberId; //접속ID
+	private String receiveId;
 	private long lastCheck;
 	private String status;
 	private Date startDate;

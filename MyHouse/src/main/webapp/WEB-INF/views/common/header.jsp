@@ -41,7 +41,7 @@
 function openAgentChat(){
 	var url = "${pageContext.request.contextPath}/chat/agentChatList.do";
 	var title = "문의채팅";
-	var specs="width=700px, height=700px, left=600px, top=200px";
+	var specs="width=400px, height=700px, left=600px, top=200px";
 	
 	window.open(url, title,specs);	//팝업의 최상위 윈도우 객체를 리턴함
 	self.resizeTo(20,20);

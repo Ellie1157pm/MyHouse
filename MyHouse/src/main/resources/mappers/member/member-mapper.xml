@@ -21,7 +21,7 @@
 	</select>
 	
 	<update id="updateMember">
-		UPDATE MEMBER SET MEMBER_NAME = #{memberName}, MEMBER_PWD = #{memberPwd}, RECEIVE_MEMO_YN = #{receiveMemoYN} 
+		UPDATE MEMBER SET MEMBER_NAME = #{memberName}, MEMBER_PWD = #{newPwd}, RECEIVE_MEMO_YN = #{receiveMemoYN} 
 		WHERE MEMBER_NO = #{memberNo}
 	</update>
 	
@@ -41,10 +41,74 @@
 		INSERT INTO INTEREST(INTEREST_NO, MEMBER_NO) VALUES(seq_interest_no.nextval, seq_member_no.currval)
 	</insert>
 	
+	<select id="selectInterest" resultType="interest">
+		SELECT *
+		FROM INTEREST 
+		WHERE MEMBER_NO = #{memberNo}
+	</select>
+	
+	<resultMap type="interest" id="interestMap">
+		<result column="estateType" property="estateType" typeHandler="strArrTypeHandler"/>
+	</resultMap>
+	
 	<update id="updateInterest">
 		UPDATE INTEREST 
-		SET REGION = #{region}, ESTATE_TYPE = #{estateType, typeHandler=strArrTypeHandler}, 
-		PET = #{pet}, ELEVATOR = #{elevator}, PARKING = #{parking}, SUBWAY = #{subway}
-		WHERE MEMBER_NO = #{MEMBER_NO}
+		SET REGION_CODE = SELECT SUBSTR(REGION_CODE,0,5) FROM REGION WHERE LEGAL_DONG LIKE '%'||#{city} || ' ' ||#{state}||'%' AND ROWNUM=1;}
+		ESTATE_TYPE = #{estateType, typeHandler=strArrTypeHandler}, PET = #{pet}, ELEVATOR = #{elevator},
+		PARKING = #{parking}, SUBWAY = #{subway}, CITY = #{city}, STATE = #{state} 
+		WHERE MEMBER_NO = #{memberNo}
 	</update>
+	
+	<select id="forSaleList">
+		SELECT E.ESTATE_NO, NVL(E.BUSINESS_PHONE, 'NULL'), E.TRANSACTION_TYPE, E.ESTATE_PRICE, E.ESTATE_AREA, E.ADDRESS, 
+		E.ESTATE_CONTENT, P.RENAMED_FILENAME 
+		FROM ESTATE E LEFT JOIN (SELECT ESTATE_NO, RENAMED_FILENAME FROM ESTATE_PHOTO
+								 WHERE ROWID IN (SELECT MIN(ROWID) FROM ESTATE_PHOTO
+								 GROUP BY ESTATE_NO)) AS P
+								 ON E.ESTATE_NO = P.ESTATE_NO
+		WHERE MEMBER_NO = #{memberNo}
+	</select>
+	
+	<resultMap type="map" id="estate">
+	<!-- 	<id column="ESTATE_NO" property="EstateNo"/>
+		<result column="REGION_CODE" property="RegionCode"/>          
+		<result column="MEMBER_NO" property="MemberNo"/>
+		<result column="BUSINESS_MEMBER_NO" property="BusinessMemberNo"/>
+		<result column="PHONE" property="Phone"/>
+		<result column="BUSINESS_PHONE" property="BusinessPhone"/>
+		<result column="ADDRESS" property="Address"/>
+		<result column="ESTATE_TYPE" property="EstateType"/>
+		<result column="TRANSACTION_TYPE" property="TransActionType"/>
+		<result column="ESTATE_PRICE" property="EstatePrice"/>
+		<result column="MANAGEMENT_FEE" property="ManageMenetFee"/>
+		<result column="ESTATE_AREA" property="EstateArea"/>
+		<result column="SUBWAY_STATION" property="SubwayStation"/>
+		<result column="ESTATE_CONTENT" property="EstateContent"/>
+		<result column="WRITTEN_DATE" property="WrittenDate"/>
+		<result column="DEPOSIT" property="Deposit"/> -->
+	</resultMap>
+	
+	<select id="cartList" resultMap="estate">
+		SELECT E.ESTATE_NO, E.BUSINESS_MEMBER_NO, NVL(E.BUSINESS_PHONE, 'NULL'), E.TRANSACTION_TYPE, E.ESTATE_PRICE, E.ESTATE_AREA, E.ADDRESS, 
+		E.ESTATE_CONTENT, P.RENAMED_FILENAME
+		FROM ESTATE E LEFT JOIN (SELECT ESTATE_NO, RENAMED_FILENAME FROM ESTATE_PHOTO
+								 WHERE ROWID IN (SELECT MIN(ROWID) FROM ESTATE_PHOTO
+								 GROUP BY ESTATE_NO)) P
+								 ON E.ESTATE_NO = P.ESTATE_NO
+		LEFT JOIN TBL_CART C ON E.ESTATE_NO = C.ESTATE_NO
+		WHERE C.MEMBER_NO = #{memberNo}
+	</select>
+	
+	<update id="cart_check" parameterType="HashMap">
+		UPDATE TBL_CART
+		SET CART_CHECK = CART_CHECK + 1
+		WHERE MEMBER_NO = #{memberNo} AND ESTATE_NO = #{estateNo}
+	</update>
+	
+	<update id="cart_check_cancel" parameterType="HashMap">
+		UPDATE TBL_CART
+		SET CART_CHECK = 0
+		WHERE MEMBER_NO = #{memberNo} AND ESTATE_NO = #{estateNo}
+	</update>
+
 </mapper>

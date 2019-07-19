@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -132,21 +133,30 @@ public class ChatController {
 		
 		return fromMessage; 
 	}
+	@MessageMapping("/lastCheck")
+	@SendTo(value={"/chat/admin"})
+	public Msg lastCheck(@RequestBody Msg fromMessage){
+		logger.info("fromMessage={}",fromMessage);
+		
+		chatService.updateLastCheck(fromMessage);
+		
+		return fromMessage; 
+	}
 	
 	//chatList
 	@GetMapping("/chat/agentChatList.do")
 	public void agentList(Model model, 
 					  HttpSession session, 
 					  @SessionAttribute(value="memberLoggedIn", required=false) Agent memberLoggedIn){
+		//받는사람(로그인한 아이디)
 		String memberId = Optional.ofNullable(memberLoggedIn).map(Agent::getMemberEmail).orElse(session.getId());
-		
-		
+		System.out.println("loginOn-memberId="+memberId);
 		
 		List<Map<String, String>> recentList = chatService.findRecentList();
 		logger.info("recentList={}",recentList);
-		
+
+		model.addAttribute("memberId",memberId);
 		model.addAttribute("recentList", recentList);
-		
 	}
 	
 	

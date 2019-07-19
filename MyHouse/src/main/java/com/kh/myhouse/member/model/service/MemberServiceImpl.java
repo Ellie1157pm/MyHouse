@@ -2,10 +2,12 @@ package com.kh.myhouse.member.model.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.myhouse.interest.model.vo.Interest;
 import com.kh.myhouse.member.model.dao.MemberDAO;
 import com.kh.myhouse.member.model.vo.Member;
 
@@ -26,8 +28,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int updateMember(Member member) {
-		return memberDAO.updateMember(member);
+	public int updateMember(Map map) {
+		return memberDAO.updateMember(map);
 	}
 
 	@Override
@@ -62,7 +64,22 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int updateInterest(int memberNo) {
-		return memberDAO.updateInterest(memberNo);
+	public int updateInterest(Interest interest) {
+		return memberDAO.updateInterest(interest);
+	}
+
+	@Override
+	public Interest selectInterest(int memberNo) {
+		return memberDAO.selectInterest(memberNo);
+	}
+
+	@Override
+	public List<Map<String, String>> forSaleList(int memberNo) {
+		return memberDAO.forSaleList(memberNo);
+	}
+
+	@Override
+	public List<Map<String, String>> cartList(int memberNo) {
+		return memberDAO.cartList(memberNo);
 	}
 }

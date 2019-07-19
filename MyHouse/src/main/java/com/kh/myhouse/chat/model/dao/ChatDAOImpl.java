@@ -46,6 +46,7 @@ public class ChatDAOImpl implements ChatDAO {
 	public List<Map<String, String>> findRecentList() {
 		System.out.println("findRecentList DAOImpl작동");
 		return sqlSession.selectList("chat.findRecentList");
+
 	}
 
 
