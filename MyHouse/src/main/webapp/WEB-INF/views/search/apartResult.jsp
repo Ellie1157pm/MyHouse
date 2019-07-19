@@ -33,7 +33,6 @@
 <!--Plugin JavaScript file-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/js/ion.rangeSlider.min.js"></script>
 
-
 <div id="map">
 
 </div>
@@ -272,6 +271,7 @@ geocoder.addressSearch(loc,placesSearchCB2);
 <%}}%>
 
 
+
 //이미지 마커 올리기
 var imageSrc = '${pageContext.request.contextPath}/resources/images/search/oneRoom.png'; // 마커이미지의 주소입니다    
 var  imageSize = new kakao.maps.Size(70, 70); // 마커이미지의 크기입니다
@@ -312,11 +312,13 @@ var param = {
 		       contentType:"json",
 		       type:"get",
 		       success: function(data){
-		    	   
-		    if(data !=null){
+		    	   console.log('에이작스');
+		    	   console.log(data.model.list);
+		    if(data.model.list !=null){
 		    
-		     for(var i=0; i<data.length; i++){
-		    	var dataloc= data[i].Address;
+		     for(var i=0; i<data.model.list.length; i++){
+		    	 console.log(data.model.list[i]);
+		    	var dataloc= data.model.list[i];
 		    	console.log('dataloc====='+dataloc);
 		    	 clusterer.clear();
 		    	geocoder.addressSearch(dataloc,placesSearchCB2);
@@ -678,6 +680,7 @@ areaArray = new Array();
 
 //추천매물 가져오는함수
 function getRecommendEstate(cPage,place){
+		console.log(cPage);
 		console.log(place);
 	   var param={
 	           cPage : cPage,
@@ -770,7 +773,8 @@ function getRecommendEstate(cPage,place){
 
 //일반매물 가져오는 함수
 function getNotRecommendEstate(cPage2,place){
-	
+	console.log(cPage2);
+	console.log(place);
    var param={
            cPage2 : cPage2,
            roadAddressName : place.address_name,
@@ -985,8 +989,9 @@ function searchAddress(obj) {
                 searchDetailAddrFromCoords(coords,function(data){
                     console.log(data);
                     if (status === kakao.maps.services.Status.OK) {
-                        alert(result[0].address.address_name);
-                        $('#address').val(result[0].address.address_name.substring(0, 8));
+                        console.log(result[0].address_name);
+                    	//alert(result[0].address.address_name);
+                        $('#address').val(result[0].address_name.substring(0, 8));
                         $('#coords').val(coords);
                     $('#estateFrm').submit();
                     }

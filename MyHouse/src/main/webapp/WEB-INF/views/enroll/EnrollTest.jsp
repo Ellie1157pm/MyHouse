@@ -278,11 +278,6 @@ enctype="multipart/form-data">
 			</td>
 		</tr>
 		
-		
-		
-		
-		
-
 		<tr>
 			<th>인근전철역</th>
 			<td><input type='text' name='SubwayStation' placeholder="수유역" value="" ></td>
@@ -308,6 +303,6 @@ enctype="multipart/form-data">
 </c:if>
 
 
-<br />
 
+<br />
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />

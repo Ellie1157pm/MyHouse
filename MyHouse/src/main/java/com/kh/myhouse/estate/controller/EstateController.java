@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -491,19 +492,12 @@ public class EstateController {
 		map.put("topOption", topOption);}
         
         mav=returnResult(map);
-        
-        
-        
-        System.out.println("파인드list@@@@@=="+list);
+
          response.setContentType("application/json; charset=utf-8");
-            new Gson().toJson(list,response.getWriter());
+            new Gson().toJson(mav,response.getWriter());
     }
 	
-	
-	
-	
-	
-	
+
 	
 	
 	public ModelAndView returnResult(Map<String,Object> map) {
@@ -529,7 +523,6 @@ public class EstateController {
 			System.out.println("구조 : "+structure);
 		}
 		if(option==null) {
-			System.out.println("옵션 없다");
 			String[] option2= {"a","a","a"};
 			for(int i=0;i<option2.length;i++) {
 				System.out.println(option2[i]);
@@ -575,13 +568,10 @@ public class EstateController {
 					list=estateService.selectEstateListSelectStructureNotOption(map);
 				}else {
 					//구조가 전체가 아니고 옵션이 있을때
-					list=estateService.selectEstateListSelectStructureNotOptoin(map);
-				}
+					list=estateService.selectEstateListSelectStructureNotOptoin(map);}
 			}
 			//월세 혹은 전체인 경우 =>range3,4 추가해야되므로 나눠줌
 			else {
-
-				//층수 옵션도 같이 비교해야함.
 				//구조가 전체일 때-option의 null여부와 topOption이 all인지 아닌지로 비교
 				if(structure.equals("all")&&option==null&&topOption.equals("all")) {
 					list=estateService.selectEstateListForAllNotOptionForMontlyFee(map);
@@ -679,6 +669,7 @@ public class EstateController {
 					list=estateService.selectApartListForAllNotOptionAndMontlyFee(map);
 				}
 			}
+			System.out.println("리스트");
 			System.out.println(list);
 			 
 			//view단 처리
