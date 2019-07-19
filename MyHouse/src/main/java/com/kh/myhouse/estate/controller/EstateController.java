@@ -264,8 +264,12 @@ public class EstateController {
         System.out.println("도로명 : "+roadAddressName);
         System.out.println("번지명 : "+addressName);
         
+        Map<String, String> param=new HashMap<>();
+        param.put("roadAddressName", roadAddressName);
+        param.put("addressName", addressName);
         
-        List<Map<String,String>> showRecommendEstate = estateService.showRecommendEstate(cPage,numPerPage,roadAddressName,addressName);
+        
+        List<Map<String,String>> showRecommendEstate = estateService.showRecommendEstate(cPage,numPerPage,param);
         
         response.setContentType("application/json; charset=utf-8");
         new Gson().toJson(showRecommendEstate,response.getWriter());
@@ -284,9 +288,12 @@ public class EstateController {
          String addressName=request.getParameter("addressName");
          System.out.println("도로명 : "+roadAddressName);
          System.out.println("번지명 : "+addressName);
+         
+         Map<String, String> param=new HashMap<>();
+         param.put("roadAddressName", roadAddressName);
+         param.put("addressName", addressName);
     	
-    	
-    	List<Map<String,String>> showNotRecommendEstate = estateService.showNotRecommendEstate(cPage2,numPerPage,roadAddressName,addressName);
+    	List<Map<String,String>> showNotRecommendEstate = estateService.showNotRecommendEstate(cPage2,numPerPage,param);
     	
     	System.out.println("제발 나와라="+showNotRecommendEstate.size());
     	

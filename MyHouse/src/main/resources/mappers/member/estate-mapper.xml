@@ -58,8 +58,6 @@
          where address=#{address} or address=#{roadAddressName} order by written_date desc
 	</select>
 	
-	
-	
 	<select id="selectEstateAttach" resultType="estateAttach">
 		select * from
 		estate_photo where estate_no=#{estateNo}
