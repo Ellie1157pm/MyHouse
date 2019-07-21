@@ -15,7 +15,11 @@
 <script
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
 	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-	crossorigin="anonymous"></script>
+	crossorigin="anonymous"></script> 
+<!-- WebSocket:sock.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.3.0/sockjs.js"></script>
+<!-- WebSocket: stomp.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
 <style>
 .person {
 	width: 30px;
@@ -37,6 +41,7 @@
 	</div>
 </section> --%>
 </head>
+<title>채팅목록</title>
 <body>
 	<style>
 * {
@@ -177,7 +182,7 @@ a.none-underline:active {
 							<td class="chat_td">
 								<!--Email & Preview-->
 								<div class="email">${m.MEMBER_ID }&nbsp;<span class="badge badge-primary badge-pill">14</span></div>
-								<div class="chat_preview"><a href="" class="none-underline">${m.MSG }</a></div>
+								<div class="chat_preview"><a href="javascript:goChat('${m.CHAT_ID}')" class="none-underline">${m.MSG }</a></div>
 							</td>
 							<td class="time_td">
 								<!--Time & Check-->
@@ -187,7 +192,7 @@ a.none-underline:active {
 								
 								<div class="time">
 									<c:if test="${nowDate eq talkDate }">
-										<fmt:formatDate value="${m.TIME}" pattern="a hh:mm" timeZone="Etc/GMT+6" />
+										<fmt:formatDate value="${m.TIME}" pattern="a h:mm" timeZone="Etc/GMT+6" />
 									</c:if>
 									<c:if test="${nowDate ne talkDate }">
 										<fmt:formatDate value="${m.TIME }" pattern="yy/MM/dd" timeZone="Etc/GMT+6" />
@@ -209,25 +214,28 @@ a.none-underline:active {
 	//웹소켓 선언
 	//1.최초 웹소켓 생성 url: /stomp
 	let socket = new SockJS('<c:url value="/stomp"/>');
+	console.log(socket);
 	let stompClient = Stomp.over(socket);
 
 	stompClient.connect({}, function(frame) {
 		console.log('connected stomp over sockjs');
 		console.log(frame);
 
-		/* 	// subscribe message
+	// subscribe message
 		 stompClient.subscribe('/chat/${chatId}/', function(message) {
 		 console.log("receive from /chat/agentChatList :", message);
 		 //새로운 메세지가 있을때 목록 갱신을 위해서 reload함.
 		 location.reload();
 		 //let messsageBody = JSON.parse(message.body);
 		 //$("#data").append(messsageBody.memberId+":"+messsageBody.msg+ "<br/>");
-		 }); */
+		 });
 
 	});
-	/* 
+	
 	 function goChat(chatId){
-	 open("${pageContext.request.contextPath}/ws/adminChat.do/"+chatId, chatId, "width=500, height=500", false);
-	 } */
+	 	
+		 open("${pageContext.request.contextPath}/chat/chatRoom.do", "문의채팅","width=500px, height=500px", false);
+
+	 }
 </script>
 

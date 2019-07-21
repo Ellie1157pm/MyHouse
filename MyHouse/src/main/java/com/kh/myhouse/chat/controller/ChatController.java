@@ -47,7 +47,7 @@ public class ChatController {
 	ChatService chatService;
 	
 	
-	@GetMapping("/chat/chatMain.do")
+	@GetMapping("/chat/chatRoom.do")
 	public void websocket(Model model,
 						  HttpSession session, 
 						  @SessionAttribute(value="memberLoggedIn", required=false) Agent memberLoggedIn){
@@ -119,7 +119,7 @@ public class ChatController {
 	
 	
 	
-	
+	//chat input
 	@MessageMapping("/chat/{chatId}")
 	@SendTo(value={"/chat/{chatId}"})
 	public Msg sendEcho(Msg fromMessage, 
@@ -133,8 +133,10 @@ public class ChatController {
 		
 		return fromMessage; 
 	}
+	
+	//user 확인
 	@MessageMapping("/lastCheck")
-	@SendTo(value={"/chat/admin"})
+	//@SendTo(value={"/chat/admin"})
 	public Msg lastCheck(@RequestBody Msg fromMessage){
 		logger.info("fromMessage={}",fromMessage);
 		
@@ -152,14 +154,23 @@ public class ChatController {
 		String memberId = Optional.ofNullable(memberLoggedIn).map(Agent::getMemberEmail).orElse(session.getId());
 		System.out.println("loginOn-memberId="+memberId);
 		
-		List<Map<String, String>> recentList = chatService.findRecentList();
+		List<Map<String, String>> recentList = chatService.findRecentList(memberId);
 		logger.info("recentList={}",recentList);
 
 		model.addAttribute("memberId",memberId);
 		model.addAttribute("recentList", recentList);
 	}
 	
-	
+	//chatting 창
+	@GetMapping("/chat/Chatting.do/{chatId}")
+	public String Chat(@PathVariable("chatId") String chatId, Model model){
+		
+		List<Msg> chatList = chatService.findChatListByChatId(chatId);
+		model.addAttribute("chatList", chatList);
+		
+		logger.info("chatList={}",chatList);
+		return "chat/chatRoom";
+	}
 
 	
 	

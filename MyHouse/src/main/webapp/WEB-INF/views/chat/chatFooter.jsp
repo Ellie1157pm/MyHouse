@@ -39,7 +39,7 @@ $(document).ready(function() {
 function lastCheck() {
 	let data = {
 		chatId : "${chatId}",
-		memberId : "${memberId}",
+		memberId : "${memberLoggedIn.memberEmail}",
 		time : new Date().getTime()
 	}
 	stompClient.send('<c:url value="/lastCheck" />', {}, JSON.stringify(data));
@@ -80,7 +80,7 @@ function sendMessage() {
 
 	let data = {
 		chatId : "${chatId}",
-		memberId : "${memberId}",
+		memberId : "${memberLoggedIn.memberEmail}",
 		
 		msg : $("#message").val(),
 		time : new Date().getTime(),
