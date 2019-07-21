@@ -221,4 +221,38 @@
 	insert into memo
 	values(seq_memo_no.nextval, #{receiver}, #{memoContent}, default, default)
 	</insert>
+	
+	<select id="selectReportFlagNList" resultType="map">
+	select *
+	from report_estate
+	where warn_flag='N'
+	</select>
+	
+	<select id="reportFlagNTotalpage" resultType="_int">
+	select count(*)
+	from report_estate
+	where warn_flag='N'
+	</select>
+	
+	<select id="selectReportFlagYList" resultType="map">
+	select *
+	from report_estate
+	where warn_flag in ('W', 'R')
+	</select>
+	
+	<select id="reportFlagYTotalpage" resultType="_int">
+	select count(*)
+	from report_estate
+	where warn_flag in ('W', 'R')
+	</select>
+	
+	<select id="selectCompanyList" resultType="map">
+	select *
+	from company_info
+	</select>
+	
+	<select id="companyTotalPage" resultType="_int">
+	select count(*)
+	from company_info
+	</select>
 </mapper>

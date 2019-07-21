@@ -48,6 +48,10 @@ public class AdminController {
 			list = adminService.selectRealtorList(rb);
 			totalContents = adminService.realtorTotalPage();
 		}
+		else if("company".equals(item)) {
+			list = adminService.selectCompanyList(rb);
+			totalContents = adminService.companyTotalPage();
+		}
 		else {
 			list = adminService.selectReportList(rb);
 			totalContents = adminService.reportTotalPage();
@@ -235,5 +239,52 @@ public class AdminController {
 		}
 		
 		return map;
+	}
+	
+	@RequestMapping(value="/agentApprove")
+	@ResponseBody
+	public Object agentApprove(@RequestParam int agentNo) {
+		Map<String, String> map = new HashMap<>();
+		
+		logger.info("agentNo={}", agentNo);
+		
+		return map;
+	}
+	
+	@RequestMapping("/reportFlagList")
+	public String reportFlagList(@RequestParam String chk,
+								 @RequestParam(value="cPage", required=false, defaultValue="1") int cPage,
+								 HttpServletRequest request) {
+		logger.info("flagChk@reportFlagList={}", chk);
+		
+		// RowBounds를 이용한 페이징 처리
+		int numPerPage = 6;
+		int totalContents = 0;
+		RowBounds rb = new RowBounds(numPerPage*(cPage-1), numPerPage);
+		
+		List<Map<String, String>> list = null;
+		
+		if("flagAll".equals(chk)) {	// 전체
+			list = adminService.selectReportList(rb);
+			totalContents = adminService.reportTotalPage();
+		}
+		else if("flagN".equals(chk)) {	// 미처리
+			list = adminService.selectReportFlagNList(rb);
+			totalContents = adminService.reportFlagNTotalpage();
+		}
+		else {
+			list = adminService.selectReportFlagYList(rb);
+			totalContents = adminService.reportFlagYTotalpage();
+		}
+		
+		logger.info("list@reportFlagList={}", list);
+		String url = request.getContextPath()+"/admin/reportFlagList?item=report&chk="+chk;
+		String pageBar = Utils.getPageBar(totalContents, cPage, numPerPage, url); 
+		
+		request.setAttribute("item", "report");
+		request.setAttribute("list", list);
+		request.setAttribute("pageBar", pageBar);
+		
+		return "admin/adminInfo"; 
 	}
 }

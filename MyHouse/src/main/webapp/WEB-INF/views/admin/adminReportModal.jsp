@@ -39,6 +39,13 @@ $("#WarningBtn").click(function() {
 		return;
 	}
 	
+	console.log("content="+content);
+	
+	if(content == null || content == '') {
+		alert('내용을 입력해주세요.');
+		return;
+	}
+	
 	$.ajax({
 		url: "${pageContext.request.contextPath}/admin/reportUpdate",
 		type: 'post',

@@ -184,4 +184,34 @@ public class AdminDAOImpl implements AdminDAO {
 	public int insertReportMemo(Map<String, String> param) {
 		return sqlSession.insert("admin.insertReportMemo", param);
 	}
+
+	@Override
+	public List<Map<String, String>> selectReportFlagNList(RowBounds rb) {
+		return sqlSession.selectList("admin.selectReportFlagNList", null, rb);
+	}
+	
+	@Override
+	public int reportFlagNTotalpage() {
+		return sqlSession.selectOne("admin.reportFlagNTotalpage");
+	}
+	
+	@Override
+	public List<Map<String, String>> selectReportFlagYList(RowBounds rb) {
+		return sqlSession.selectList("admin.selectReportFlagYList", null, rb);
+	}
+	
+	@Override
+	public int reportFlagYTotalpage() {
+		return sqlSession.selectOne("admin.reportFlagYTotalpage");
+	}
+	
+	@Override
+	public List<Map<String, String>> selectCompanyList(RowBounds rb) {
+		return sqlSession.selectList("admin.selectCompanyList", null, rb);
+	}
+	
+	@Override
+	public int companyTotalPage() {
+		return sqlSession.selectOne("admin.companyTotalPage");
+	}
 }

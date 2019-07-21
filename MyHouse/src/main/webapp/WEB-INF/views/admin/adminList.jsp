@@ -16,6 +16,29 @@ $(function() {
 		search();
 	});
 	
+	$("input.agentChk").change(function(){
+		if(!confirm('승인하시겠습니까?'))
+			return;
+		
+		$.ajax({
+			url: "${pageContext.request.contextPath}/admin/agentApprove?agentNo="+$(this).attr('agentNo'),
+			success: function(data) {
+				location.href="${pageContext.request.contextPath}/admin/list?item=realtor";
+			},
+			error: function(jqxhr, textStatus, errorThrown) {
+				console.log("jqxhr="+jqxhr.status);
+				console.log(textStatus);
+				console.log(errorThrown);
+			}
+		});
+	});
+	
+	$('input[name=flagChk]').change(function() {
+		var chk = $(this).attr('id');
+		alert(chk+"를 선택하셨습니다.");
+		location.href = "${pageContext.request.contextPath}/admin/reportFlagList?chk="+chk;
+	});
+	
 	$('#reportModal').on('show.bs.modal', function (event) {
 		  var button = $(event.relatedTarget) // Button that triggered the modal
 		  var receiver = button.data('reciever') // Extract info from data-* attributes
@@ -58,7 +81,7 @@ function search() {
 }
 </script>
 <!-- 검색창 -->
-<c:if test="${item eq 'member' || item eq 'realtor' || item eq 'report'}">
+<c:if test="${item eq 'member' || item eq 'realtor' || item eq 'report' || item eq 'company'}">
 <nav class="navbar navbar-light bg-light" id="search-nav">
   <form class="form-inline" style="margin: auto;" onsubmit="return false;">
     <input class="form-control mr-sm-2" type="text" placeholder="Search" id="searchKeyword" name="searchKeyword" aria-label="Search"
@@ -109,17 +132,56 @@ function search() {
       <th scope="col">아이디</th>
       <th scope="col">전화번호</th>
       <th scope="col">사업자번호</th>
+      <th scope="col">승인여부</th>
     </tr>
   </thead>
   <tbody>
   	<c:if test="${not empty list}">
-  	<c:forEach items="${list}" var="member">
+  	<c:forEach items="${list}" var="member" varStatus="vs">
 		<tr>
 	      <th scope="row">${member.MEMBER_NO}</th>
 	      <td>${member.MEMBER_NAME}</td>
 	      <td>${member.MEMBER_EMAIL}</td>
 	      <td>${member.PHONE}</td>
 	      <td>${member.COMPANY_REG_NO}</td>
+	      <td><input type="checkbox" class="form-check-input agentChk" id="exampleCheck1" 
+	      	   style="margin: auto;" agentNo="${member.MEMBER_NO}"
+	      	   ${member.APPROVE_YN eq 'Y'?'checked disabled':''} ></td>
+	    </tr>
+  	</c:forEach>
+  	</c:if>
+    <c:if test="${empty list}">
+	    <tr>
+	      <th scope="row" colspan="5">조회된 회원이 없습니다.</th>
+	    </tr>
+    </c:if>
+  </tbody>
+</table>
+</c:if>
+
+<!-- 중개사무소 리스트 -->
+<c:if test="${item eq 'company'}">
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">번호</th>
+      <th scope="col">사명</th>
+      <th scope="col">대표번호</th>
+      <th scope="col">사업자번호</th>
+      <th scope="col">승인여부</th>
+    </tr>
+  </thead>
+  <tbody>
+  	<c:if test="${not empty list}">
+  	<c:forEach items="${list}" var="company">
+		<tr>
+	      <th scope="row">${company.COMPANY_NO}</th>
+	      <td>${company.COMPANY_NAME}</td>
+	      <td>${company.COMPANY_PHONE}</td>
+	      <td>${company.COMPANY_REG_NO}</td>
+	      <td><input type="checkbox" class="form-check-input agentChk" id="exampleCheck1" 
+	      	   style="margin: auto;" companyNo="${company.COMPANY_NO}"
+	      	   ${company.APPROVE_YN eq 'Y'?'checked disabled':''} ></td>
 	    </tr>
   	</c:forEach>
   	</c:if>
@@ -141,7 +203,7 @@ function search() {
       <th scope="col">신고인번호</th>
       <th scope="col">신고내용</th>
       <th scope="col">신고일자</th>
-      <th scope="col">경고</th>
+      <th scope="col">신고처리</th>
     </tr>
   </thead>
   <tbody>
