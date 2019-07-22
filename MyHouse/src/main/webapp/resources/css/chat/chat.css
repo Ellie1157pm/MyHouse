@@ -8,9 +8,8 @@
 
 
 /*채팅창 컨테이너*/
-div#chat-container{
-	width:580px;
-	height:516px;
+div.chat-class-container{
+	height:520px;
 	background-color: rgb(133, 186, 221);
 }
 
@@ -23,4 +22,9 @@ div#chat-container{
     width: 95%;
     margin-left: 2%;
     margin-top: 1%;
+}
+
+.badge-primary{
+	margin-top: 2px;
+	background-color: #798086
 }

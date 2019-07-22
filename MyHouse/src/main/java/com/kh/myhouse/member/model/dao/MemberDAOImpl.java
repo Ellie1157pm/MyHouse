@@ -42,6 +42,11 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 	
 	@Override
+	public int findPwd(Member member) {
+		return sqlSession.selectOne("member.findPwd", member);
+	}
+	
+	@Override
 	public int deleteMember(String memberNo) {
 		return sqlSession.update("member.deleteMember", memberNo);
 	}
@@ -75,6 +80,8 @@ public class MemberDAOImpl implements MemberDAO {
 	public List<Map<String, String>> cartList(int memberNo) {
 		return sqlSession.selectList("member.cartList", memberNo);
 	}
+
+	
 	
 	
 

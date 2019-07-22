@@ -22,8 +22,7 @@
   			   alias="strArrTypeHandler"/>
 	<typeAlias type="com.kh.myhouse.member.model.vo.Member" alias="member"/>
 	<typeAlias type="com.kh.myhouse.interest.model.vo.Interest" alias="interest"/>
-	<typeAlias type="com.kh.myhouse.agent.model.vo.Agent" alias="agent"/>
-	<typeAlias type="com.kh.myhouse.chat.model.vo.Chat" alias="chat"/>
+	<typeAlias type="com.kh.myhouse.chat.model.vo.Msg" alias="msg"/>
   </typeAliases>
   
 <!--   <mappers>

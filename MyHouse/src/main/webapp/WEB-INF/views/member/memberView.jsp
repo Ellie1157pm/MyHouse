@@ -10,16 +10,16 @@
 $(function() {
 	$("#update-member-btn").css("opacity", 0.6);
 	$("#cart-list-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/cartList?memberNo=" + ${memberLoggedIn.memberNo};
+		$("#cartListFrm").submit();
 	});
 	$("#interest-list-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/interestList?memberNo=" + ${memberLoggedIn.memberNo};
+		$("#interestListFrm").submit();
 	});
 	$("#for-sale-btn").on("click", function(){
 		$("#forSaleListFrm").submit();
 	});
 	$("#warning_memo").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/warningMemo.do?memberNo=${memberLoggedIn.memberNo}";
+		$("#warningMemoFrm").submit();
 	});
 
 	/* 입력한 기존 비밀번호가 맞는지 검사 */
@@ -100,19 +100,42 @@ $(function() {
 		else $("#memberUpdateFrm").submit();
 	});
 	
-	/* delete member */
-	$("button#member-delete-btn").on("click", function(){
-		/* if(!confirm("정말로 탈퇴하시겠습니까?")) return; */
-		location.href = "${pageContext.request.contextPath}/member/deleteMember.do?memberNo="+${memberLoggedIn.memberNo};
-	});
-	
 });
+
+/* delete member */
+function deleteMember(memberNo){
+	console.log(memberNo);
+	if(!confirm("정말로 탈퇴하시겠습니까?")) return;
+	location.href = "${pageContext.request.contextPath}/member/deleteMember.do?memberNo=" + memberNo;
+}
+
 </script>
+<form action="${pageContext.request.contextPath}/member/warningMemo.do"
+	  id="warningMemoFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/member/cartList"
+	  id="cartListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/member/interestList"
+	  id="interestListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
 <form action="${pageContext.request.contextPath}/member/forSaleList"
 	  id="forSaleListFrm"
 	  method="post">
 	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
 </form>
+<form action="${pageContext.request.contextPath}/member/deleteMember.do"
+	  id="deleteMemberFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+
 <div id="back-container">
 	<div id="info-container">
 		<div class="btn-group btn-group-lg" role="group" aria-label="..." id="button-container">
@@ -160,7 +183,7 @@ $(function() {
 			</table>
 			<div id="agentSet-btnGroup">
 				<input type="submit" class="btn btn-outline-success" id="member-update-btn" value="수정" />&nbsp;
-				<input type="button" class="btn btn-outline-success" id="member-delete-btn" value="회원탈퇴" />
+				<input type="button" class="btn btn-outline-success" id="member-delete-btn" value="회원탈퇴" onclick="deleteMember(${memberLoggedIn.memberNo});"/>
 			</div>
 		</form>
 		</div>	

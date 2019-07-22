@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.myhouse.cart.model.vo.Cart;
 import com.kh.myhouse.interest.model.vo.Interest;
 import com.kh.myhouse.member.model.exception.MemberException;
 import com.kh.myhouse.member.model.service.MemberService;
@@ -81,9 +80,9 @@ public class MemberController {
 			String msg = "";
 			String loc = "/";
 			
-			if(m == null) {
+			if(m == null || m.getQuitYN() == 'Y')
 				msg = "존재하지 않는 회원입니다.";
-			}
+
 			else {
 				boolean bool = bcryptPasswordEncoder.matches(memberPwd, m.getMemberPwd());
 				if(bool) {
@@ -120,15 +119,18 @@ public class MemberController {
 	}
 	
 
-	@RequestMapping("/memberView.do")
+	/*@RequestMapping("/memberView.do")
 	public ModelAndView memberView(@RequestParam int memberNo) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("member", memberService.selectOneMember(memberNo));
 		System.out.println("member@cont: " + memberService.selectOneMember(memberNo));
 		mav.setViewName("member/memberView");
 		return mav;
-	}
+	}*/
 	
+	@RequestMapping("/memberView.do")
+	public void memberView() {
+	}
 	
 	@RequestMapping("/memberUpdate.do")
 	public String memberUpdate(int memberNo, String newPwd, Model model) {
@@ -151,6 +153,30 @@ public class MemberController {
 		
 		return "common/msg";
 	}
+	
+	/*@RequestMapping("/memberUpdate.do")
+	public ModelAndView memberUpdate(Member member) {
+		ModelAndView mav = new ModelAndView();
+		System.out.println(member);
+
+		// 1.비지니스로직 실행
+		int result = memberService.updateMember(member);
+
+		// 2.처리결과에 따라 view단 분기처리
+		String loc = "/";
+		String msg = "";
+		if (result > 0) {
+			msg = "회원정보수정성공!";
+			mav.addObject("memberLoggedIn", member);
+		} else
+			msg = "회원정보수정실패!";
+
+		mav.addObject("msg", msg);
+		mav.addObject("loc", loc);
+		mav.setViewName("common/msg");
+
+		return mav;
+	}*/
 
 	@RequestMapping("/checkMemberEmail.do")
 	@ResponseBody
@@ -160,21 +186,23 @@ public class MemberController {
 	}
 	
 	/* 아이디 찾기 */
-	@RequestMapping(value = "/findId" , method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/findId.do" , method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public String findId(@ModelAttribute Member member, Model model , HttpServletResponse response) throws Exception {
-
-		System.out.println(member.toString());
-
-
+	public String findId(@ModelAttribute Member member) throws Exception {
+		
 		ArrayList <String> emailList = memberService.findId(member);
-		System.out.println(emailList.toString());
-		System.out.println(emailList.get(0));
-		String findEmail = "{\"member_email\":\""+emailList+"\"}";
 
-		System.out.println(findEmail);
+		String findEmail = "{\"memberEmail\":\""+emailList+"\"}";
 
 		return findEmail;
+	}
+	
+	/* 비밀번호 찾기 */
+	@RequestMapping(value = "/findPwd.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	@ResponseBody
+	public int findPwd(@ModelAttribute Member member) throws Exception {
+		
+		return memberService.findPwd(member);
 	}
 	
 	/* 비밀번호 변경시 기존 비밀번호 매칭 확인 */
@@ -231,18 +259,21 @@ public class MemberController {
 	}
 	
 	@RequestMapping("/deleteMember.do")
-	public ModelAndView deleteMember(@RequestParam String memberNo) {
+	public ModelAndView deleteMember(@RequestParam String memberNo, SessionStatus sessionStatus) {
 		ModelAndView mav = new ModelAndView();
 		int result = memberService.deleteMember(memberNo);
+		System.out.println("memberNo@deleteMemberCont=" + memberNo);
+		System.out.println("result@deleteMemberCont=" + result);
 		String msg = "";
 		String loc = "";
 		if (result > 0) {
 			msg = "회원탈퇴 성공!";
 			loc = "/";
+			sessionStatus.setComplete();
 		}
 		else {
 			msg = "회원탈퇴 실패!";
-			loc = "/member/memberView?memberNo=" + memberNo;
+			loc = "/member/memberView.do?memberNo=" + memberNo;
 		}
 		
 		mav.addObject("msg", msg);
@@ -254,6 +285,7 @@ public class MemberController {
 	
 	@RequestMapping("/forSaleList")
 	public void forSaleList(@RequestParam int memberNo, Model model) {
+		System.out.println("memberNo@forSaleList=" + memberNo);
 		List<Map<String, String>> list = memberService.forSaleList(memberNo);
 		System.out.println("forSaleList@cont=" + list);
 		
@@ -262,12 +294,7 @@ public class MemberController {
 	
 	@RequestMapping("/cartList")
 	public void cartList(@RequestParam int memberNo, Model model) {
-		logger.debug("찜리스트 페이지");
-		System.out.println("memberNo@cartList=" + memberNo);
 		List<Map<String, String>> list = memberService.cartList(memberNo);
-		logger.debug("list", list);
-		System.out.println("cartList@cont=" + list);
-		
 		model.addAttribute("list", list);
 	}
 	

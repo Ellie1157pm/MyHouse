@@ -16,12 +16,15 @@
 $(document).ready(function() {
 	$("#sendBtn").click(function() {
 		sendMessage();
-		$('#message').val('')
+		$('#message').val('');
+		console.log("message@=",$('#message').val(''));
+		console.log($('#message').val());
 	});
 	$("#message").keydown(function(key) {
 		if (key.keyCode == 13) {// 엔터
 			sendMessage();
-			$('#message').val('')
+			$('#message').val('');
+			console.log("message@=",$('#message').val(''));
 		}
 	});
 	
@@ -39,7 +42,7 @@ $(document).ready(function() {
 function lastCheck() {
 	let data = {
 		chatId : "${chatId}",
-		memberId : "${memberId}",
+		memberId : "${memberLoggedIn.memberEmail}",
 		time : new Date().getTime()
 	}
 	stompClient.send('<c:url value="/lastCheck" />', {}, JSON.stringify(data));
@@ -76,12 +79,12 @@ stompClient.connect({}, function(frame) {
 	
 	
 	
-function sendMessage() {
+function sendMessage(receiveEmail) {
 
 	let data = {
 		chatId : "${chatId}",
-		memberId : "${memberId}",
-		
+		memberId : "${memberLoggedIn.memberEmail}",
+		receiveId: "${receiveId}",
 		msg : $("#message").val(),
 		time : new Date().getTime(),
 		type: "MESSAGE"

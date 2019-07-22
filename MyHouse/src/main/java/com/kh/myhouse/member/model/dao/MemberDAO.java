@@ -32,4 +32,6 @@ public interface MemberDAO {
 
 	List<Map<String, String>> cartList(int memberNo);
 
+	int findPwd(Member member);
+
 }

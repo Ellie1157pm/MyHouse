@@ -22,7 +22,10 @@ public interface ChatService {
 	//admin
 	List<Msg> findChatListByChatId(String chatId);
 
-	List<Map<String, String>> findRecentList();
+	List<Map<String, String>> findRecentList(String memberId);
+	
+	//memberChat창
+	String findChatIdByMemberId2(String memberId);
 	
 
 }

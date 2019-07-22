@@ -48,9 +48,14 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
-	public List<Map<String, String>> findRecentList() {
+	public List<Map<String, String>> findRecentList(String memberId) {
 		System.out.println("findRecentList ServiceImpl작동");
-		return chatDAO.findRecentList();
+		return chatDAO.findRecentList(memberId);
+	}
+
+	@Override
+	public String findChatIdByMemberId2(String memberId) {
+		return chatDAO.findChatIdByMemberId2(memberId);
 	}
 
 

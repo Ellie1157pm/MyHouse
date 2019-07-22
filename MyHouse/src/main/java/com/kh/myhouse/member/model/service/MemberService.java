@@ -19,6 +19,8 @@ public interface MemberService {
 
 	ArrayList<String> findId(Member member);
 
+	int findPwd(Member member);
+	
 	int deleteMember(String memberNo);
 
 	Member selectOneMember(int memberNo);
@@ -32,6 +34,8 @@ public interface MemberService {
 	List<Map<String, String>> forSaleList(int memberNo);
 
 	List<Map<String, String>> cartList(int memberNo);
+
+
 
 
 }

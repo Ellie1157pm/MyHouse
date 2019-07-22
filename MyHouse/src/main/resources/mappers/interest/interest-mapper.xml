@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="interest">
+ 	<select id="selectInterest" resultType="interest">
+		SELECT * FROM INTEREST WHERE MEMBER_NO = #{memberNo}
+	</select>
+
+	<update id="updateInterest">
+	region코드 담을 때 쿼리: select substr(region_code,0,5) from region 
+	where legal_dong like '%'||STATE값 + CITY값 ||'%' and rownum=1;
+		UPDATE INTEREST SET REGION = #{region},
+							STATE = #{state},
+							CITY = #{city},
+							ESTATE_TYPE = #{estateType, typeHandler=strArrTypeHandler},
+							PET = #{pet},
+							ELEVATOR = #{elevator},
+							PARKING = #{parking},
+							SUBWAY = #{subway}
+		WHERE MEMBER_NO = #{memberNo}
+	</update>
+</mapper>

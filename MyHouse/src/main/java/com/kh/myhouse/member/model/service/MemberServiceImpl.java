@@ -49,6 +49,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	public int findPwd(Member member) {
+		return memberDAO.findPwd(member);
+	}
+	
+	@Override
 	public int deleteMember(String memberNo) {
 		return memberDAO.deleteMember(memberNo);
 	}
@@ -82,4 +87,6 @@ public class MemberServiceImpl implements MemberService {
 	public List<Map<String, String>> cartList(int memberNo) {
 		return memberDAO.cartList(memberNo);
 	}
+
+	
 }

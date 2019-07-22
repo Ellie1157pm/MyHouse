@@ -11,21 +11,40 @@
 <script>
 $(function() {
 	$("#update-member-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/memberView?memberNo=" + ${memberLoggedIn.memberNo};
+		$("#memberViewFrm").submit();
 	});
 	$("#cart-list-btn").css("opacity", 0.6);
 	$("#interest-list-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/interestList?memberNo=" + ${memberLoggedIn.memberNo};
+		$("#interestListFrm").submit();
 	});
 	$("#for-sale-btn").on("click", function(){
 		$("#forSaleListFrm").submit();
 	});
 	$("#warning_memo").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/warningMemo.do?memberNo=${memberLoggedIn.memberNo}";
+		$("#warningMemoFrm").submit();
 	});
 });
 </script>
-
+<form action="${pageContext.request.contextPath }/member/warningMemo.do"
+	  id="warningMemoFrm"
+	  method="post">
+	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
+</form>
+<form action="${pageContext.request.contextPath }/member/memberView.do"
+	  id="memberViewFrm"
+	  method="post">
+	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
+</form>
+<form action="${pageContext.request.contextPath}/member/interestList"
+	  id="interestListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/member/forSaleList"
+	  id="forSaleListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
 <div id="back-container">
 	<div id="info-container">
 		<div class="btn-group btn-group-lg" role="group" aria-label="..." id="button-container">
@@ -43,7 +62,7 @@ $(function() {
 				<c:forEach var="e" items="${list}">
 					<div class="cartList-box">
 						<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/${e.RENAMED_FILENAME}" alt="매물사진"/>
-						<button type="button" class="btn btn-info chat-for-cartList-btn" onclick="chatForCartList(this);" id="${e.ESTATE_NO}" value="${e.BUSINESS_PHONE }">문의채팅</button>
+						<button type="button" class="btn btn-info chat-for-cartList-btn" onclick="openMemberChat('${e.MEMBER_EMAIL}')" id="${e.ESTATE_NO}" value="${e.MEMBER_EMAIL }">문의채팅</button>
 						<p>
 							<c:choose>
 								<c:when test="${e.TRANSACTION_TYPE eq 'M'}">

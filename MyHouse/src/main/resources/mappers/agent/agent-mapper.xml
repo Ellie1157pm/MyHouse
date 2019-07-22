@@ -37,14 +37,46 @@
 	<select id="checkCompanyCount" resultType="_int">
 		select count(*) from company_info where company_reg_no = #{companyRegNo}
 	</select>
+	
+	<update id="updateAgent">
+		update member set member_pwd = #{newPwd} where member_no = #{memberNo}
+	</update>
+	
+	<update id="updateAgentProfileImg">
+		merge into profile_photo
+		using dual
+		on(member_no = #{memberNo})
+		when MATCHED then
+		    update set original_filename = #{originalFileName}, renamed_filename = #{renamedFileName}, upload_date = default
+		when not MATCHED then
+		    insert
+		    values(#{memberNo}, #{originalFileName}, #{renamedFileName}, default)
+	</update>
+	
+	<update id="agentDelete">
+		update member set quit_yn = 'Y' where member_no = #{memberNo}
+	</update>
+	
+	<select id="selectProfileImg" resultType="string">
+		select renamed_filename from profile_photo
+		where member_no = #{memberNo}
+	</select>
+	
+	<delete id="agentDeleteImg">
+		delete from profile_photo where member_no = #{memberNo}
+	</delete>
+	
 	<resultMap type="map" id="estate"></resultMap>
 	<select id="estateList" resultType="map">
-		select e.estate_no, e.business_member_no, e.transaction_type, e.estate_price, e.estate_area, e.address, e.estate_content,
-         p.renamed_filename
-		from estate e left join (select estate_no, renamed_filename from estate_photo
-		                                where rowid in (select min(rowid) from estate_photo group by estate_no))p
-		                                on e.estate_no = p.estate_no
-		where e.business_member_no is null
+		  select B.*
+ 		  from (select rownum as rnum, A.*
+             from (select e.estate_no, e.estate_type, e.business_member_no, e.transaction_type, e.estate_price,
+             e.estate_area, e.address, e.estate_content, p.renamed_filename
+                    from estate e left join (select estate_no, renamed_filename from estate_photo
+                                                    where rowid in (select min(rowid) from estate_photo group by estate_no))p
+                                                    on e.estate_no = p.estate_no
+                    where e.business_member_no = 0) A) B
+		  where rnum between #{pageStart} and #{pageEnd}
 		<if test="searchType != null">
 			and estate_type like #{searchType}
 		</if>
@@ -57,6 +89,15 @@
 		set business_member_no = #{memberNo}, business_phone = #{phone}
 		where estate_no = #{estateNo}
 	</update>
+	<select id="selectEstate" resultType="estate">
+		select * from estate where estate_no = #{estateNo}
+	</select>
+	<select id="selectEstateAttach" resultType="estateAttach">
+		select * from estate_photo where estate_no = #{estateNo}
+	</select>
+	<select id="selectOption" resultType="map">
+		select * from tbl_option where estate_no = #{estateNo}
+	</select>
 	<select id="estateListEnd" resultMap="estate">
 		select e.estate_no, e.transaction_type, e.estate_price, e.estate_area, e.address, e.estate_content,
          p.renamed_filename, nvl(l.period-sysdate, 0) as adate
@@ -66,6 +107,22 @@
         left join power_link l on e.estate_no = l.estate_no
         where business_member_no = #{memberNo}
 	</select>
+	<update id="estateUpdate">
+		update estate set region_code = #{RegionCode}, phone = #{Phone}, address = #{Address},
+						estate_type = #{EstateType}, transaction_type = #{TransActionType},
+						estate_price = #{EstatePrice}, management_fee = #{ManageMentFee},
+						estate_area = #{EstateArea}, subway_station = #{SubwayStation},
+						estate_content = #{EstateContent}, deposit = #{Deposit},
+						address_detail =  #{AddressDetail}
+		where estate_no = #{EstateNo}
+	</update>
+	<delete id="estatePhotoDelete">
+		delete from estate_photo where estate_no = #{estateNo}
+	</delete>
+	<insert id="estatePhotoUpdate">
+		insert into estate_photo
+		values(seq_estate_photo.nextval,#{estateNo},#{originalFileName},#{renamedFileName},sysdate)
+	</insert>
 	<update id="updateAdvertised">
 		merge into power_link
 		using dual

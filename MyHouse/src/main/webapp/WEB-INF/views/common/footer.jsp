@@ -12,7 +12,5 @@
 	<p>서비스 이용문의 : 1661-0000 | 이메일 : myhouse19@naver.com</p>
 	<p>Copyright 2019 MYHOUSE. All Rights Reserved.</p>
 </footer>
-<script>
-</script>
 </body>
 </html>

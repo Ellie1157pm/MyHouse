@@ -10,20 +10,41 @@
 <script>
 $(function() {
 	$("#update-member-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/memberView";
+		$("#memberViewFrm").submit();
 	});
 	$("#cart-list-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/cartList";
+		$("#cartListFrm").submit();
 	});
 	$("#interest-list-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/interestList?memberNo=" + ${memberLoggedIn.memberNo};
+		$("#interestListFrm").submit();
 	});
 	$("#for-sale-btn").css("opacity", 0.6);
 	$("#warning_memo").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/warningMemo.do?memberNo=${memberLoggedIn.memberNo}";
+		$("#warningMemoFrm").submit();
 	});
 });
 </script>
+<form action="${pageContext.request.contextPath }/member/warningMemo.do"
+	  id="warningMemoFrm"
+	  method="post">
+	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
+</form>
+
+<form action="${pageContext.request.contextPath}/member/memberView.do"
+	  id="memberViewFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/member/cartList"
+	  id="cartListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/member/interestList"
+	  id="interestListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
 
 <div id="back-container">
 	<div id="info-container">
@@ -39,7 +60,7 @@ $(function() {
 				<c:forEach var="e" items="${list}">
 					<div class="forSaleList-box">
 						<span>
-						<c:if test="${e.BUSINESS_PHONE.equals("NULL")}">
+						<c:if test="${e.BUSINESS_PHONE eq '0'}">
 								중개사 컨택중
 						</c:if>
 						</span>

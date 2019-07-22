@@ -11,10 +11,10 @@
 <script>
 $(function() {
 	$("#update-member-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/memberView";	
+		$("#memberViewFrm").submit();	
 	});
 	$("#cart-list-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/cartList";
+		$("#cartListFrm").submit();
 	});
 	
 	$("#interest-list-btn").css("opacity", 0.6);
@@ -26,7 +26,7 @@ $(function() {
 		$("#forSaleListFrm").submit();
 	});
 	$("#warning_memo").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/warningMemo.do?memberNo=${memberLoggedIn.memberNo}";
+		$("#warningMemoFrm").submit();
 	});
 });
 </script>
@@ -43,10 +43,25 @@ $(function() {
 	}
 				
 </script>
+<form action="${pageContext.request.contextPath }/member/warningMemo.do"
+	  id="warningMemoFrm"
+	  method="post">
+	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
+</form>
+<form action="${pageContext.request.contextPath }/member/memberView.do"
+	  id="memberViewFrm"
+	  method="post">
+	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
+</form>
 <form action="${pageContext.request.contextPath}/member/forSaleList"
 	  id="forSaleListFrm"
 	  method="post">
 	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath }/member/cartList"
+	  id="cartListFrm"
+	  method="post">
+	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
 </form>
 
 <div id="back-container">

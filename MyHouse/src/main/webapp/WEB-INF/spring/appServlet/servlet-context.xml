@@ -6,34 +6,14 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
-			
+
+
+	
 	<!-- #5.appServlet 관련 설정 : servlet-context에 대한 설정(application당 여러개일 수 있음.) -->
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
-	
-	
-	<!-- stomp관련 빈등록하기 -->
-<!-- 	<websocket:message-broker application-destination-prefix="/myhouse">
-		<websocket:stomp-endpoint path="/stomp">
-			<websocket:handshake-interceptors>
-				<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" >
-				</beans:bean>
-			</websocket:handshake-interceptors>
-			<websocket:sockjs session-cookie-needed="true"/>
-		</websocket:stomp-endpoint>
-		<websocket:simple-broker prefix="/hello, /chat"/>
-	</websocket:message-broker> -->
-	
-	<!-- sockjs관련 빈등록하기 -->
-	<!-- <beans:bean id="echoHandler" class="com.kh.myhouse.ws.EchoHandler" />
-	<websocket:handlers>
-		<websocket:mapping handler="echoHandler" path="/echo" />
-		<websocket:sockjs />
-	</websocket:handlers> -->
-	
-	
 	<annotation-driven />
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<!-- resources 로 요청이 들어오면 webapp밑에 resources 로 찾아가게 설정됨 -->
@@ -73,12 +53,21 @@
 	<beans:bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"></beans:bean>
 	
 	<beans:bean id="AgentLoginInterceptor" class="com.kh.myhouse.common.interceptor.AgentLoginInterceptor"></beans:bean>
+	<beans:bean id="AdminInfoInterceptor" class="com.kh.myhouse.common.interceptor.AdminInfoInterceptor"></beans:bean>
     
     <interceptors>
         <interceptor>
             <mapping path="/agent/*"/>
             <beans:ref bean="AgentLoginInterceptor"/>
         </interceptor>
+        <interceptor>
+            <mapping path="/admin/list"/>
+            <beans:ref bean="AdminInfoInterceptor"/>
+        </interceptor>
+        <interceptor>
+            <mapping path="/admin/noticeForm"/>
+            <beans:ref bean="AdminInfoInterceptor"/>
+        </interceptor>
     </interceptors>
-	
+
 </beans:beans>

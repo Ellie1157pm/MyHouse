@@ -29,6 +29,10 @@
 		SELECT MEMBER_EMAIL FROM MEMBER WHERE MEMBER_NAME = #{memberName} AND PHONE = #{phone}
 	</select>
 	
+	<select id="findPwd" resultType="_int">
+		SELECT MEMBER_NO FROM  MEMBER WHERE MEMBER_EMAIL = #{memberEmail} AND PHONE = #{phone}
+	</select>
+	
 	<update id="deleteMember">
 		UPDATE MEMBER SET QUIT_DATE = sysdate, QUIT_YN = 'Y' WHERE MEMBER_NO = #{memberNo}
 	</update>
@@ -41,14 +45,14 @@
 		INSERT INTO INTEREST(INTEREST_NO, MEMBER_NO) VALUES(seq_interest_no.nextval, seq_member_no.currval)
 	</insert>
 	
-	<select id="selectInterest" resultType="interest">
+	<select id="selectInterest" resultMap="interestMap">
 		SELECT *
 		FROM INTEREST 
 		WHERE MEMBER_NO = #{memberNo}
 	</select>
 	
 	<resultMap type="interest" id="interestMap">
-		<result column="estateType" property="estateType" typeHandler="strArrTypeHandler"/>
+		<result column="estate_type" property="estateType" typeHandler="strArrTypeHandler"/>
 	</resultMap>
 	
 	<update id="updateInterest">
@@ -59,12 +63,12 @@
 		WHERE MEMBER_NO = #{memberNo}
 	</update>
 	
-	<select id="forSaleList">
-		SELECT E.ESTATE_NO, NVL(E.BUSINESS_PHONE, 'NULL'), E.TRANSACTION_TYPE, E.ESTATE_PRICE, E.ESTATE_AREA, E.ADDRESS, 
+	<select id="forSaleList" resultMap="estate">
+		SELECT E.ESTATE_NO, E.BUSINESS_PHONE, E.TRANSACTION_TYPE, E.ESTATE_PRICE, E.ESTATE_AREA, E.ADDRESS, 
 		E.ESTATE_CONTENT, P.RENAMED_FILENAME 
 		FROM ESTATE E LEFT JOIN (SELECT ESTATE_NO, RENAMED_FILENAME FROM ESTATE_PHOTO
 								 WHERE ROWID IN (SELECT MIN(ROWID) FROM ESTATE_PHOTO
-								 GROUP BY ESTATE_NO)) AS P
+								 GROUP BY ESTATE_NO)) P
 								 ON E.ESTATE_NO = P.ESTATE_NO
 		WHERE MEMBER_NO = #{memberNo}
 	</select>
@@ -89,13 +93,15 @@
 	</resultMap>
 	
 	<select id="cartList" resultMap="estate">
-		SELECT E.ESTATE_NO, E.BUSINESS_MEMBER_NO, NVL(E.BUSINESS_PHONE, 'NULL'), E.TRANSACTION_TYPE, E.ESTATE_PRICE, E.ESTATE_AREA, E.ADDRESS, 
+		SELECT E.ESTATE_NO, E.BUSINESS_MEMBER_NO,M.MEMBER_EMAIL, NVL(E.BUSINESS_PHONE, 'NULL'), E.TRANSACTION_TYPE, E.ESTATE_PRICE, E.ESTATE_AREA, E.ADDRESS, 
 		E.ESTATE_CONTENT, P.RENAMED_FILENAME
 		FROM ESTATE E LEFT JOIN (SELECT ESTATE_NO, RENAMED_FILENAME FROM ESTATE_PHOTO
 								 WHERE ROWID IN (SELECT MIN(ROWID) FROM ESTATE_PHOTO
 								 GROUP BY ESTATE_NO)) P
 								 ON E.ESTATE_NO = P.ESTATE_NO
 		LEFT JOIN TBL_CART C ON E.ESTATE_NO = C.ESTATE_NO
+		LEFT JOIN MEMBER M ON E.MEMBER_NO = M.MEMBER_NO
+		
 		WHERE C.MEMBER_NO = #{memberNo}
 	</select>
 	

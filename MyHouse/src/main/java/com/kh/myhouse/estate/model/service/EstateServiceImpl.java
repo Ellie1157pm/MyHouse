@@ -97,13 +97,13 @@ public class EstateServiceImpl implements EstateService{
 	}
 	
 	@Override
-	public List<Map<String, String>> showRecommendEstate(int cPage, int numPerPage, String addressName) {
-		return estateDAO.showRecommendEstate(cPage,numPerPage,addressName);
+	public List<Map<String, String>> showRecommendEstate(int cPage, int numPerPage, Map<String, String> param) {
+		return estateDAO.showRecommendEstate(cPage,numPerPage,param);
 	}
 
 	@Override
-	public List<Map<String, String>> showNotRecommendEstate(int cPage2, int numPerPage, String addressName) {
-		return estateDAO.showNotRecommendEstate(cPage2,numPerPage,addressName);
+	public List<Map<String, String>> showNotRecommendEstate(int cPage2, int numPerPage, Map<String, String> param) {
+		return estateDAO.showNotRecommendEstate(cPage2,numPerPage,param);
 	}
 
 

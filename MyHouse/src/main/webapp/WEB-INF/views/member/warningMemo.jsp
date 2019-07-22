@@ -14,16 +14,19 @@ var memberNo = ${memberLoggedIn.memberNo};
 var cPage = ${cPage};
 $(function() {
 	$("#update-member-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/memberView.do?memberNo=${memberLoggedIn.memberNo}";	
+		$("#memberViewFrm").submit();
 	});
 	$("#cart-list-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/cartList";
+		$("#cartListFrm").submit();
 	});
 	$("#interest-list-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/interestList.do?memberNo=${memberLoggedIn.memberNo}";
+		$("#updateInterestFrm").submit();
 	});
 	$("#for-sale-btn").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/forSaleList";
+		$("#forSaleListFrm").submit();
+	});
+	$("#warning_memo").on("click", function(){
+		$("#warningMemoFrm").submit();
 	});
 	
 	$("#allcheck").click(function(){
@@ -98,6 +101,38 @@ function noteDel(){
 
 
 </script>
+<form action="${pageContext.request.contextPath }/member/warningMemo.do"
+	  id="warningMemoFrm"
+	  method="post">
+	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
+</form>
+<form action="${pageContext.request.contextPath }/member/memberView.do"
+	  id="memberViewFrm"
+	  method="post">
+	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
+</form>
+<form action="${pageContext.request.contextPath}/member/cartList"
+	  id="cartListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/member/interestList"
+	  id="interestListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/member/forSaleList"
+	  id="forSaleListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+
+<form action="${pageContext.request.contextPath}/member/deleteMember.do"
+	  id="deleteMemberFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+
 <div class="modal fade" id="exampleModalCenter" tabindex="-1"
 	role="dialog" aria-labelledby="exampleModalCenterTitle"
 	aria-hidden="true">

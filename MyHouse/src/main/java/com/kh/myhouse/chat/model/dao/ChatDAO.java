@@ -17,7 +17,9 @@ public interface ChatDAO {
 	
 	int updateLastCheck(Msg fromMessage);
 	
-	List<Map<String, String>> findRecentList();
+	List<Map<String, String>> findRecentList(String memberId);
+	
+	String findChatIdByMemberId2(String memberId);
 
 
 

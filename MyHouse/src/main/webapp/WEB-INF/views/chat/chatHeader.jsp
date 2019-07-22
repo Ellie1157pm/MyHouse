@@ -19,12 +19,18 @@
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
 	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
 	crossorigin="anonymous"></script>
+<!-- WebSocket:sock.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.3.0/sockjs.js"></script>
+<!-- WebSocket: stomp.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
 <!-- 사용자작성 css -->
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/css/chat/chat.css" />
-<title>문의 채팅</title>
 <div class="chatHeader-container">
-	<span id="chat-header-con">대화가 시작되었습니다.</span>
+	<c:if test="${memberLoggedIn.status eq 'B'.charAt(0)  }">
+		<a href="${pageContext.request.contextPath }/chat/agentChatList.do" class="badge badge-primary"><</a>
+	</c:if>
+	<span class="badge badge-primary badge-pill">대화가 시작되었습니다.</span>
 </div>
 
 

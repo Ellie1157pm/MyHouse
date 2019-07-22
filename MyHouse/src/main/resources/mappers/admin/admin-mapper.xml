@@ -6,15 +6,18 @@
 	select * 
 	from member
 	where status='U'
+	order by member_name
 	</select>
 	<select id="selectRealtorList" resultMap="memberMap">
 	select * 
 	from member
 	where status='B'
+	order by member_name
 	</select>
 	<select id="selectReportList" resultType="map">
 	select * 
 	from report_estate
+	order by report_date desc
 	</select>
 	<select id="selectMemberEmail" resultType="string">
 	select member_email
@@ -82,4 +85,140 @@
 	select count(*) cnt
 	from report_estate
 	</select>
+	
+	<select id="selectRecentNews" resultType="map">
+	select a.*
+	from (
+		select * 
+		from news
+		order by news_no desc) a
+	where rownum <![CDATA[ <= ]]> 5
+	</select>
+	
+	<select id="selectRecentNotice" resultType="map">
+	select a.*
+	from (
+		select * 
+		from notice
+		order by notice_no desc) a
+	where rownum <![CDATA[ <= ]]> 5
+	</select>
+	
+	<delete id="deleteNotice">
+	delete from notice
+	where notice_no = #{noticeNo}
+	</delete>
+	
+	<select id="selectOneNotice" resultType="map">
+	select *
+	from notice
+	where notice_no=#{noticeNo}
+	</select>
+	
+	<update id="updateNotice">
+	update notice
+	set notice_title=#{noticeTitle},
+		notice_content=#{noticeContent}
+	where notice_no=#{noticeNo}
+	</update>
+	
+	<select id="selectMemberSearchList" resultType="map">
+	select *
+	from member
+	where (member_name like '%'||#{searchKeyword}||'%'
+		or member_email like '%'||#{searchKeyword}||'%'
+		or phone like '%'||#{searchKeyword}||'%')
+		and status = 'U'
+	order by member_name
+	</select>
+	
+	<select id="memberSearchTotalpage" resultType="_int">
+	select count(*)
+	from member
+	where (member_name like '%'||#{searchKeyword}||'%'
+		or member_email like '%'||#{searchKeyword}||'%'
+		or phone like '%'||#{searchKeyword}||'%')
+		and status = 'U'
+	</select>
+	
+	<select id="selectRealtorSearchList" resultType="map">
+	select *
+	from member
+	where (member_name like '%'||#{searchKeyword}||'%'
+		or member_email like '%'||#{searchKeyword}||'%'
+		or phone like '%'||#{searchKeyword}||'%'
+		or COMPANY_REG_NO like '%'||#{searchKeyword}||'%')
+		and status = 'B'
+	order by member_name
+	</select>
+	
+	<select id="realtorSearchTotalpage" resultType="_int">
+	select count(*)
+	from member
+	where (member_name like '%'||#{searchKeyword}||'%'
+		or member_email like '%'||#{searchKeyword}||'%'
+		or phone like '%'||#{searchKeyword}||'%'
+		or COMPANY_REG_NO like '%'||#{searchKeyword}||'%')
+		and status = 'B'
+	</select>
+	
+	<select id="selectReportSearchList" resultType="map">
+	select *
+	from report_estate
+	where (estate_no like '%'||#{searchKeyword}||'%'
+		or member_no like '%'||#{searchKeyword}||'%'
+		or report_comment like '%'||#{searchKeyword}||'%')
+	order by report_date desc
+	</select>
+	
+	<select id="reportSearchTotalpage" resultType="_int">
+	select count(*)
+	from report_estate
+	where (estate_no like '%'||#{searchKeyword}||'%'
+		or member_no like '%'||#{searchKeyword}||'%'
+		or report_comment like '%'||#{searchKeyword}||'%')
+	</select>
+	
+	<select id="selectOneWarn" resultType="map">
+	select *
+	from member_warning
+	where member_no=#{memberNo}
+	</select>
+	
+	<select id="getMemberStatus" resultType="string">
+	select status
+	from member
+	where member_no=#{memberNo}
+	</select>
+	
+	<update id="updateMemberQuit">
+	update member
+	set quit_date=sysdate,
+		quit_yn='Y'
+	where member_no=#{memberNo}
+	</update>
+	
+	<update id="updateWarn">
+	update member_warning
+	set warning_count=#{warnCnt},
+		warning_reason=#{warningReason}
+	where member_no=#{memberNo}
+	</update>
+	
+	<insert id="insertWarn">
+	insert into member_warning
+	values(#{memberNo}, 1, #{warningReason})
+	</insert>
+	
+	<update id="updateReport">
+	update report_estate
+	set WARN_FLAG=#{warnFlag}
+	where estate_no=#{estateNo}
+		and member_no=#{memberNo}
+	</update>
+	
+	<insert id="insertReportMemo">
+	insert into memo
+	values(seq_memo_no.nextval, #{receiver}, #{memoContent}, default, default)
+	</insert>
 </mapper>

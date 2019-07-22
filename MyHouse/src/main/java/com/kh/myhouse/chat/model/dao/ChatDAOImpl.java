@@ -23,17 +23,13 @@ public class ChatDAOImpl implements ChatDAO {
 	}
 
 	@Override
-	public int insertChatRoom(Chat chat) {
-		return sqlSession.insert("stomp.insertChatRoom", chat);
-	}
-
-	@Override
 	public List<Msg> findChatListByChatId(String chatId) {
 		return sqlSession.selectList("chat.findChatListByChatId", chatId);
 	}
 
 	@Override
 	public int insertChatLog(Msg fromMessage) {
+		System.out.println(fromMessage+"라일락레일리");
 		return sqlSession.insert("chat.insertChatLog", fromMessage);
 	}
 
@@ -43,11 +39,22 @@ public class ChatDAOImpl implements ChatDAO {
 	}
 
 	@Override
-	public List<Map<String, String>> findRecentList() {
+	public List<Map<String, String>> findRecentList(String memberId) {
 		System.out.println("findRecentList DAOImpl작동");
-		return sqlSession.selectList("chat.findRecentList");
+		return sqlSession.selectList("chat.findRecentList",memberId);
 
 	}
+
+	@Override
+	public String findChatIdByMemberId2(String memberId) {
+		return sqlSession.selectOne("chat.findChatIdByMemberId2",memberId);
+	}
+
+	@Override
+	public int insertChatRoom(Chat chatRoom) {
+		return sqlSession.insert("chat.insertChatRoom", chatRoom);
+	}
+
 
 
 }

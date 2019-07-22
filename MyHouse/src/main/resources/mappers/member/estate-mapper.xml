@@ -6,19 +6,21 @@
 		substr(region_code,0,5) FROM REGION where legal_dong like
 		'%'||#{localName}||'%' and rownum=1
 	</select>
+	
 	<select id="selectApartmentname" resultType="string"> select address from
-		estate where region_code= #{localCode}
+		estate where region_code= #{localCode} and estate_type=#{estateType}
+
 	</select>
 
-	<select id="selectDetailEstate" resultType="estate">
-		select * from estate
-		where ADDRESS = #{addressName} or ADDRESS=#{roadAddressName}
+	<select id="selectDetailEstate" resultMap="estateAttchmentMap">
+		select * from estate e join estate_photo p using(estate_no)
+		where estate_no = #{estateNo}
 	</select>
 	
-	
-	
-	<select id="selectShowEstate" resultMap="estateAttchmentMap">
-		select * from estate e join power_link p using(estate_no) join estate_photo p using(estate_no) order by start_date
+	<select id="showRecommendEstate" resultMap="estateAttchmentMap">
+		 select *  from estate e join power_link pl using(estate_no) join 
+         (select e.*from( select * from  estate_photo)e where rowid in(select max(rowid) from  estate_photo group by estate_no))using(estate_no)
+         where address=#{address} or address=#{roadAddressName} order by start_date desc
 	</select>
 	<resultMap type="estate" id="estateAttchmentMap">
 		<id column="ESTATE_NO" property="EstateNo"/>
@@ -36,6 +38,7 @@
 		<result column="SUBWAY_STATION" property="SubwayStation"/>
 		<result column="ESTATE_CONTENT" property="EstateContent"/>
 		<result column="WRITTEN_DATE" property="WrittenDate"/>
+		<result column="ADDRESS_DETAIL" property="AddressDetail"/>
 		<result column="DEPOSIT" property="Deposit"/>
 		
 		<!-- collection: 1:n 관계e를 표현 -->
@@ -49,16 +52,23 @@
 	</resultMap>
 	
 	
+	<select id="showNotRecommendEstate" resultMap="estateAttchmentMap">
+		 select *  from estate e join 
+         (select e.*from( select * from  estate_photo)e where rowid in(select max(rowid) from  estate_photo group by estate_no))using(estate_no)
+         where address=#{address} or address=#{roadAddressName} order by written_date desc
+	</select>
 	
 	<select id="selectEstateAttach" resultType="estateAttach">
 		select * from
 		estate_photo where estate_no=#{estateNo}
 	</select>
-	<insert id="estateoptionlist">
-	 insert into tbl_option(estate_no,option_detail,construction,flooroption)
-	 values(seq_estate_no.currval,#{optionDetail, typeHandler=strArrTypeHandler},
-	         #{construction,typeHandler=strArrTypeHandler},#{floorOpt,typeHandler=strArrTypeHandler})
-	</insert>
+	
+	
+	 <insert id="estateoptionlist">
+     insert into tbl_option(estate_no,option_detail,construction,flooroption)
+     values(seq_estate_no.currval,#{optionDetail, typeHandler=strArrTypeHandler},
+             #{construction,typeHandler=strArrTypeHandler},#{floorOpt,typeHandler=strArrTypeHandler})
+    </insert>
 	
 
 	<resultMap type="option" id="optionMap">
@@ -66,15 +76,17 @@
 			typeHandler="strArrTypeHandler" />
 	</resultMap>
 
-	<insert id="EstateInsert">
-		insert into estate
-		(estate_no,region_code,member_no,business_member_no,phone,business_phone,
-		address,estate_type,transaction_type,estate_price,management_fee,estate_area,subway_station,
-		estate_content,written_date,deposit)
-		values(seq_estate_no.nextval,#{RegionCode},#{MemberNo},#{BusinessMemberNo},#{Phone},#{BusinessPhone},#{Address},
-		#{EstateType},#{TransActionType},#{EstatePrice},#{ManageMenetFee},#{EstateArea},#{SubwayStation},#{EstateContent},
-		sysdate,#{Deposit})
-	</insert>
+	 <insert id="EstateInsert">
+        insert into estate
+        (estate_no,region_code,member_no,business_member_no,phone,business_phone,
+        address,estate_type,transaction_type,estate_price,management_fee,estate_area,subway_station,
+        estate_content,written_date,deposit,address_detail)
+        values(seq_estate_no.nextval,#{RegionCode},#{MemberNo},#{BusinessMemberNo},#{Phone},#{BusinessPhone},#{Address},
+        #{EstateType},#{TransActionType},#{EstatePrice},#{ManageMenetFee},#{EstateArea},#{SubwayStation},#{EstateContent},
+        sysdate,#{Deposit},#{AddressDetail})
+    </insert>
+	
+
 	<insert id="insertattach">
 		insert into
 		estate_photo
@@ -230,31 +242,9 @@
 		and o.flooroption=#{topOption}
 	</select>
 	
-	<!-- 일반회원정보에서 등록한 매물 가져오기 -->	
-	<!-- <select id="forSaleList" resultMap="estate">
-		SELECT * 
-		FROM ESTATE
-		WHERE MEMBER_NO = #{memberNo}
-		ORDER BY ESTATE_NO DESC
-	</select>
-	
-	<resultMap type="estate" id="estateMap">
-		<id column="ESTATE_NO" property="EstateNo"/>
-		<result column="REGION_CODE" property="RegionCode"/>          
-		<result column="MEMBER_NO" property="MemberNo"/>
-		<result column="BUSINESS_MEMBER_NO" property="BusinessMemberNo"/>
-		<result column="PHONE" property="Phone"/>
-		<result column="BUSINESS_PHONE" property="BusinessPhone"/>
-		<result column="ADDRESS" property="Address"/>
-		<result column="ESTATE_TYPE" property="EstateType"/>
-		<result column="TRANSACTION_TYPE" property="TransActionType"/>
-		<result column="ESTATE_PRICE" property="EstatePrice"/>
-		<result column="MANAGEMENT_FEE" property="ManageMenetFee"/>
-		<result column="ESTATE_AREA" property="EstateArea"/>
-		<result column="SUBWAY_STATION" property="SubwayStation"/>
-		<result column="ESTATE_CONTENT" property="EstateContent"/>
-		<result column="WRITTEN_DATE" property="WrittenDate"/>
-		<result column="DEPOSIT" property="Deposit"/>
-	</resultMap> -->
+	<select id="selectlocalList" resultType="estate">
+    select * from
+        estate where region_code=#{localCode}
+    </select>
 	
 </mapper> 
