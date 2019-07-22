@@ -79,10 +79,6 @@ function estateReqView(e){
 	});
 }
 $(function() {
-	$("button.confirm-btn").on("click", function(){
-		
-	});
-	
 	$("#estateList-end").css("opacity", 0.6);
 	$("#estateList").on("click", function(){
 		location.href="${pageContext.request.contextPath}/agent/estateList";
@@ -96,7 +92,8 @@ $(function() {
 	$("#warning_memo").on("click", function(){
 		location.href="${pageContext.request.contextPath}/agent/warningMemo";
 	});
-	$(".modified-btn").on("click", function(){
+	$(".modified-btn").on("click", function(e){
+		e.stopPropagation();
 		$("input[name=estateNo]").val($(this).attr("id"));
 		$("#estateModifiedFrm").submit();
 	});
@@ -124,7 +121,7 @@ $(function() {
 		<div id="list-container">
 			<div id="estateListEnd">
 				<c:forEach var="e" items="${list}">
-					<div class="estateListEnd-box">
+					<div class="estateListEnd-box" data-toggle="modal" data-target="#estateReqModal" onclick="estateReqView(this);">
 						<span>
 						<c:if test="${e.POWER_LINK_NO ne 0}">
 							<c:if test="${e.ADATE > 0}">
@@ -150,12 +147,43 @@ $(function() {
 						<p>${e.ESTATE_AREA}㎡</p>
 						<p>${e.ADDRESS}</p>
 						<p>${e.ESTATE_CONTENT}</p>
-						<button type="button" class="btn btn-primary confirm-btn btn-class" id="${e.ESTATE_NO}">매물확인</button>
-						<button type="button" class="btn btn-warning modified-btn btn-class" id="${e.ESTATE_NO}">수정</button>
+						<button type="button" class="btn btn-warning modified-btn" id="${e.ESTATE_NO}">수정</button>
 					</div>
 				</c:forEach>
 			</div>
 		</div>	
 	</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="estateReqModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document" style="max-width: 802px;">
+    <div class="modal-content" style="width: 802px;">
+      <div class="modal-header">
+        <h5 class="modal-title estate-info-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="estate-info-box">
+      <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style ="width:400px;">
+		 <div class="carousel-inner">
+		  
+		 </div>
+		 <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+		   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		   <span class="sr-only">Previous</span>
+		 </a>
+		 <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+		   <span class="carousel-control-next-icon" aria-hidden="true"></span>
+		   <span class="sr-only">Next</span>
+		 </a>
+	  </div>
+	  
+	  </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

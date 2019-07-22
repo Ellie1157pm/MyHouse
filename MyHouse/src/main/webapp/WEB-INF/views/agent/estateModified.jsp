@@ -47,6 +47,8 @@ $(document).ready(function() {
 		$("#oneroom").hide();
 		 $("#villa").hide();
 		 $("#officetel").hide();
+		 $("#address2").show();
+		 $("span#dong").show();
 	 });
 	
  $("input:radio[id='raidovilla']").on('click',function(){
@@ -54,6 +56,8 @@ $(document).ready(function() {
 	 $("#oneroom").hide();
 	 $("#villa").show();
 	 $("#officetel").hide();
+	 $("#address2").hide();
+	 $("span#dong").hide();
  });
  
  $("input:radio[id='radiooneroom']").on('click',function(){
@@ -61,6 +65,8 @@ $(document).ready(function() {
 	 $("#oneroom").show();
 	 $("#villa").hide();
 	 $("#officetel").hide();
+	 $("#address2").hide();
+	 $("span#dong").hide();
  });
  
  $("input:radio[id='radioopi']").on('click',function(){
@@ -68,6 +74,8 @@ $(document).ready(function() {
 	 $("#oneroom").hide();
 	 $("#villa").hide();
 	 $("#officetel").show();
+	 $("#address2").hide();
+	 $("span#dong").hide();
  });
  
 	
@@ -102,13 +110,19 @@ $(function(){
 		$("#forsale").show();
 	}
 	
-	if("${estate.getEstateType()}" == 'B'){
+	if("${estate.getEstateType()}" == 'V'){
 		$("#villa").show();
+		$("#address2").hide();
+		$("span#dong").hide();
 	} else if("${estate.getEstateType()}" == 'O'){
 		$("#flooroption").show();
 		$("#oneroom").show();
+		$("#address2").hide();
+		$("span#dong").hide();
 	} else if("${estate.getEstateType()}" == 'P'){
 		$("#officetel").show();
+		$("#address2").hide();
+		$("span#dong").hide();
 	}
 	$('#address1').val("${estate.getAddress()}");
 });
@@ -126,7 +140,22 @@ enctype="multipart/form-data">
 			<th>중개인회원번호</th>
 		<td><input type="text" name="BusinessMemberNo" id="BusinessMemberNo" /></td>
 		</tr>
+		<tr>
+			<th>매물정보</th>
+			<td><input type="radio" name="estateType" id="apt" value="A" <c:if test="${estate.getEstateType() eq 'A'.charAt(0)}">checked</c:if>/>
+			<label for="apt">아파트</label> 
+			<input type="radio" name="estateType" id="raidovilla" value="V" <c:if test="${estate.getEstateType() eq 'V'.charAt(0)}">checked</c:if>/>
+			<label for="villa">빌라</label> 
+			
+			<input type="radio" name="estateType" id="radiooneroom" value="O" <c:if test="${estate.getEstateType() eq 'O'.charAt(0)}">checked</c:if>/>
+			<label for="oneroom">원룸</label>
+				
+				
+			<input type="radio" name="estateType" id="radioopi" value="P" <c:if test="${estate.getEstateType() eq 'P'.charAt(0)}">checked</c:if>/>
+			<label for="opi">오피스텔</label>
 
+			</td>
+		</tr>
 		<tr>
 			<th>주소</th>
 			<td><input type="text" name="taddress1" id="taddress1" class="addr"
@@ -137,10 +166,18 @@ enctype="multipart/form-data">
 		<tr>
 			<td><input type="hidden" name="address1" id="address1" class="addr"></td>
 		</tr>
-		<tr>
-			<th>상세정보</th>																			
-			<td><input type="number" name="address2" id="address2" class="addr" value="${estate.getAddressDetail().substring(0, estate.getAddressDetail().indexOf('동'))}" required>동
-			<input type="number" name="address3" id="address3" class="addr" value="${estate.getAddressDetail().substring(estate.getAddressDetail().indexOf('동')+1, estate.getAddressDetail().indexOf('층'))}" required>층
+		<tr id="adressdetail">
+			<th>상세정보</th>																		
+			<td><input type="number" name="address2" id="address2" class="addr ${estate.getEstateType()}"
+				value="<c:if test="${estate.getEstateType() eq 'A'.charAt(0)}">${estate.getAddressDetail().substring(0,estate.getAddressDetail().indexOf('동'))}</c:if>" required><span id="dong">동</span>
+			<c:if test="${estate.getEstateType() eq 'A'.charAt(0)}">
+				<input type="number" name="address3" id="address3" class="addr"
+					value="${estate.getAddressDetail().substring(estate.getAddressDetail().indexOf('동')+1, estate.getAddressDetail().indexOf('층'))}" required>층
+			</c:if>
+			<c:if test="${estate.getEstateType() ne 'A'.charAt(0)}">
+				<input type="number" name="address3" id="address3" class="addr"
+					value="${estate.getAddressDetail().substring(0, estate.getAddressDetail().indexOf('층'))}" required>층
+			</c:if>
 			</td>
 		</tr>
 		
@@ -151,22 +188,6 @@ enctype="multipart/form-data">
                <input type="text" name="phone3"  pattern="\d{4}"required value="${estate.getPhone().substring(7, 11)}">
            </td>
           </tr>
-		<tr>
-			<th>매물정보</th>
-			<td><input type="radio" name="estateType" id="apt" value="A" <c:if test="${estate.getEstateType() eq 'A'.charAt(0)}">checked</c:if>/>
-			<label for="apt">아파트</label> 
-			<input type="radio" name="estateType" id="raidovilla" value="V" <c:if test="${estate.getEstateType() eq 'B'.charAt(0)}">checked</c:if>/>
-			<label for="villa">빌라</label> 
-			
-			<input type="radio" name="estateType" id="radiooneroom" value="O" <c:if test="${estate.getEstateType() eq 'O'.charAt(0)}">checked</c:if>/>
-			<label for="oneroom">원룸</label>
-				
-				
-				<input type="radio" name="estateType" id="radioopi" value="P" <c:if test="${estate.getEstateType() eq 'P'.charAt(0)}">checked</c:if>/>
-				<label for="opi">오피스텔</label>
-
-			</td>
-		</tr>
 		<tr>
 			<th>매물정보2</th>
 			<td>

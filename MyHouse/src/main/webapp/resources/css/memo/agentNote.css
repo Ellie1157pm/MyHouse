@@ -51,11 +51,6 @@ td.yn{
 }
 
 
-/*tr hover*/
-tr.note-select:hover{
-	background-color: #28a7457a !important;
-}
-
 /*쪽지모달*/
 div.modal-content{
 	weight: 300px;
@@ -70,4 +65,29 @@ div #contentC{
 }
 div.note-contents{
 	margin: 2%;
+}
+
+/* a link design */
+/* 방문 전 링크 상태이다. */
+a.none-underline:link {
+	color: black;
+	text-decoration: none;
+}
+
+/* 방문 후 링크 상태이다. */
+a.none-underline:visited {
+	color: gray;
+	text-decoration: none;
+}
+
+/* 마우스 오버 했을 때 링크 상태이다. */
+a.none-underline:hover {
+	color: lightgray;
+	text-decoration: none;
+}
+
+/* 클릭 했을 때 링크 상태이다. */
+a.none-underline:active {
+	color: lightgray;
+	text-decoration: none;
 }

@@ -31,7 +31,6 @@
 				</div>
 					<input type="checkbox" id="estate-agent-agree"/>
 					<label for="estate-agent-agree">개인정보 수집 및 이용에 대한 동의</label>
-					<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}"/>
 			</form>
 		</div>
 	</div>

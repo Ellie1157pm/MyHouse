@@ -5,6 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <link rel="stylesheet"
 	  href="${pageContext.request.contextPath }/resources/css/admin/adminIndexBoard.css" />
+<% pageContext.setAttribute("newLineChar", "\n"); %>	  
 <script>
 $(document).ready(function() {
 	//location.href = "${pageContext.request.contextPath}/admin/indexBoard";
@@ -15,7 +16,7 @@ $(document).ready(function() {
 		success: function(data) {
 			for(var i = 0 ; i < data.newsList.length ; i++) {
 				var title = data.newsList[i].NEWS_TITLE;
-				var content = data.newsList[i].NEWS_CONTENT;
+				var content = data.newsList[i].NEWS_CONTENT.replace(/\n/gm, '<br>');
 				content += '</br></br><div style="text-align:center;">';
 				content += '<a class="none-underline" href="'+data.newsList[i].NEWS_LINK+'" target="_blank">';
 				content += '[원본 링크]</a>';
@@ -37,7 +38,7 @@ $(document).ready(function() {
 				notice += "<a class='none-underline' href='#'";
 				notice += "data-toggle='modal' data-target='#exampleModalCenter'";
 				notice += "data-title='"+noticeList[i].NOTICE_TITLE+"'";
-				notice += "data-content='"+noticeList[i].NOTICE_CONTENT+"'>"+noticeList[i].NOTICE_TITLE+"</a>";
+				notice += "data-content='"+noticeList[i].NOTICE_CONTENT.replace(/\n/gm, '<br>')+"'>"+noticeList[i].NOTICE_TITLE+"</a>";
 				notice += "</div>";
 				$("#m-notice .item_box").append(notice);
 			}

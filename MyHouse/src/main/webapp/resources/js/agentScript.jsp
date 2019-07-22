@@ -170,9 +170,19 @@ $(function(){
        }
        
 	});
-	
+	/*사업자번호 유효성검사*/
 	$("input#agent-enroll-companyno").blur(function(){
-		
+	   var regExp = /^[0-9]{3}[-]+[0-9]{2}[-]+[0-9]{5}$/;
+       var phone = $(this).val();
+       var bool = regExp.test(phone);
+       
+       if(bool != true){
+           $("input#agent-enroll-companyno").css("color", "red");
+           $("button#agent-enroll-end-btn").attr("disabled", true);
+       } else {
+    	   $("input#agent-enroll-companyno").css("color", "black");
+    	   $("button#agent-enroll-end-btn").attr("disabled", false);
+       }
 	});
 	
 	/*중개사무소가입*/
@@ -193,8 +203,13 @@ $(function(){
 		} else if("${memberLoggedIn.status}" == "U"){
 			alert("중개회원만 광고문의가 가능합니다.");
 		} else {
-			location.href = "${pageContext.request.contextPath}/agent/advertisedQuestion?memberNo="+"${memberLoggedIn.memberNo}";
+			$("#advetisedQuestionFrm").submit();
 		}
 	});	
 });
 </script>
+<form action="${pageContext.request.contextPath}/agent/advertisedQuestion"
+	  method="post"
+	  id="advetisedQuestionFrm">
+	  <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}"/>
+</form>

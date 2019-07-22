@@ -28,12 +28,9 @@
 				#{companyRegNo},
 				#{companyName},
 				#{companyPhone},
-				#{memberNo},
-				default)
+				default,
+				null)
 	</insert>
-	<select id="checkCompany" resultType="_int">
-		select count(*) from company_info where business_member_no = #{memberNo}
-	</select>
 	<select id="checkCompanyCount" resultType="_int">
 		select count(*) from company_info where company_reg_no = #{companyRegNo}
 	</select>
@@ -70,19 +67,19 @@
 	<select id="estateList" resultType="map">
 		  select B.*
  		  from (select rownum as rnum, A.*
-             from (select e.estate_no, e.business_member_no, e.transaction_type, e.estate_price, e.estate_area, e.address, e.estate_content,
-                     p.renamed_filename
+             from (select e.estate_no, e.estate_type, e.business_member_no, e.transaction_type, e.estate_price,
+             e.estate_area, e.address, e.estate_content, p.renamed_filename
                     from estate e left join (select estate_no, renamed_filename from estate_photo
                                                     where rowid in (select min(rowid) from estate_photo group by estate_no))p
                                                     on e.estate_no = p.estate_no
-                    where e.business_member_no = 0) A) B
+                    where e.business_member_no = 0
+                    <if test="searchType != null">
+						and estate_type like #{searchType}
+					</if>
+					<if test="searchKeyword != null">
+						and address like '%' || #{searchKeyword} || '%'
+					</if>) A) B
 		  where rnum between #{pageStart} and #{pageEnd}
-		<if test="searchType != null">
-			and estate_type like #{searchType}
-		</if>
-		<if test="searchKeyword != null">
-			and address like '%' || #{searchKeyword} || '%'
-		</if>
 	</select>
 	<update id="updateEstate">
 		update estate

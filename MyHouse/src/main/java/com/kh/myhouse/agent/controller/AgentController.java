@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -92,26 +93,17 @@ public class AgentController {
 	public String insertEstateAgent(String companyName,
 									String companyRegNo,
 									String companyPhone,
-									int memberNo,
 									Model model) {
 		Map<String, Object> map = new HashMap();
 		map.put("companyName", companyName);
 		map.put("companyRegNo", companyRegNo);
 		map.put("companyPhone", companyPhone);
-		map.put("memberNo", memberNo);
 		
 		String msg = "";
 		
-		int checkCompany = agentService.checkCompany(memberNo);
-		if(checkCompany>0) {
-			msg = "이미 신청 하셨습니다.";
-			model.addAttribute("msg", msg);
-			return "common/msg";
-		}
-		
 		int companyCount = agentService.checkCompanyCount(companyRegNo);
-		if(companyCount>2) {
-			msg = "더이상 중개사무소 가입이 불가능합니다.";
+		if(companyCount>0) {
+			msg = "이미 신청 하셨습니다.";
 			model.addAttribute("msg", msg);
 			return "common/msg";
 		}
@@ -125,7 +117,7 @@ public class AgentController {
 		return "common/msg";
 	}
 	
-	@RequestMapping("/agentLogin")
+	@RequestMapping(value="/agentLogin", method=RequestMethod.POST)
 	public ModelAndView memberLogin(@RequestParam String memberEmail,
 							  @RequestParam String memberPwd,
 							  ModelAndView mav) {
@@ -174,7 +166,7 @@ public class AgentController {
 		return mav;
 	}
 	
-	@RequestMapping("/advertisedQuestion")
+	@RequestMapping(value="/advertisedQuestion", method=RequestMethod.POST)
 	public void advertisedQuestion(int memberNo, Model model) {
 		List<Map<String, String>> list = agentService.estateListEnd(memberNo);
 		
@@ -198,14 +190,14 @@ public class AgentController {
 		int result = agentService.updateAdvertised(map);
 	}
 	
-	@RequestMapping("/agentMypage")
+	@RequestMapping(value="/agentMypage", method=RequestMethod.POST)
 	public void agentMypage(int memberNo, Model model) {
 		String renamedFileName = agentService.selectProfileImg(memberNo);
 		
 		model.addAttribute("renamedFileName", renamedFileName);
 	}
 	
-	@RequestMapping("/updateAgent")
+	@RequestMapping(value="/updateAgent", method=RequestMethod.POST)
 	public String updateAgent(int memberNo, String newPwd, String renamedFileNamed,
 			HttpServletRequest request,
 			MultipartFile upFile, Model model) { 
@@ -319,7 +311,7 @@ public class AgentController {
 		try {			
 			if(searchType.equals("상관없음")) searchType = null;
 			else if(searchType.equals("아파트")) searchType = "A";
-			else if(searchType.equals("빌라")) searchType = "B";
+			else if(searchType.equals("빌라")) searchType = "V";
 			else if(searchType.equals("원룸")) searchType = "O";
 			else if(searchType.equals("오피스텔")) searchType = "P";
 			if(searchKeyword.equals("")) searchKeyword = null;
@@ -329,6 +321,8 @@ public class AgentController {
 		map.put("searchKeyword", searchKeyword);
 		map.put("pageStart", pageStart);
 		map.put("pageEnd", pageEnd);
+		
+		System.out.println("map@controller="+map);
 		
 		List<Map<String, Object>> list = agentService.estateList(map);
 		
@@ -349,7 +343,7 @@ public class AgentController {
 		try {			
 			if(searchType.equals("상관없음")) searchType = null;
 			else if(searchType.equals("아파트")) searchType = "A";
-			else if(searchType.equals("빌라")) searchType = "B";
+			else if(searchType.equals("빌라")) searchType = "V";
 			else if(searchType.equals("원룸")) searchType = "O";
 			else if(searchType.equals("오피스텔")) searchType = "P";
 			if(searchKeyword.equals("")) searchKeyword = null;
@@ -382,7 +376,7 @@ public class AgentController {
 		return map;
 	}
 	
-	@RequestMapping("/updateEstate")
+	@RequestMapping(value="/updateEstate", method=RequestMethod.POST)
 	public String updateEstate(int estateNo, int memberNo, String phone
 								,Model model) {
 		Map<String, Object> map = new HashMap();
@@ -400,7 +394,7 @@ public class AgentController {
 		return "common/msg";
 	}
 	 
-	@RequestMapping("/estateListEnd")
+	@RequestMapping(value="/estateListEnd", method=RequestMethod.POST)
 	public void estateListEnd(int memberNo, Model model) {
 		
 		List<Map<String, String>> list = agentService.estateListEnd(memberNo);
@@ -408,16 +402,15 @@ public class AgentController {
 		model.addAttribute("list", list);
 	}
 	
-	@RequestMapping("/estateModified")
+	@RequestMapping(value="/estateModified", method=RequestMethod.POST)
 	public void estateModified(int estateNo, Model model) {
 		Estate e = agentService.selectEstate(estateNo);
 		Map<String, String> optMap = agentService.selectOption(estateNo);
-		
 		model.addAttribute("estate", e);
 		model.addAttribute("option", optMap);
 	}
 	
-	@RequestMapping("/estateUpdate")
+	@RequestMapping(value="/estateUpdate", method=RequestMethod.POST)
 	public String estateUpdate(
 			@RequestParam int estateNo,
 			@RequestParam String address1,
@@ -521,7 +514,6 @@ public class AgentController {
 					}
 				}
 			}
-			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -330,7 +330,6 @@ var param = {
 		           console.log(jqxhr);
 		       }
 		   });
-			
 	});
     
    //address에 구단위 검색용 값이 들어온 상태-확인 후 지울것
@@ -746,7 +745,7 @@ function getRecommendEstate(cPage,place){
 	 	   		 else{
 		        	 html+="<span class='price'>월세 "+str+"</span><br>";	 	   			 	 	   			 
 	 	   		 }
-	        	 html+="<span class='area'>평수 "+data[i].EstateArea+"<span class='unitSpan'>"+(unit==''?'m<sup>2</sup>':unit)+"</span></span><br>";	        	 
+	        	 html+="<span class='area'><span class='unitNumSpan'>"+Number(data[i].EstateArea)/Number(unitNum==''?'1':unitNum)+"</span><span class='unitSpan'>"+(unit==''?'m<sup>2</sup>':unit)+"</span></span><br>";	        	 
 	        	 html+="<span class='address'>"+data[i].AddressDetail+"</span>";
 	        	 html+="</div>";  
 	          }
@@ -771,6 +770,9 @@ function getRecommendEstate(cPage,place){
  });
 }
 
+var unit = '';
+var unitNum = '';
+
 //일반매물 가져오는 함수
 function getNotRecommendEstate(cPage2,place){
 	console.log(cPage2);
@@ -787,6 +789,10 @@ function getNotRecommendEstate(cPage2,place){
        dataType:"json",
        success:function(data){
     	   console.log(data)
+    	   
+    	   for(var i=0; i<data.length; i++){
+    	  		  areaArray[i] = data[i].EstateArea;
+    	  	 }
     	  var html="";
           for(var i=0; i<data.length; i++){ 
         	 html+="<div id='estate' onclick=\"getDetailEstate('"+place.road_address.building_name+"','"+place.address_name+"',"+data[i].EstateNo+","+place.x+","+place.y+");\">";	
@@ -819,7 +825,8 @@ function getNotRecommendEstate(cPage2,place){
  	   		 else{
 	        	 html+="<span class='price'>월세 "+str+"</span><br>";	 	   			 	 	   			 
  	   		 }
-        	 html+="<span class='area'>평수 "+data[i].EstateArea+"<span class='unitSpan'>"+(unit==''?'m<sup>2</sup>':unit)+"</span></span><br>";
+       			console.log(Number(data[i].EstateArea/3));
+        	 html+="<span class='area'><span class='unitNumSpan'>"+Number(data[i].EstateArea)/Number(unitNum==''?'1':unitNum)+"</span><span class='unitSpan'>"+(unit==''?'m<sup>2</sup>':unit)+"</span></span><br>";
         	 html+="<span class='address'>"+data[i].AddressDetail+"</span>";
         	 html+="</div>";  
           }
@@ -1013,15 +1020,27 @@ function searchAddress(obj) {
 //단위클릭시 면적 바꾸기위해서
 function areaChange(){
 	console.log('unit@areaChange='+unit);
+	console.log('unitNum@areaChange='+unitNum);
 	$.ajax({
-		url: '${pageContext.request.contextPath}/estate/unitChange?unit='+unit,
+		url: '${pageContext.request.contextPath}/estate/unitChange?unit='+unit+'&unitNum='+unitNum,
 		type: 'get',
 		contentType: 'application/json; charset=utf-8',
 		success: function(data) {
 			console.log("msg: "+data.msg);
 
 			$('span.unitSpan').html(data.unit);
+			
+			for(var i=0; i<areaArray.length; i++){
+				if(data.unitNum == '1') {
+					$('span.unitNumSpan').html(Number(areaArray[i]*3));
+				}
+				else if(data.unitNum == '3') {
+					$('span.unitNumSpan').html(Number(areaArray[i]/3));
+				}
+			}
+			
 			unit=data.unit;
+			unitNum=data.unitNum;
 		},
 		error: function(jqxhr, textStatus, errorThrown) {
 			console.log("ajax 처리 에러: "+jqxhr.status);
@@ -1030,8 +1049,6 @@ function areaChange(){
 		}
 	});
 }
-
-var unit = '';
 </script>
 
 

@@ -1,8 +1,6 @@
 package com.kh.myhouse.estate.model.vo;
-
 import java.util.Date;
 import java.util.List;
-
 public class Estate {
 
 	private int EstateNo;
@@ -37,10 +35,9 @@ public class Estate {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Estate(int estateNo, String regionCode, int memberNo, int businessMemberNo, String phone,
-			String businessPhone, String address, char estateType, char transActionType, int estatePrice,
-			int manageMentFee, int estateArea, String subwayStation, String estateContent, Date writtenDate,
-			int deposit, String addressDetail) {
+	public Estate(int estateNo, String regionCode, int memberNo, int businessMemberNo, String phone, String businessPhone,
+			String address, char estateType, char transActionType, int estatePrice, int manageMentFee, int estateArea,
+			String subwayStation, String estateContent, Date writtenDate, int deposit,String addressDetail) {
 		super();
 		EstateNo = estateNo;
 		RegionCode = regionCode;
@@ -58,9 +55,8 @@ public class Estate {
 		EstateContent = estateContent;
 		WrittenDate = writtenDate;
 		Deposit = deposit;
-		AddressDetail = addressDetail;
+		AddressDetail =addressDetail;
 	}
-
 	public Estate(int estateNo, String regionCode, int memberNo, int businessMemberNo, String phone,
 			String businessPhone, String address, char estateType, char transActionType, int estatePrice,
 			int manageMentFee, int estateArea, String subwayStation, String estateContent, Date writtenDate,
@@ -89,139 +85,105 @@ public class Estate {
 	public int getEstateNo() {
 		return EstateNo;
 	}
-
 	public void setEstateNo(int estateNo) {
 		EstateNo = estateNo;
 	}
-
 	public String getRegionCode() {
 		return RegionCode;
 	}
-
 	public void setRegionCode(String regionCode) {
 		RegionCode = regionCode;
 	}
-
 	public int getMemberNo() {
 		return MemberNo;
 	}
-
 	public void setMemberNo(int memberNo) {
 		MemberNo = memberNo;
 	}
-
 	public int getBusinessMemberNo() {
 		return BusinessMemberNo;
 	}
-
 	public void setBusinessMemberNo(int businessMemberNo) {
 		BusinessMemberNo = businessMemberNo;
 	}
-
 	public String getPhone() {
 		return Phone;
 	}
-
 	public void setPhone(String phone) {
 		Phone = phone;
 	}
-
 	public String getBusinessPhone() {
 		return BusinessPhone;
 	}
-
 	public void setBusinessPhone(String businessPhone) {
 		BusinessPhone = businessPhone;
 	}
-
 	public String getAddress() {
 		return Address;
 	}
-
 	public void setAddress(String address) {
 		Address = address;
 	}
-
 	public char getEstateType() {
 		return EstateType;
 	}
-
 	public void setEstateType(char estateType) {
 		EstateType = estateType;
 	}
-
 	public char getTransActionType() {
 		return TransActionType;
 	}
-
 	public void setTransActionType(char transActionType) {
 		TransActionType = transActionType;
 	}
-
 	public int getEstatePrice() {
 		return EstatePrice;
 	}
-
 	public void setEstatePrice(int estatePrice) {
 		EstatePrice = estatePrice;
 	}
-
 	public int getManageMentFee() {
 		return ManageMentFee;
 	}
-
-	public void setManageMentFee(int manageMenetFee) {
-		ManageMentFee = manageMenetFee;
+	public void setManageMentFee(int manageMentFee) {
+		ManageMentFee = manageMentFee;
 	}
-
 	public int getEstateArea() {
 		return EstateArea;
 	}
-
 	public void setEstateArea(int estateArea) {
 		EstateArea = estateArea;
 	}
-
 	public String getSubwayStation() {
 		return SubwayStation;
 	}
-
 	public void setSubwayStation(String subwayStation) {
 		SubwayStation = subwayStation;
 	}
-
 	public String getEstateContent() {
 		return EstateContent;
 	}
-
 	public void setEstateContent(String estateContent) {
 		EstateContent = estateContent;
 	}
-
 	public Date getWrittenDate() {
 		return WrittenDate;
 	}
-
 	public void setWrittenDate(Date writtenDate) {
 		WrittenDate = writtenDate;
 	}
-
 	public int getDeposit() {
 		return Deposit;
 	}
-
 	public void setDeposit(int deposit) {
 		Deposit = deposit;
 	}
-
 	public String getAddressDetail() {
 		return AddressDetail;
 	}
-
 	public void setAddressDetail(String addressDetail) {
 		AddressDetail = addressDetail;
 	}
-
 	@Override
 	public String toString() {
 		return "Estate [EstateNo=" + EstateNo + ", RegionCode=" + RegionCode + ", MemberNo=" + MemberNo
@@ -229,8 +191,7 @@ public class Estate {
 				+ ", Address=" + Address + ", EstateType=" + EstateType + ", TransActionType=" + TransActionType
 				+ ", EstatePrice=" + EstatePrice + ", ManageMentFee=" + ManageMentFee + ", EstateArea=" + EstateArea
 				+ ", SubwayStation=" + SubwayStation + ", EstateContent=" + EstateContent + ", WrittenDate="
-				+ WrittenDate + ", Deposit=" + Deposit + ", AddressDetail= " + AddressDetail + ", attachList="
-				+ attachList + "]";
+				+ WrittenDate + ", Deposit=" + Deposit +", AddressDetail= "+AddressDetail+", attachList=" + attachList + "]";
 	}
 
 }

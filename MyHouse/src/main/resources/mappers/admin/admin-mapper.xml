@@ -179,7 +179,7 @@
 		or report_comment like '%'||#{searchKeyword}||'%')
 	</select>
 	
-	<select id="selectOneWarn" resultType="_int">
+	<select id="selectOneWarn" resultType="map">
 	select *
 	from member_warning
 	where member_no=#{memberNo}
@@ -200,7 +200,7 @@
 	
 	<update id="updateWarn">
 	update member_warning
-	set warning_count=#{warnCnt}
+	set warning_count=#{warnCnt},
 		warning_reason=#{warningReason}
 	where member_no=#{memberNo}
 	</update>
@@ -219,6 +219,6 @@
 	
 	<insert id="insertReportMemo">
 	insert into memo
-	values(seq_memo_no.nextval, #{receiver}, #{warningReason}, default, default)
+	values(seq_memo_no.nextval, #{receiver}, #{memoContent}, default, default)
 	</insert>
 </mapper>

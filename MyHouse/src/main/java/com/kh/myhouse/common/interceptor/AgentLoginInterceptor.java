@@ -15,11 +15,10 @@ public class AgentLoginInterceptor extends HandlerInterceptorAdapter {
             throws Exception {
         HttpSession session = request.getSession();
         Agent memberLoggedIn = (Agent)session.getAttribute("memberLoggedIn");
+        
+        String reqUrl = request.getRequestURL().toString();
             
         if(memberLoggedIn == null) {
-            
-            String reqUrl = request.getRequestURL().toString();
-            
             if(reqUrl.equals(request.getHeader("Origin")+"/myhouse/agent/loginCheck") ||
                     reqUrl.equals(request.getHeader("Origin")+"/myhouse/agent/agentLogin") ||
                     reqUrl.equals(request.getHeader("Origin")+"/myhouse/agent/insertAgent") ||
@@ -32,7 +31,11 @@ public class AgentLoginInterceptor extends HandlerInterceptorAdapter {
                    .forward(request, response);
             
             return false;
-        } else if(memberLoggedIn.getApproveYN() != 'Y') {
+        } else if(memberLoggedIn.getApproveYN() == 'N') {
+        	if(reqUrl.equals(request.getHeader("referer")+"agent/agentEnroll") ||
+        			reqUrl.equals(request.getHeader("Origin")+"/myhouse/agent/insertEstateAgent")){
+        		return super.preHandle(request, response, handler);
+            }
             request.setAttribute("msg", "가입승인중 입니다.");
             request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp")
                    .forward(request, response);

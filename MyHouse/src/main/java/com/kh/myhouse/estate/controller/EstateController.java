@@ -265,8 +265,12 @@ public class EstateController {
         System.out.println("도로명 : "+roadAddressName);
         System.out.println("번지명 : "+addressName);
         
+        Map<String, String> param=new HashMap<>();
+        param.put("roadAddressName", roadAddressName);
+        param.put("addressName", addressName);
         
-        List<Map<String,String>> showRecommendEstate = estateService.showRecommendEstate(cPage,numPerPage,roadAddressName,addressName);
+        
+        List<Map<String,String>> showRecommendEstate = estateService.showRecommendEstate(cPage,numPerPage,param);
         
         response.setContentType("application/json; charset=utf-8");
         new Gson().toJson(showRecommendEstate,response.getWriter());
@@ -285,9 +289,12 @@ public class EstateController {
          String addressName=request.getParameter("addressName");
          System.out.println("도로명 : "+roadAddressName);
          System.out.println("번지명 : "+addressName);
+         
+         Map<String, String> param=new HashMap<>();
+         param.put("roadAddressName", roadAddressName);
+         param.put("addressName", addressName);
     	
-    	
-    	List<Map<String,String>> showNotRecommendEstate = estateService.showNotRecommendEstate(cPage2,numPerPage,roadAddressName,addressName);
+    	List<Map<String,String>> showNotRecommendEstate = estateService.showNotRecommendEstate(cPage2,numPerPage,param);
     	
     	System.out.println("제발 나와라="+showNotRecommendEstate.size());
     	
@@ -685,20 +692,29 @@ public class EstateController {
 	
 	@RequestMapping("/unitChange")
 	@ResponseBody
-	public Object unitChange(@RequestParam(value="unit", required=false, defaultValue="m<sup>2</sup>") String unit) {
+	public Object unitChange(@RequestParam(value="unit", required=false, defaultValue="m<sup>2</sup>") String unit,
+							 @RequestParam(value="unitNum", required=false, defaultValue="1") String unitNum) {
 		Map<String, String> map = new HashMap<>();
 		
-		logger.info("unit1@unitChange="+unit);
 		
-		if("m<sup>2</sup>".equals(unit))
+		logger.info("unit1@unitChange="+unit);
+		logger.info("unitNum1@unitChange="+unitNum);
+		// 1 or 3
+		if("m<sup>2</sup>".equals(unit)) {
 			unit = "평";
-		else
+			unitNum="3";
+		}
+		else {
 			unit = "m<sup>2</sup>";
+			unitNum="1";
+		}
 		
 		logger.info("unit2@unitChange="+unit);
+		logger.info("unitNum2@unitChange="+unitNum);
 		
 		map.put("unit", unit);
-		map.put("msg", "unit="+unit);
+		map.put("unitNum", unitNum);
+		map.put("msg", "unit="+unit+", unitNum="+unitNum);
 
 		return map;
 	}

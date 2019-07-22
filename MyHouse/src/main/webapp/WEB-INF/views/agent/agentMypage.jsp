@@ -20,7 +20,7 @@ $(function() {
 		$("#estateListEndFrm").submit();
 	});
 	$("#warning_memo").on("click", function(){
-		location.href="${pageContext.request.contextPath}/agent/warningMemo";
+		location.href="${pageContext.request.contextPath}/agent/warningMemo.do?memberNo=${memberLoggedIn.memberNo}";
 	});
 	
 	var fileTarget = $('input[name=upFile]');

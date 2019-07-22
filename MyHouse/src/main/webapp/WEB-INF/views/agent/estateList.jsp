@@ -55,7 +55,7 @@ function estateReqView(e){
 			info_html += "<h3>보증금"+data.estate.deposit+" "+str;
 			info_html += (data.estate.estatePrice).toLocaleString();
 			if(data.estate.estateType == 'A') str = "아파트";
-			else if(data.estate.estateType == 'B') str = "빌라";
+			else if(data.estate.estateType == 'V') str = "빌라";
 			else if(data.estate.estateType == 'O') str = "원룸";
 			else if(data.estate.estateType == 'P') str = "오피스텔";
 			info_html += "("+str+")</h3>";

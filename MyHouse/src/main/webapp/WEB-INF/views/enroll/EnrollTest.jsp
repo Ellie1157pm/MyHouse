@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -52,6 +52,8 @@ $(document).ready(function() {
 		$("#oneroom").hide();
 		 $("#villa").hide();
 		 $("#officetel").hide();
+		  $("#adressdetail").show();
+		  $("#adressdetail2").hide();
 	 });
 	
  $("input:radio[id='raidovilla']").on('click',function(){
@@ -59,6 +61,9 @@ $(document).ready(function() {
 	 $("#oneroom").hide();
 	 $("#villa").show();
 	 $("#officetel").hide();
+	 $("#adressdetail").hide();
+	  $("#adressdetail2").show();
+	 
  });
  
  $("input:radio[id='radiooneroom']").on('click',function(){
@@ -66,6 +71,8 @@ $(document).ready(function() {
 	 $("#oneroom").show();
 	 $("#villa").hide();
 	 $("#officetel").hide();
+	 $("#adressdetail").hide();
+	  $("#adressdetail2").show();
  });
  
  $("input:radio[id='radioopi']").on('click',function(){
@@ -73,6 +80,8 @@ $(document).ready(function() {
 	 $("#oneroom").hide();
 	 $("#villa").hide();
 	 $("#officetel").show();
+	 $("#adressdetail").hide();
+	  $("#adressdetail2").show();
  });
  
 	
@@ -145,12 +154,21 @@ enctype="multipart/form-data">
 		<tr>
 			<td><input type="hidden" name="address1" id="address1" class="addr"></td>
 		</tr>
-		<tr>
+		<tr id="adressdetail" style="display:none;">
 			<th>상세정보</th>
-			<td><input type="number" name="address2" id="address2" class="addr" required>동
-			<input type="number" name="address3" id="address3" class="addr" required>층
-			</td>
+			<td><input type="number" name="address2" id="address2" class="addr" required value="0">동
+			<input type="number" name="address3" id="address3" class="addr" value="0" required>층
+			</td>	
 		</tr>
+		
+		<tr id="adressdetail2" style="display:none;">
+			<th>상세정보</th>
+			<td>
+			<input type="number" name="address4" id="address4" class="addr" required value="0">층
+			</td>	
+		</tr>
+		
+		
 		
 		 <tr>
           <th>핸드폰 번호</th>
@@ -204,9 +222,9 @@ enctype="multipart/form-data">
 		</tr>
 	
 		<tr>
-			<th>평수</th>
+			<th>면적</th>
 			<td><input type="number" name="estateArea" id="estateArea"  min="0"
-			required />평</td>
+			required />㎡</td>
 		</tr>
 		
 		
@@ -278,6 +296,11 @@ enctype="multipart/form-data">
 			</td>
 		</tr>
 		
+		
+		
+		
+		
+
 		<tr>
 			<th>인근전철역</th>
 			<td><input type='text' name='SubwayStation' placeholder="수유역" value="" ></td>
@@ -303,6 +326,15 @@ enctype="multipart/form-data">
 </c:if>
 
 
-
 <br />
+
+
+
+
+
+
+
+
+
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
