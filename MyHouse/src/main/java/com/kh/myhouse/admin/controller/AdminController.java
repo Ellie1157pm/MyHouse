@@ -105,47 +105,7 @@ public class AdminController {
 		return "admin/adminInfo";
 	}
 	
-	@RequestMapping("/board")
-	public String showAdminBoard(HttpServletRequest request,
-			@RequestParam(value="cPage", required=false, defaultValue="1") int cPage,
-			@RequestParam(value="item", required=false, defaultValue="news") String item) throws Exception {
-		List<Map<String, String>> list = null;
-		
-		// RowBounds를 이용한 페이징 처리
-		int numPerPage = 8;
-		int totalContents = 0;
-		RowBounds rb = new RowBounds(numPerPage*(cPage-1), numPerPage);
-		
-		if("news".equals(item)) {
-			list = adminService.selectAllNews(rb);
-			totalContents = adminService.newsTotalPage();
-		}
-		else if("notice".equals(item)) {
-			list = adminService.selectAllNotice(rb);
-			totalContents = adminService.noticeTotalPage();
-		}
-		
-		logger.info("list@showAdminBoard={}", list);
-		
-		request.setAttribute("list", list);
-		request.setAttribute("item", item);
-		request.setAttribute("pageBar", Utils.getPageBar(totalContents, cPage, numPerPage, "/myhouse/admin/board?item="+item));
-		
-		return "admin/adminBoard";
-	}
 	
-	@ResponseBody
-	@RequestMapping("/indexBoard")
-	public Object showAdminIndexBoard() {
-		Map<String, Object> map = new HashMap<>();
-		List<Map<String, String>> newsList = adminService.selectRecentNews();
-		List<Map<String, String>> noticeList = adminService.selectRecentNotice();
-		
-		map.put("newsList", newsList);
-		map.put("noticeList", noticeList);
-		
-		return map;
-	}
 	
 	@RequestMapping("/noticeDelete")
 	public String noticeDelete(@RequestParam("noticeNo") int noticeNo, Model model) {
@@ -213,7 +173,7 @@ public class AdminController {
 		request.setCharacterEncoding("EUC-KR");
 		adminService.newsAllData("부동산");
 		
-		return "admin/adminBoard";
+		return "redirect:/admin/board";
 	}
 	
 	@RequestMapping("/noticeForm")
@@ -242,13 +202,65 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value="/agentApprove")
-	@ResponseBody
-	public Object agentApprove(@RequestParam int agentNo) {
-		Map<String, String> map = new HashMap<>();
+	public String agentApprove(@RequestParam int agentNo, @RequestParam String regNo, HttpServletRequest request) {
+		// parameter handling
+		Map<String, Object> param = new HashMap<>();
+		int result = 0;
+		String msg = "";
+		String chk = "";
+		logger.info("agentNo@agentApprove={}", agentNo);
+		logger.info("regNo@agentApprove={}", regNo);
 		
-		logger.info("agentNo={}", agentNo);
+		// 사업자등록번호와 등록된 사무소 사업자등록번호 비교
+		result = adminService.selectCompanyRegNoCnt(regNo);
+
+		// 등록된 사무소가 있을 경우,
+		if(result>0) {
+			int cnt = adminService.selectAgentRegNoCnt(regNo);
+			logger.info("cnt@agentApprove={}", cnt);
+			
+			// 3명 초과일 경우 승인 거절
+			if(cnt > 3) {
+				msg = "이미 등록 인원이 3명입니다. 승인 거절 처리됩니다.";
+				chk = "R";
+			}
+			// 3명 이하일 경우 승인 허가
+			else {
+				msg = "승인 허가합니다. 이 사무소는 앞으로 "+(2-cnt)+"명 더 등록 가능합니다.";
+				chk = "Y";
+			}
+		}
+		// 등록된 사무소가 없을 경우,
+		else {
+			// 승인 거절 메세지
+			msg = "등록된 사무소가 없습니다. 승인 거절 처리됩니다.";
+			chk = "R";
+		}
 		
-		return map;
+		param.put("agentNo", agentNo);
+		param.put("chk", chk);
+		
+		result = adminService.updateAgentApproveYN(param);
+		if(result == 0)
+			msg = "승인 처리 결과 데이터 입력 오류.";
+		
+		request.setAttribute("msg", msg);
+		request.setAttribute("loc", "/admin/list?item=realtor");
+		
+		return "common/msg";
+	}
+	
+	@RequestMapping("companyApprove")
+	public String companyApprove(@RequestParam String chk, @RequestParam int companyNo, Model model) {
+		logger.info("chk@companyApprove="+chk);
+		logger.info("companyNo@companyApprove"+companyNo);
+		Map<String, Object> param = new HashMap<>();
+		param.put("chk", chk);
+		param.put("companyNo", companyNo);
+		int result = adminService.updateCompanyApproveYN(param);
+		logger.info("result@companyApprove: "+(result>0?"사무소 승인 성공":"사무소 승인 실패"));
+		
+		return "redirect:/admin/list?item=company";
 	}
 	
 	@RequestMapping("/reportFlagList")

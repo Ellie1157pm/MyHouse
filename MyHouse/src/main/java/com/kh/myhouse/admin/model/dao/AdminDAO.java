@@ -80,4 +80,12 @@ public interface AdminDAO {
 	List<Map<String, String>> selectCompanyList(RowBounds rb);
 
 	int companyTotalPage();
+
+	int updateCompanyApproveYN(Map<String, Object> param);
+
+	int selectCompanyRegNoCnt(String regNo);
+
+	int selectAgentRegNoCnt(String regNo);
+
+	int updateAgentApproveYN(Map<String, Object> param);
 }

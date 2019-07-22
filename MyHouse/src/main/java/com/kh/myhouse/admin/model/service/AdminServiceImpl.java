@@ -301,4 +301,24 @@ public class AdminServiceImpl implements AdminService {
 	public int companyTotalPage() {
 		return adminDAO.companyTotalPage();
 	}
+	
+	@Override
+	public int updateCompanyApproveYN(Map<String, Object> param) {
+		return adminDAO.updateCompanyApproveYN(param);
+	}
+	
+	@Override
+	public int selectCompanyRegNoCnt(String regNo) {
+		return adminDAO.selectCompanyRegNoCnt(regNo);
+	}
+	
+	@Override
+	public int selectAgentRegNoCnt(String regNo) {
+		return adminDAO.selectAgentRegNoCnt(regNo);
+	}
+	
+	@Override
+	public int updateAgentApproveYN(Map<String, Object> param) {
+		return adminDAO.updateAgentApproveYN(param);
+	}
 }

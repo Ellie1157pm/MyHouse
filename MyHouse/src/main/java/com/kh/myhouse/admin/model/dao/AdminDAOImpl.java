@@ -214,4 +214,24 @@ public class AdminDAOImpl implements AdminDAO {
 	public int companyTotalPage() {
 		return sqlSession.selectOne("admin.companyTotalPage");
 	}
+	
+	@Override
+	public int updateCompanyApproveYN(Map<String, Object> param) {
+		return sqlSession.update("admin.updateCompanyApproveYN", param);
+	}
+	
+	@Override
+	public int selectCompanyRegNoCnt(String regNo) {
+		return sqlSession.selectOne("admin.selectCompanyRegNoCnt", regNo);
+	}
+	
+	@Override
+	public int selectAgentRegNoCnt(String regNo) {
+		return sqlSession.selectOne("admin.selectAgentRegNoCnt", regNo);
+	}
+	
+	@Override
+	public int updateAgentApproveYN(Map<String, Object> param) {
+		return sqlSession.update("admin.updateAgentApproveYN", param);
+	}
 }

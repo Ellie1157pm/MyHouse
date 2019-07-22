@@ -59,11 +59,7 @@
             <beans:ref bean="AgentLoginInterceptor"/>
         </interceptor>
         <interceptor>
-            <mapping path="/admin/list"/>
-            <beans:ref bean="AdminInfoInterceptor"/>
-        </interceptor>
-        <interceptor>
-            <mapping path="/admin/noticeForm"/>
+            <mapping path="/admin/*"/>
             <beans:ref bean="AdminInfoInterceptor"/>
         </interceptor>
     </interceptors>

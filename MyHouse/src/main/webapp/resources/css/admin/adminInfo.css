@@ -77,7 +77,5 @@ a.none-underline:active {
 
 /* 신고목록 처리여부 */
 .flagChk-container {
-	position: relative;
-    right: -626px;
-    top: -511px;
+	position: absolute;
 }
