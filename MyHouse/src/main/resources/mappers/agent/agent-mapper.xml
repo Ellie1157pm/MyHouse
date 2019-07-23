@@ -120,6 +120,16 @@
 		insert into estate_photo
 		values(seq_estate_photo.nextval,#{estateNo},#{originalFileName},#{renamedFileName},sysdate)
 	</insert>
+	<update id="optionUpdate">
+		update tbl_option set option_detail = #{optionDetail}
+			   <if test="construction != null">
+			   ,construction = #{construction}
+			   </if>
+			   <if test="flooropt != null">
+			   ,flooroption = #{flooropt}
+			   </if>
+		where estate_no = #{estateNo}
+	</update>
 	<update id="updateAdvertised">
 		merge into power_link
 		using dual

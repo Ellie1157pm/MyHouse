@@ -52,6 +52,7 @@
 	
 	<beans:bean id="AgentLoginInterceptor" class="com.kh.myhouse.common.interceptor.AgentLoginInterceptor"></beans:bean>
 	<beans:bean id="AdminInfoInterceptor" class="com.kh.myhouse.common.interceptor.AdminInfoInterceptor"></beans:bean>
+	<beans:bean id="LoginInterceptor" class="com.kh.myhouse.common.interceptor.LoginInterceptor"></beans:bean>
     
     <interceptors>
         <interceptor>
@@ -61,6 +62,10 @@
         <interceptor>
             <mapping path="/admin/*"/>
             <beans:ref bean="AdminInfoInterceptor"/>
+        </interceptor>
+        <interceptor>
+        	<mapping path="/EnrollTest.do"/>
+            <beans:ref bean="AgentLoginInterceptor"/>
         </interceptor>
     </interceptors>
 

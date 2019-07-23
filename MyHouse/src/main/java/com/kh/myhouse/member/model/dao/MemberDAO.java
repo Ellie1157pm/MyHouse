@@ -3,6 +3,8 @@ package com.kh.myhouse.member.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.myhouse.estate.model.vo.Estate;
+import com.kh.myhouse.estate.model.vo.EstateAttach;
 import com.kh.myhouse.interest.model.vo.Interest;
 import com.kh.myhouse.member.model.vo.Member;
 
@@ -33,5 +35,19 @@ public interface MemberDAO {
 	List<Map<String, String>> cartList(int memberNo);
 
 	int findPwd(Member member);
+
+	Estate selectOneEstate(int estateNo);
+
+	List<EstateAttach> selectEstatePhoto(int estateNo);
+
+	Map<String, String> selectEstateOption(int estateNo);
+
+	int resetPwd(Map map);
+
+	int deleteEstate(int estateNo);
+
+	int deleteEstateOption(int estateNo);
+
+	int deleteCartList(Map map);
 
 }

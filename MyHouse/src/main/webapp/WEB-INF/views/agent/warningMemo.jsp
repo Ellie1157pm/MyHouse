@@ -8,11 +8,26 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/agent/agentMypage.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/memo/agentNote.css" />
 <script>
-//일반회원
+var cPage = ${cPage};
+
 var memberNo = ${memberLoggedIn.memberNo};
 var cPage = ${cPage};
 $(function() {
-	
+	$("#agent-set-btn").on("click", function(){
+		$("#agentMypageFrm").submit();
+	});
+	$("#estateRequest").on("click", function(){
+		location.href="${pageContext.request.contextPath}/estate/EnrollTest.do";
+	});
+	$("#estateList").on("click", function(){
+		$("#estateListFrm").submit();
+	});
+	$("#estateList-end").on("click", function(){
+		$("#estateListEndFrm").submit();
+	});
+	$("#warning_memo").on("click", function(){
+		$("#warningMemoFrm").submit();
+	});
 	
 	$("#allcheck").click(function(){
 		console.log("allcheck");
@@ -86,6 +101,44 @@ function noteDel(){
 
 
 </script>
+<form action="${pageContext.request.contextPath}/agent/warningMemo.do"
+	  id="warningMemoFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/agent/agentMypage"
+	  method="post"
+	  id="agentMypageFrm">
+	  <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/agent/estateList"
+	  id="estateListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+
+<form action="${pageContext.request.contextPath}/agent/estateListEnd"
+	  id="estateListEndFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+
+<form action="${pageContext.request.contextPath}/agent/updateAgent"
+	  id="updateAgentFrm"
+	  method="post"
+	  enctype="multipart/form-data">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+	<input type="file"  name="upFile" style="display: none">
+	<input type="hidden" name="renamedFileNamed" value="${renamedFileName}" />
+	<input type="hidden" name="newPwd" value="" />
+</form>
+
+<form action="${pageContext.request.contextPath}/agent/agentDelete"
+	  id="agentDeleteFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+
 <div class="modal fade" id="exampleModalCenter" tabindex="-1"
 	role="dialog" aria-labelledby="exampleModalCenterTitle"
 	aria-hidden="true">
@@ -106,17 +159,14 @@ function noteDel(){
 		</div>
 	</div>
 </div>
-<form action="${pageContext.request.contextPath}/agent/estateListEnd"
-	  id="estateListEndFrm"
-	  method="post">
-	<input type="hidden" name="memberNo" value="0" />
-</form>
+
 <div id="back-container">
 	<div id="info-container">
 		<div class="btn-group btn-group-lg" role="group" aria-label="..." id="button-container">
-			<button type="button" id="agentMypage-btn" class="btn btn-secondary" id="agent-set-btn">설정</button>
-			<button type="button" id="" class="btn btn-secondary" id="estateList">매물신청목록</button>
-			<button type="button" id="" class="btn btn-secondary" id="estateList-end">등록된매물</button>
+			<button type="button" class="btn btn-secondary" id="agent-set-btn">설정</button>
+			<button type="button" class="btn btn-secondary" id="estateRequest">매물등록</button>
+			<button type="button" class="btn btn-secondary" id="estateList">매물신청목록</button>
+			<button type="button" class="btn btn-secondary" id="estateList-end">등록된매물</button>
 			<button type="button" id="" class="btn btn-secondary" id="warning_memo">쪽지함</button>
 			<button type="button" id="" class="btn btn-secondary" id="chat" onclick="openAgentChat()">채팅목록</button>
 		</div>

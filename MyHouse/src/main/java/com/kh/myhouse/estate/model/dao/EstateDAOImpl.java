@@ -25,9 +25,9 @@ public class EstateDAOImpl implements EstateDAO{
 
 
 	@Override
-	public List<Estate> selectApartmentname(String localCode) {
+	public List<Estate> selectApartmentname(Map<String, String> map) {
 
-		return sqlSession.selectList("estate.selectApartmentname", localCode);
+		return sqlSession.selectList("estate.selectApartmentname", map);
 	}
 
 	@Override
@@ -205,4 +205,27 @@ public class EstateDAOImpl implements EstateDAO{
     public List<Estate> selectlocalList(String localCode) {
         return sqlSession.selectList("estate.selectlocalList",localCode);
     }
+	
+	@Override
+	public Map<String, String> selectCompany(Estate e) {
+		return sqlSession.selectOne("estate.selectCompany",e);
+	}
+
+
+	@Override
+	public int insertWarningMemberByUser(Map<String, Object> map) {
+		return sqlSession.insert("estate.insertWarningMemberByUser",map);
+	}
+
+
+	@Override
+	public Map<String, String> selectBusinessMemberInfo(int bMemberNo) {
+		return sqlSession.selectOne("estate.selectBusinessMemberInfo",bMemberNo);
+	}
+
+
+	@Override
+	public int insertEstimation(Map<String, Object> map) {
+		return sqlSession.insert("estate.estimation",map);
+	}
 }

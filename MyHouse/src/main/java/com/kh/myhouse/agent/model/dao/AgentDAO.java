@@ -51,4 +51,6 @@ public interface AgentDAO {
 
 	int estatePhotoDelete(int estateNo);
 
+	int optionUpdate(Map<String, Object> map_);
+
 }

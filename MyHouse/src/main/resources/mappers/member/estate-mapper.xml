@@ -9,18 +9,54 @@
 	
 	<select id="selectApartmentname" resultType="string"> select address from
 		estate where region_code= #{localCode} and estate_type=#{estateType}
-
+		<if test='dealType !="all"'>
+			and transaction_type=#{dealType}
+		</if>
 	</select>
 
 	<select id="selectDetailEstate" resultMap="estateAttchmentMap">
 		select * from estate e join estate_photo p using(estate_no)
-		where estate_no = #{estateNo}
+		where estate_no = #{estateNo} order by photo_no desc
 	</select>
 	
 	<select id="showRecommendEstate" resultMap="estateAttchmentMap">
-		 select *  from estate e join power_link pl using(estate_no) join 
+		 select *  from estate e join power_link pl using(estate_no) join tbl_option tbl using(estate_no) join 
          (select e.*from( select * from  estate_photo)e where rowid in(select max(rowid) from  estate_photo group by estate_no))using(estate_no)
-         where address=#{address} or address=#{roadAddressName} order by start_date desc
+         where (address=#{addressName} or address=#{roadAddressName})  and replace(option_detail,',','') like '%'||#{option}||'%'
+         and estate_type=#{estateType} and business_member_no != 0
+       <if test='estateType == "A"'>
+       and transAction_type=#{transActionType}
+	       <if test='structure !="all"'>
+		         <if test="structure gte 198.0">
+						and estate_area between #{structure} and 10000000
+				</if>
+				<if test='structure !=198.0'>
+					and estate_area between #{structure} and #{structure}+32
+				</if>
+				<if test='transActionType == "O"'>
+	         			and estate_price between #{range3} and #{range4} and deposit between #{range1} and #{range2}
+	         	</if> 
+	         	<if test='transActionType != "O"'>
+	         			and estate_price between #{range1} and #{range2}
+	         	</if> 
+	       </if>
+		</if>
+        <if test='estateType != "A"'>
+        	<if test='transActionType == "all"'>
+        		and estate_price between #{range3} and #{range4} and deposit between #{range1} and #{range2}
+        	</if>
+        	<if test='transActionType == "O"'>
+	         		and estate_price between #{range3} and #{range4} and deposit between #{range1} and #{range2} and transaction_type=#{transActionType}
+	         </if>
+        	<if test='transActionType != "all" and transActionType != "O"'>
+	         	 and estate_price between #{range1} and #{range2} and transaction_type=#{transActionType}
+        	</if>
+        	<if test="structure != 'all'">
+          		and replace(construction,',','') = #{structure}
+			</if>
+        </if>
+		
+         order by start_date desc
 	</select>
 	<resultMap type="estate" id="estateAttchmentMap">
 		<id column="ESTATE_NO" property="EstateNo"/>
@@ -33,13 +69,20 @@
 		<result column="ESTATE_TYPE" property="EstateType"/>
 		<result column="TRANSACTION_TYPE" property="TransActionType"/>
 		<result column="ESTATE_PRICE" property="EstatePrice"/>
-		<result column="MANAGEMENT_FEE" property="ManageMenetFee"/>
+		<result column="MANAGEMENT_FEE" property="ManageMentFee"/>
 		<result column="ESTATE_AREA" property="EstateArea"/>
 		<result column="SUBWAY_STATION" property="SubwayStation"/>
 		<result column="ESTATE_CONTENT" property="EstateContent"/>
 		<result column="WRITTEN_DATE" property="WrittenDate"/>
 		<result column="ADDRESS_DETAIL" property="AddressDetail"/>
 		<result column="DEPOSIT" property="Deposit"/>
+		
+		<collection property="option" ofType="hashmap">
+			<id column="ESTATE_NO" property="estateNo"/>
+			<result column="OPTION_DETAIL" property="optionDetail"/>
+			<result column="CONSTRUCTION" property="construction"/>
+			<result column="FLOOROPTION" property="floorOption"/>
+		</collection>
 		
 		<!-- collection: 1:n 관계e를 표현 -->
 		<collection property="attachList" ofType="estateAttach">
@@ -53,9 +96,44 @@
 	
 	
 	<select id="showNotRecommendEstate" resultMap="estateAttchmentMap">
-		 select *  from estate e join 
+		 select *  from estate e join tbl_option tbl using(estate_no) join 
          (select e.*from( select * from  estate_photo)e where rowid in(select max(rowid) from  estate_photo group by estate_no))using(estate_no)
-         where address=#{address} or address=#{roadAddressName} order by written_date desc
+         where estate_no not in (select estate_no from power_link ) and (address=#{addressName} or address=#{roadAddressName})
+         and replace(option_detail,',','') like '%'||#{option}||'%' and estate_type=#{estateType} and business_member_no != 0
+       <if test='estateType == "A"'>
+       and transAction_type=#{transActionType}
+	       <if test='structure !="all"'>
+		         <if test="structure gte 198.0">
+						and estate_area between #{structure} and 10000000
+				</if>
+				<if test='structure !=198.0'>
+					and estate_area between #{structure} and #{structure}+32
+				</if>
+				<if test='transActionType == "O"'>
+	         			and estate_price between #{range3} and #{range4} and deposit between #{range1} and #{range2}
+	         	</if> 
+	         	<if test='transActionType != "O"'>
+	         			and estate_price between #{range1} and #{range2}
+	         	</if> 
+	       </if>
+		</if>
+        <if test='estateType != "A"'>
+        	<if test='transActionType == "all"'>
+        		and estate_price between #{range3} and #{range4} and deposit between #{range1} and #{range2}
+        	</if>
+        	<if test='transActionType == "O"'>
+	         		and estate_price between #{range3} and #{range4} and deposit between #{range1} and #{range2} and transaction_type=#{transActionType}
+	         </if>
+        	<if test='transActionType != "all" and transActionType != "O"'>
+	         	 and estate_price between #{range1} and #{range2} and transaction_type=#{transActionType}
+        	</if>
+        	<if test="structure != 'all'">
+          		and replace(construction,',','') = #{structure}
+			</if>
+        </if>
+		
+         
+         order by written_date desc
 	</select>
 	
 	<select id="selectEstateAttach" resultType="estateAttach">
@@ -82,7 +160,7 @@
         address,estate_type,transaction_type,estate_price,management_fee,estate_area,subway_station,
         estate_content,written_date,deposit,address_detail)
         values(seq_estate_no.nextval,#{RegionCode},#{MemberNo},#{BusinessMemberNo},#{Phone},#{BusinessPhone},#{Address},
-        #{EstateType},#{TransActionType},#{EstatePrice},#{ManageMenetFee},#{EstateArea},#{SubwayStation},#{EstateContent},
+        #{EstateType},#{TransActionType},#{EstatePrice},#{ManageMentFee},#{EstateArea},#{SubwayStation},#{EstateContent},
         sysdate,#{Deposit},#{AddressDetail})
     </insert>
 	
@@ -119,7 +197,12 @@
 	<select id="selectApartListSelectStructureNotOption" resultType="string">
 		select address from estate 
 		where estate_type=#{estateType} and transaction_type=#{dealType} and region_code=#{localCode}  and estate_price between #{range1} and #{range2} 
-		and estate_area between #{structure} and #{structure+9}
+		<if test="structure gte 198.0">
+			and estate_area between #{structure} and 10000000
+		</if>
+		<if test='structure != 198.0'>
+			and estate_area between #{structure} and #{structure}+32
+		</if>
 	</select>
 	
 	<select id="selectApartListSelectStructureSelectOption" resultType="string">
@@ -127,7 +210,12 @@
 			estate e left join tbl_option o on  e.estate_no=o.estate_no
 			where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code=#{localCode} 
 			and e.estate_price between #{range1} and #{range2} and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
-			and e.estate_area between #{structure} and #{structure+9}
+			<if test="structure gte 198.0">
+				and estate_area between #{structure} and 10000000
+			</if>
+			<if test='structure !=198.0'>
+				and estate_area between #{structure} and #{structure}+32
+			</if>
 	</select>
 	
 	<select id="selectApartListForAllSelectOptionAndMontlyFee" resultType="string">
@@ -142,13 +230,25 @@
 		estate e left join tbl_option o on  e.estate_no=o.estate_no
 		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code=#{localCode} 
 		and e.estate_price between #{range3} and #{range4}and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
-		and e.estate_area between #{structure} and #{structure+9} and e.deposit between #{range1} and #{range2}
+		and e.deposit between #{range1} and #{range2}
+		<if test="structure gte 198.0">
+			and estate_area between #{structure} and 10000000
+		</if>
+		<if test='structure !=198.0'>
+			and estate_area between #{structure} and #{structure}+32
+		</if>
 	</select>
 	
 	<select id="selectApartListForSelectStructureNotOptionAndMontlyFee" resultType="string">
 		select address from estate 
 		where estate_type=#{estateType} and transaction_type=#{dealType} and region_code=#{localCode}  and estate_price between #{range3} and #{range4} 
-		and estate_area between #{structure} and #{structure+9} and deposit between #{range1} and #{range2}
+		 and deposit between #{range1} and #{range2}
+		 <if test="structure gte 198.0">
+			and estate_area between #{structure} and 10000000
+		</if>
+		<if test='structure !=198.0'>
+			and estate_area between #{structure} and #{structure}+32
+		</if>
 	</select>
 	
 	<select id="selectApartListForAllNotOptionAndMontlyFee" resultType="string">
@@ -156,6 +256,7 @@
 		where estate_type=#{estateType} and transaction_type=#{dealType} and region_code=#{localCode}  and estate_price between #{range3} and #{range4} 
 		and deposit between #{range1} and #{range2}
 	</select>
+	
 	
 	<select id="selectEstateListForAllNotOption" resultType="string">
 		select address from estate where estate_type=#{estateType} and transaction_type=#{dealType} 
@@ -174,7 +275,7 @@
 		and e.transaction_type= #{dealType} 
 		and e.region_code = #{region_code}
 		and e.estate_price between #{range1} and #{range2} 
-		and construction=#{structure}
+		and replace(construction,',','')=#{structure}
 	</select>
 	
 	<select id="selectEstateListSelectStructureNotOpionNotFloorOptionMontlyFee" resultType="string">
@@ -183,18 +284,22 @@
 		and e.transaction_type= #{dealType} 
 		and e.region_code = #{region_code}
 		and e.estate_price between #{range1} and #{range2} 
-		and construction=#{structure}
+		and replace(construction,',','')=#{structure}
 	</select>
 	
 	<select id="selectEstateListSelectStructureNotOptoin" resultType="string">
 		select e.address from estate e left join tbl_option o on e.estate_no=o.estate_no 
 		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code =#{region_code}
-		and e.estate_price between #{range1} and #{range2} and o.construction=#{structure} 
+		and e.estate_price between #{range1} and #{range2} and replace(o.construction,',','')=#{structure} 
 		and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
 	</select>
 	<select id="selectEstateListForAllNotOptionForMontlyFee" resultType="string">
-		select address from estate where estate_type=#{estateType} and transaction_type=#{dealType} and region_code=#{localCode}  and estate_price between #{range3} and #{range4} 
+		select address from estate where estate_type=#{estateType} and region_code=#{localCode}  and estate_price between #{range3} and #{range4} 
 		and deposit between #{range1} and #{range2}
+		<if test ='dealType == "O"'>
+			and transaction_type=#{dealType}
+		</if>
+		
 	</select>
 	
 	<select id="selectEstateListForAllNotOptionSelectFloorOptionForMontlyFee" resultType="string">
@@ -224,21 +329,21 @@
 		select e.address from estate e left join tbl_option o  on e.estate_no=o.estate_no 
 		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code =#{region_code}
 		and e.estate_price between #{range3} and #{range4} and e.deposit between #{range1} and #{range2}
-		and o.construction =#{structure} and o.flooroption=#{topOption}
+		and replace(o.construction,',','')=#{structure} and o.flooroption=#{topOption}
 	</select>
 	
 	<select id="selectEstateListSelectStructureSelectOptionNotFloorOptionMontlyFee" resultType="string">
 		select e.address from estate e left join tbl_option o  on e.estate_no=o.estate_no 
 		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code =#{region_code}
 		and e.estate_price between #{range3} and #{range4} and e.deposit between #{range1} and #{range2}
-		and o.construction =#{structure}  and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
+		and replace(o.construction,',','')=#{structure}  and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
 	</select>
 	
 	<select id="selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee" resultType="string">
 		select e.address from estate e left join tbl_option o on e.estate_no=o.estate_no 
 		where e.estate_type=#{estateType} and e.transaction_type=#{dealType} and e.region_code =#{region_code}
 		and e.estate_price between #{range3} and #{range4} and e.deposit between #{range1} and #{range2}
-		and o.construction =#{structure}  and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
+		and replace(o.construction,',','')=#{structure} and o.option_detail like '%'||#{option,typeHandler=strArrTypeHandler}||'%'
 		and o.flooroption=#{topOption}
 	</select>
 	
@@ -246,5 +351,25 @@
     select * from
         estate where region_code=#{localCode}
     </select>
-	
+    
+    <select id="selectCompany" resultType="map">
+       select estate_no,business_member_no,member_name,business_phone,nvl(renamed_filename,'basicprofileimg.jpg') as RENAMED_FILENAME,company_name,company_reg_no,member_email,quit_yn
+	   from member left join estate using(member_no)  left join profile_photo using (member_no)  left join company_info using(company_reg_no)
+	   where business_member_no =#{BusinessMemberNo} and estate_no = #{EstateNo}
+    </select>
+    
+    <insert id="insertWarningMemberByUser" >
+    	insert into report_estate (estate_no,member_no,report_comment) values(#{estateNo},#{memberNo},#{reason})
+    </insert>
+    
+    <select id="selectBusinessMemberInfo" resultType="map">
+    	select  b.avg, b.no,m.member_name as name
+		from(
+		select round(avg(rate_value),1) as avg ,business_member_no as no from member_rate where business_member_no=#{bMemberNo} group by business_member_no) b right join member m on(b.no=m.member_no)
+		where b.no=#{bMemberNo}
+    </select>
+
+    <insert id="estimation">
+    	insert into member_rate (business_member_no,member_no,rate_comment,rate_value) values(#{bMemberNo},#{memberNo},#{comment},#{count})
+    </insert>
 </mapper> 

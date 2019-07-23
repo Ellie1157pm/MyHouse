@@ -122,4 +122,9 @@ public class AgentServiceImpl implements AgentService {
 		return agentDAO.estatePhotoDelete(estateNo);
 	}
 
+	@Override
+	public int optionUpdate(Map<String, Object> map_) {
+		return agentDAO.optionUpdate(map_);
+	}
+
 }

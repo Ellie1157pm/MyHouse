@@ -36,12 +36,39 @@
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=52628547fe813f9f2accb85c95efcde3&libraries=services,clusterer"></script>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/css/member.css" />
+<script>
+//agent chat띄우기
+function openAgentChat(){
+	var url = "${pageContext.request.contextPath}/chat/agentChatList.do";
+	var title = "문의채팅";
+	var specs="width=400px, height=600px, left=300px, top=200px, status=no";
+	
+	window.open(url, title,specs);	//팝업의 최상위 윈도우 객체를 리턴함
+	self.resizeTo(20,20);
+	
+}
+//member chat띄우기
+function openMemberChat(Email){
+	var url = "${pageContext.request.contextPath}/chat/chatRoom2.do?receiveId="+Email;
+	var title = "문의채팅";
+	var specs="width=400px, height=600px, left=300px, top=200px, status=no";
+	
+	window.open(url, title,specs);	//팝업의 최상위 윈도우 객체를 리턴함
+	self.resizeTo(20,20);
+	
+}
 
+</script>
 </head>
 <body>
 	<form action="${pageContext.request.contextPath}/agent/agentMypage"
 		  method="post"
 		  id="agentMypageFrm">
+		  <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+	</form>
+	<form action="${pageContext.request.contextPath}/member/memberView.do"
+		  method="post"
+		  id="memberViewFrm">
 		  <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
 	</form>
 	<div id="container">
@@ -119,8 +146,7 @@
 						</c:if>
 						<c:if test="${memberLoggedIn.status eq 'U'.charAt(0)}">
 							<c:if test="${memberLoggedIn.memberNo ne 1}">
-								<span><a href="${pageContext.request.contextPath }/member/memberView.do?memberNo=${memberLoggedIn.memberNo}">${memberLoggedIn.memberName }</a>님
-									환영합니다.</span>
+								<span><a onclick="memberLogin();" id="login-memberName">${memberLoggedIn.memberName }</a>님 환영합니다.</span>
 							</c:if>
 							<c:if test="${memberLoggedIn.memberNo eq 1}">
 								<span><a href="${pageContext.request.contextPath }/admin/list">${memberLoggedIn.memberName }</a>님
@@ -215,7 +241,7 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">비밀번호 찾기</h5>
+					<h5 class="modal-title" id="exampleModalLabel">비밀번호 리셋</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -247,7 +273,36 @@
 	<!-- 비밀번호 찾기 modal 끝 -->
 
 	<!-- 비밀번호 재설정 modal -->
-
+	<div class="modal fade pwd-reset-end" id="resetPwdModal" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+		onclick="">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">비밀번호 변경</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body pwd-reset-modal" id="enroll-division">
+					<form action="${pageContext.request.contextPath}/member/resetPwd.do"
+						id="resetPwdFrm" method="post">
+						<input type="hidden" name="memberNo" id="memberNoForReset" />
+						<p>새로 변경할 비밀번호를 입력해 주세요.</p>
+						<label for="member-enroll-name">비밀번호 입력</label> 
+						<input type="password" name="resetPwd" id="resetPwd" /><br /> 
+						<label for="member-enroll-phone">비밀번호 확인</label> 
+						<input type="password" name="resetPwd_" id="resetPwd_" /><br />
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="pwd-reset-end-btn" class="btn btn-primary">확인</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- 비밀번호 재설정 modal 끝 -->
 
@@ -291,7 +346,7 @@
 		      <form action="${pageContext.request.contextPath}/agent/insertAgent" id="agent-enrollFrm" method="post">
 		      	  <span id="s-email"></span>
 		      	  <label for="agent-enroll-email">아이디(이메일)</label>
-			      <input type="text" name="memberEmail" id="agent-enroll-email" placeholder="ex) abc@qwe.com"/><br />
+			      <input type="text" name="memberEmail" id="agent-enroll-email" placeholder="abc@qwe.com"/><br />
 			      <label for="agent-enroll-name">이름</label>
 			      <input type="text" name="memberName" id="agent-enroll-name"/><br />
 			      <label for="agent-enroll-password">비밀번호</label>
@@ -299,10 +354,10 @@
 			      <label for="agent-enroll-password_">비밀번호 확인</label>
 			      <input type="password"  id="agent-enroll-password_"/><br />
 			      <label for="agent-enroll-phone">전화번호</label>
-			      <input type="text" name="phone" id="agent-enroll-phone" placeholder="ex) 01012341234"/><br />
+			      <input type="text" name="phone" id="agent-enroll-phone" placeholder="-없이 작성"/><br />
 			      <label for="agent-enroll-companyno">사업자 번호</label>
-			      <input type="text" name="companyRegNo" id="agent-enroll-companyno" placeholder="ex) 150-12-12341"/><br />
-			      <input type="hidden" name="status" id="agent-enroll-status" value="B"/><br />
+			      <input type="text" name="companyRegNo" id="agent-enroll-companyno"/><br />
+			      <input type="hidden" name="status" id="agent-enroll-status" value="B" placeholder="-없이 작성"/><br />
 			  </form>
 	      </div>
 	      <div class="modal-footer">
@@ -330,8 +385,8 @@
 					<form
 						action="${pageContext.request.contextPath}/member/insertMember.do"
 						id="member-enrollFrm" method="post">
-						<span id="s-email"></span> <label for="member-enroll-email" placeholder="abc@qwe.com">아이디(이메일)</label>
-						<input type="text" name="memberEmail" id="member-enroll-email" /><br />
+						<span id="s-email"></span> <label for="member-enroll-email" >아이디(이메일)</label>
+						<input type="email" name="memberEmail" id="member-enroll-email" placeholder="abc@qwe.com"/><br />
 						<label for="member-enroll-name">이름</label> <input type="text"
 							name="memberName" id="member-enroll-name" /><br /> <label
 							for="member-enroll-password">비밀번호</label> <input type="password"

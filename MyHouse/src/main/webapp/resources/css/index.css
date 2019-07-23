@@ -75,6 +75,10 @@ a#mName{
 	color: blue;
 	cursor: pointer;
 }
+a#login-memberName{
+	color: blue;
+	cursor: pointer;
+}
 div#login-div button {
 	padding: 5px;
 	font-size: 12px;
@@ -85,7 +89,23 @@ div.modal-body input#id {
 }
 
 div.modal-body input#password {
-	margin-left: 9px;
+	margin-left: 66px;
+}
+
+div.modal-body input#find-id-name{
+	margin-left: 41px;
+}
+
+div.modal-body input#find-id-phone{
+	margin-left: 10px;
+}
+
+div.modal-body input#find-pwd-email{
+	margin-left: 31px;
+}
+
+div.modal-body input#find-pwd-phone{
+	margin-left: 16px;
 }
 /*회원가입 일반,중개인 분류 버튼*/
 div#enroll-division {

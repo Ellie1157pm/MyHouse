@@ -24,9 +24,9 @@ public class EstateServiceImpl implements EstateService{
 
 
 	@Override
-	public List<Estate> selectApartmentname(String localCode) {
+	public List<Estate> selectApartmentname(Map<String, String> map) {
 
-		return estateDAO.selectApartmentname(localCode);
+		return estateDAO.selectApartmentname(map);
 	}
 
 
@@ -213,5 +213,28 @@ public class EstateServiceImpl implements EstateService{
 	public List<Estate> selectlocalList(String localCode) {
 		// TODO Auto-generated method stub
 		return estateDAO.selectlocalList(localCode);
+	}
+	
+	@Override
+	public Map<String, String> selectCompany(Estate e) {
+		return estateDAO.selectCompany(e);
+	}
+
+
+	@Override
+	public int insertWarningMemberByUser(Map<String, Object> map) {
+		return estateDAO.insertWarningMemberByUser(map);
+	}
+
+
+	@Override
+	public Map<String, String> selectBusinessMemberInfo(int bMemberNo) {
+		return estateDAO.selectBusinessMemberInfo(bMemberNo);
+	}
+
+
+	@Override
+	public int insertEstimation(Map<String, Object> map) {
+		return estateDAO.insertEstimation(map);
 	}
 }

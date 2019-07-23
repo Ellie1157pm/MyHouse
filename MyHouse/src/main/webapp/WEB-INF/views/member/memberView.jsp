@@ -19,7 +19,7 @@ $(function() {
 		$("#forSaleListFrm").submit();
 	});
 	$("#warning_memo").on("click", function(){
-		location.href="${pageContext.request.contextPath}/member/warningMemo.do?memberNo=${memberLoggedIn.memberNo}";
+		$("#warningMemoFrm").submit();
 	});
 
 	/* 입력한 기존 비밀번호가 맞는지 검사 */
@@ -89,27 +89,24 @@ $(function() {
 	
 	/* updateMember submit */
 	$("button#member-update-btn").on("click", function() {
-		if($("input#oldPwd").val() == ""){
-			alert("비밀번호가 입력되지 않았습니다.");
-			return;
-		}
-		else if($("input#newPwd").val() == ""){
-			alert("새로운 비밀번호가 입력되지 않았습니다.");
-			return;
-		}
-		else $("#memberUpdateFrm").submit();
+		$("#memberUpdateFrm").submit();
 	});
 	
 });
 
 /* delete member */
 function deleteMember(memberNo){
-	console.log(memberNo);
 	if(!confirm("정말로 탈퇴하시겠습니까?")) return;
-	location.href = "${pageContext.request.contextPath}/member/deleteMember.do?memberNo=" + memberNo;
+	$("#deleteMemberFrm").submit();
 }
 
 </script>
+<form action="${pageContext.request.contextPath }/member/warningMemo.do"
+	  id="warningMemoFrm"
+	  method="post">
+	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
+	 <input type="hidden" name="cPage" value="${cPage }" />
+</form>
 <form action="${pageContext.request.contextPath}/member/cartList"
 	  id="cartListFrm"
 	  method="post">
@@ -141,8 +138,10 @@ function deleteMember(memberNo){
 			<button type="button" class="btn btn-secondary" id="warning_memo">쪽지함</button>
 		</div>
 		<div id="list-container">
-		<form name="memberUpdateFrm" action="${pageContext.request.contextPath}/member/memberUpdate.do?memberNo="+${member.memberNo } method="post">
+		<form name="memberUpdateFrm" action="${pageContext.request.contextPath}/member/memberUpdate.do" method="post">
 			<input type="hidden" name="memberNo" id="memberNo" value="${memberLoggedIn.memberNo}"/>
+			<p>회원정보를 수정할 수 있습니다.</p> 
+			<p>비밀번호 변경은 기존 비밀번호와 새로운 비밀번호를 모두 입력하셔야 합니다.</p>
 			<table>
 				<tr>
 					<th>이름</th>
@@ -176,7 +175,7 @@ function deleteMember(memberNo){
 					</td>
 				</tr>
 			</table>
-			<div id="agentSet-btnGroup">
+			<div id="memberSet-btnGroup">
 				<input type="submit" class="btn btn-outline-success" id="member-update-btn" value="수정" />&nbsp;
 				<input type="button" class="btn btn-outline-success" id="member-delete-btn" value="회원탈퇴" onclick="deleteMember(${memberLoggedIn.memberNo});"/>
 			</div>

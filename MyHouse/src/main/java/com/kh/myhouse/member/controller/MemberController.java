@@ -1,9 +1,15 @@
 package com.kh.myhouse.member.controller;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,21 +18,25 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kh.myhouse.cart.model.vo.Cart;
+import com.kh.myhouse.agent.model.service.AgentService;
+import com.kh.myhouse.estate.model.service.EstateService;
+import com.kh.myhouse.estate.model.vo.Estate;
+import com.kh.myhouse.estate.model.vo.EstateAttach;
+import com.kh.myhouse.estate.model.vo.Option;
 import com.kh.myhouse.interest.model.vo.Interest;
 import com.kh.myhouse.member.model.exception.MemberException;
 import com.kh.myhouse.member.model.service.MemberService;
 import com.kh.myhouse.member.model.vo.Member;
-
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/member")
@@ -37,6 +47,12 @@ public class MemberController {
 			
 	@Autowired
 	MemberService memberService;
+	
+	@Autowired
+	AgentService agentService;
+	
+	@Autowired
+	EstateService estateService;
 	
 	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;		
@@ -129,54 +145,40 @@ public class MemberController {
 	}*/
 	
 	@RequestMapping("/memberView.do")
-	public void memberView() {
+	public void memberView(int memberNo) {
 	}
 	
 	@RequestMapping("/memberUpdate.do")
-	public String memberUpdate(int memberNo, String newPwd, Model model) {
+	public String memberUpdate(@RequestParam int memberNo, String memberName, String newPwd, char receiveMemoYN, Model model) {
 		Map<String, Object> map = new HashMap();
 		map.put("memberNo", memberNo);
+		map.put("memberName", memberName);
+		map.put("receiveMemoYN", receiveMemoYN);
+		
+		Member member = memberService.selectOneMember(memberNo);
 		
 		String msg = "";
+		int result = 0;
 	
-		if(!newPwd.equals("")) {
-			
+		if(!newPwd.equals("")) {	
 			String encodedPassword = bcryptPasswordEncoder.encode(newPwd);
 			map.put("newPwd", encodedPassword);
-			
-			int result = memberService.updateMember(map);
-			
-			msg = result>0?"비밀번호변경 성공! ":"비밀번호 변경 실패! ";
+			result = memberService.updateMember(map);
+			msg = result>0?"회원정보 수정 성공! ":"회원정보 수정 실패! ";
+		}
+		else {
+			map.put("newPwd", member.getMemberPwd());
+			result = memberService.updateMember(map);
+			msg = result>0?"회원정보 수정 성공!":"회원정보 수정 실패!";
 		}
 		
+		if(result>0) member = memberService.selectOneMember(memberNo);
+		
 		model.addAttribute("msg", msg);
+		model.addAttribute("memberLoggedIn", member);
 		
 		return "common/msg";
 	}
-	
-	/*@RequestMapping("/memberUpdate.do")
-	public ModelAndView memberUpdate(Member member) {
-		ModelAndView mav = new ModelAndView();
-		System.out.println(member);
-
-		// 1.비지니스로직 실행
-		int result = memberService.updateMember(member);
-
-		// 2.처리결과에 따라 view단 분기처리
-		String loc = "/";
-		String msg = "";
-		if (result > 0) {
-			msg = "회원정보수정성공!";
-			mav.addObject("memberLoggedIn", member);
-		} else
-			msg = "회원정보수정실패!";
-
-		mav.addObject("msg", msg);
-		mav.addObject("loc", loc);
-		mav.setViewName("common/msg");
-
-		return mav;
-	}*/
 
 	@RequestMapping("/checkMemberEmail.do")
 	@ResponseBody
@@ -201,8 +203,29 @@ public class MemberController {
 	@RequestMapping(value = "/findPwd.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public int findPwd(@ModelAttribute Member member) throws Exception {
-		
 		return memberService.findPwd(member);
+	}
+	
+	/* 비밀번호 리셋 */
+	//비밀번호 변경 후 변경한 비밀번호로 로그인 안됨. 해결해야 함
+	@RequestMapping("/resetPwd.do")
+	public String resetPwd(@RequestParam int memberNo, String resetPwd, Model model) throws Exception {
+		Map<String, Object> map = new HashMap();
+		
+		map.put("memberNo", memberNo);
+		String msg = "";
+		System.out.println("resetPwd@cont=" + resetPwd);
+		if(!resetPwd.equals("")) {
+			String encodedPassword = bcryptPasswordEncoder.encode(resetPwd);
+			map.put("resetPwd", encodedPassword);
+			int result = memberService.resetPwd(map);
+			System.out.println("resetPwd@cont=" + encodedPassword);
+			msg = result>0?"비밀번호 변경 성공!":"비밀번호 변경 실패!";
+		}
+		
+		model.addAttribute("msg", msg);
+		
+		return "common/msg";
 	}
 	
 	/* 비밀번호 변경시 기존 비밀번호 매칭 확인 */
@@ -230,12 +253,6 @@ public class MemberController {
 	
 		return mav;
 	}
-	
-/*	 지역코드 가져오기 
-	@RequestMapping("/getRegionCode")
-	public String getRegionCode(@RequestParam String addr1, String addr2) {
-		return addr1 + " " + addr2;
-	}*/
 	
 	/* 관심매물 설정(수정) */
 	@RequestMapping("/updateInterestList")
@@ -273,7 +290,7 @@ public class MemberController {
 		}
 		else {
 			msg = "회원탈퇴 실패!";
-			loc = "/member/memberView.do?memberNo=" + memberNo;
+			loc = "/";
 		}
 		
 		mav.addObject("msg", msg);
@@ -298,28 +315,199 @@ public class MemberController {
 		model.addAttribute("list", list);
 	}
 	
-	//추가, 삭제 판단은 매퍼에서 select count(*) from cart where member_no = 37 and estate_no = 143
-	//이런식으로 찍어봐서 있으면 삭제, 없으면 추가?
-	//찜목록에 추가
-	/*@RequestMapping("/insertCart")
-	public String insertCart(int estateNo, int memberNo) {
-		JSONObject obj = new JSONObject();
+	@RequestMapping("/selectOneEstate")
+	@ResponseBody
+	public Map selectOneEstate(@RequestParam int estateNo) {
+		Map<String, Object> map = new HashMap();
 		
-		Map<String, Object> map = new HashMap<>();
-		map.put("estateNo", estateNo);
-		map.put("memberNo", memberNo);
+		Estate estate = memberService.selectOneEstate(estateNo);
+		System.out.println("estate@cont=" + estate);
+		map.put("estate", estate);
 		
-		Cart cart = memberService.cartCheck(map);
+		List<EstateAttach> estateAttach = memberService.selectEstatePhoto(estateNo);
+		map.put("estateAttach", estateAttach);
 		
-		int like_check = 0;
-		like_check = cart.getCartCheck();
+		Map<String, String> estateOption = memberService.selectEstateOption(estateNo);
+		map.put("option", estateOption);
 		
-		if()
-	}*/
+		return map;
+		
+	}
 	
 	//찜목록에서 삭제
-	/*@RequestMapping("/deleteCart")
-	public String deleteCart(int cartNo) {
-		return "";
-	}*/
+	@RequestMapping("/deleteCartList")
+	public String deleteCart(@RequestParam int memberNo, 
+							 @RequestParam int estateNo,
+							 Model model) {
+		
+		Map<String, Object> map = new HashMap();
+		map.put("memberNo", memberNo);
+		map.put("estateNo", estateNo);
+		
+		String msg = "";
+		msg = memberService.deleteCartList(map)>0?"찜한 목록에서 삭제했습니다.":"삭제 실패!";
+		model.addAttribute("msg", msg);
+		return "common/msg";
+	}
+	
+	@RequestMapping("/updateEstate.do")
+	public void estateUpdate(int memberNo, int estateNo, Model model) {
+		Estate estate = memberService.selectOneEstate(estateNo);
+		List<EstateAttach> estateAttach = memberService.selectEstatePhoto(estateNo);
+		Map<String, String> option = memberService.selectEstateOption(estateNo);
+		System.out.println("selectedEstate@cont=" + estate);
+		System.out.println("selectedEstateAttach@cont=" + estateAttach);
+		System.out.println("selectedOption@cont=" + option);
+		
+		model.addAttribute("estateAttach", estateAttach);
+		model.addAttribute("estate", estate);
+		model.addAttribute("option", option);	
+		}
+
+	@PostMapping("/updateEstateEnd.do")
+	public String estateUpdate(@RequestParam int memberNo,
+			@RequestParam int estateNo,
+			@RequestParam String address1,
+			@RequestParam int address2,
+			@RequestParam int address3,
+			@RequestParam String phone1,
+			@RequestParam String phone2,
+			@RequestParam String phone3,
+			@RequestParam char estateType,
+			@RequestParam char transactiontype,
+			@RequestParam int deposit,
+			@RequestParam int[] mon,
+			@RequestParam int manageMentFee,
+			@RequestParam int estateArea,
+			@RequestParam String estatecontent,
+			@RequestParam String[] etcoption,
+			@RequestParam String SubwayStation,
+			@RequestParam String[] construction,
+            @RequestParam String[] flooropt,
+			MultipartFile[] upFile,
+			HttpServletRequest request,
+			Model model) {
+		
+		System.out.println("address1 주소명=="+address1);
+		System.out.println("address2 주소상세=="+address2);
+		String phone = phone1+phone2+phone3;
+		System.out.println("phone 폰번호=="+phone);
+		System.out.println("estateType 빌라,아파트,오피스텔=="+estateType);
+		System.out.println("transactiontype 전세,매매,월세 라디오버튼값=="+transactiontype);
+		System.out.println("deposit 보증금=="+deposit);
+		System.out.println("mon 전세,매매,월세 가격입력값=="+Arrays.toString(mon));//mon[0]:월세 /mon[1]:전세 /mon[2]:매물가 
+		System.out.println("ManageMenetFee 관리비=="+manageMentFee);
+		System.out.println("estateArea 평수=="+estateArea);
+		System.out.println("estatecontent 주변환경=="+estatecontent);
+		System.out.println("etcoption 엘레베이터,애완동물 등=="+Arrays.toString(etcoption));
+		System.out.println("SubwayStation 전철역=="+SubwayStation);
+		System.out.println("upFile 파일명=="+Arrays.toString(upFile));
+		
+		//지역코드 얻어오기
+		String address= (address1.substring(0,6));
+		String localCode = estateService.selectLocalCodeFromRegion(address); 
+		System.out.println("localCode 지역코드의 값 =="+localCode);
+
+		//전세 매매 월세 코드에 맞는 ,전세 ,월세 ,매매값 넣기
+		int estateprice= 0;
+		if(transactiontype=='J') {
+			estateprice = mon[1];
+		}
+		else if(transactiontype=='M') {
+			estateprice = mon[0];
+		}
+		else {
+			estateprice = mon[2];
+		}
+		System.out.println("estateNo@controller="+estateNo);
+		List<EstateAttach> list = agentService.selectEstateAttach(estateNo);
+		Estate estate = new Estate(estateNo, localCode, memberNo,
+				0, phone, "0",
+				address1, estateType, transactiontype, estateprice, 
+				manageMentFee, estateArea, SubwayStation, 
+				estatecontent, new Date(), deposit, address2+"동"+address3+"층", list);
+		
+		Map<String, Object> map = null;
+		int result1 = 0;
+		int result2 = 0;
+		try {
+			map = new HashMap();
+			//1. 파일업로드
+			String saveDirectory = request.getSession().getServletContext()
+										  .getRealPath("/resources/upload/estateenroll");
+			
+//			List<EstateAttach> ea = agentService.selectEstateAttach(estateNo);
+			
+			//원래 저장된 이미지파일 삭제
+			for(int i=0; i<list.size(); i++) {
+				File f = new File(saveDirectory+"/"+list.get(i).getRenamedFileName());
+				if(f.exists()) f.delete();			
+			}
+			
+			result1 = agentService.estatePhotoDelete(estateNo);
+			
+			for(int i=0; i<upFile.length; i++) {
+				if(!upFile[i].isEmpty()) {
+					String originalFileName = upFile[i].getOriginalFilename();
+					String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+					int rndNum = (int)(Math.random()*1000);
+					
+					String renamedFileName = sdf.format(new Date())+"_"+rndNum+"."+ext;
+					
+					map.put("estateNo", estateNo);
+					map.put("originalFileName", originalFileName);
+					map.put("renamedFileName", renamedFileName);
+					
+					result2 = agentService.estatePhotoUpdate(map);
+					
+					try {
+						//서버 지정위치에 파일 보관
+						upFile[i].transferTo(new File(saveDirectory+"/"+renamedFileName));
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		int result3 = agentService.estateUpdate(estate);
+		
+		String msg = (result1>0&&result2>0&&result3>0)?"매물 수정 성공!":"매물 수정 실패!";
+		model.addAttribute("msg", msg);
+		
+		return "common/msg";
+	}
+	
+	//매물 삭제를 하면 해당 매물번호의 ESTATE, ESTATE_PHOTO, TBL_OPTION의 모든 정보를 삭제한다.
+	@RequestMapping("/deleteEstate.do")
+	public String deleteEstate(@RequestParam int estateNo, Model model, HttpServletRequest request) {
+		System.out.println("estateNo@deleteEstateCont=" + estateNo);
+		//1. 매물 테이블의 컬럼 삭제
+		int result1 = memberService.deleteEstate(estateNo);
+		
+		//2. 매물사진 테이블의 컬럼 삭제
+		String saveDirectory = request.getSession().getServletContext()
+				  .getRealPath("/resources/upload/estateenroll");
+		
+		//서버에 저장된 이미지파일 삭제
+		List<EstateAttach> list = agentService.selectEstateAttach(estateNo);
+		
+		for(int i=0; i<list.size(); i++) {
+			File f = new File(saveDirectory+"/"+list.get(i).getRenamedFileName());
+			if(f.exists()) f.delete();			
+		}
+		int result2 = agentService.estatePhotoDelete(estateNo);
+		
+		//3. 매물 옵션 테이블의 컬럼 삭제
+		int result3 = memberService.deleteEstateOption(estateNo);
+		
+		String msg = (result1>0&&result2>0&&result3>0)?"매물 삭제 성공!":"매물 삭제 실패!";
+		model.addAttribute("msg", msg);
+		
+		return "common/msg";
+	}
 }

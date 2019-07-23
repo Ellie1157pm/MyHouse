@@ -30,8 +30,12 @@
 	</select>
 	
 	<select id="findPwd" resultType="_int">
-		SELECT MEMBER_NO FROM  MEMBER WHERE MEMBER_EMAIL = #{memberEmail} AND PHONE = #{phone}
+		SELECT MEMBER_NO FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} AND PHONE = #{phone}
 	</select>
+	
+	<update id="resetPwd">
+		UPDATE MEMBER SET MEMBER_PWD = #{resetPwd} WHERE MEMBER_NO = #{memberNo}
+	</update>
 	
 	<update id="deleteMember">
 		UPDATE MEMBER SET QUIT_DATE = sysdate, QUIT_YN = 'Y' WHERE MEMBER_NO = #{memberNo}
@@ -103,6 +107,16 @@
 		WHERE C.MEMBER_NO = #{memberNo}
 	</select>
 	
+	<select id="selectOneEstate" resultType="estate">
+		select * from estate where estate_no = #{estateNo}
+	</select>
+	<select id="selectEstatePhoto" resultType="estateAttach">
+		select * from estate_photo where estate_no = #{estateNo}
+	</select>
+	<select id="selectEstateOption" resultType="map">
+		select * from tbl_option where estate_no = #{estateNo}
+	</select>
+	
 	<update id="cart_check" parameterType="HashMap">
 		UPDATE TBL_CART
 		SET CART_CHECK = CART_CHECK + 1
@@ -114,5 +128,26 @@
 		SET CART_CHECK = 0
 		WHERE MEMBER_NO = #{memberNo} AND ESTATE_NO = #{estateNo}
 	</update>
+	
+	<update id="updateEstate">
+        UPDATE ESTATE SET
+        REGION_CODE = #{RegionCode}, PHONE = #{Phone}, ADDRESS = #{Address}, ESTATE_TYPE = #{EstateType},
+        TRANACTION_TYPE = #{TransActionType}, ESTATE_PRICE = #{EstatePrice}, MANAGEMENT_FEE = #{ManageMentFee},
+        ESTATE_AREA = #{EstateArea}, SUBWAY_STATION = #{SubwayStation}, ESTATE_CONTENT = #{EstateContent},
+        DEPOSIT = #{Deposit}, ADDRESS_DETAIL = #{AddressDetail}
+        WHERE ESTATE_NO = #{EstateNo}
+    </update>
+    
+    <delete id="deleteEstate">
+    	DELETE FROM ESTATE WHERE ESTATE_NO = #{estateNo}
+    </delete>
+    
+    <delete id="deleteEstateOption">
+    	DELETE FROM TBL_OPTION WHERE ESTATE_NO = #{estateNo}
+    </delete>
+    
+    <delete id="deleteCartList">
+    	DELETE FROM TBL_CART WHERE MEMBER_NO = #{memberNo} AND ESTATE_NO = #{estateNo}
+    </delete>
 
 </mapper>

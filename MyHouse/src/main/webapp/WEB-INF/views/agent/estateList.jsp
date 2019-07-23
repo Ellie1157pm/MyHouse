@@ -101,8 +101,8 @@ $(function() {
 	$("#estateList-end").on("click", function(){
 		$("#estateListEndFrm").submit();
 	});
-	$("#warning_memo").on("click", function(){
-		location.href="${pageContext.request.contextPath}/agent/warningMemo";
+	$("#warningMemo").on("click", function(){
+		$("#warningMemoFrm").submit();
 	});
 	
 	$("#estateList-search-btn").on("click", function(){
@@ -146,6 +146,12 @@ $(function() {
 	});
 });
 </script>
+<form action="${pageContext.request.contextPath}/agent/warningMemo.do"
+	  id="warningMemoFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+	<input type="hidden" name="cPage" value="${cPage }"/>
+</form>
 <form action="${pageContext.request.contextPath}/agent/agentMypage"
 	  method="post"
 	  id="agentMypageFrm">
@@ -170,7 +176,8 @@ $(function() {
 			<button type="button" class="btn btn-secondary" id="estateRequest">매물등록</button>
 			<button type="button" class="btn btn-secondary" id="estateList">매물신청목록</button>
 			<button type="button" class="btn btn-secondary" id="estateList-end">등록된매물</button>
-			<button type="button" class="btn btn-secondary" id="warning_memo">쪽지함</button>
+			<button type="button" class="btn btn-secondary" id="warningMemo">쪽지함</button>
+			<button type="button" id="" class="btn btn-secondary" id="chat" onclick="openAgentChat()">채팅목록</button>
 		</div>
 		<div id="list-container">
 			<div class="input-group mb-3" id="estateList-div">

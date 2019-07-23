@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.myhouse.estate.model.vo.Estate;
+import com.kh.myhouse.estate.model.vo.EstateAttach;
 import com.kh.myhouse.interest.model.vo.Interest;
 import com.kh.myhouse.member.model.dao.MemberDAO;
 import com.kh.myhouse.member.model.vo.Member;
@@ -86,6 +88,41 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public List<Map<String, String>> cartList(int memberNo) {
 		return memberDAO.cartList(memberNo);
+	}
+
+	@Override
+	public Estate selectOneEstate(int estateNo) {
+		return memberDAO.selectOneEstate(estateNo);
+	}
+
+	@Override
+	public List<EstateAttach> selectEstatePhoto(int estateNo) {
+		return memberDAO.selectEstatePhoto(estateNo);
+	}
+
+	@Override
+	public Map<String, String> selectEstateOption(int estateNo) {
+		return memberDAO.selectEstateOption(estateNo);
+	}
+
+	@Override
+	public int resetPwd(Map map) {
+		return memberDAO.resetPwd(map);
+	}
+
+	@Override
+	public int deleteEstate(int estateNo) {
+		return memberDAO.deleteEstate(estateNo);
+	}
+
+	@Override
+	public int deleteEstateOption(int estateNo) {
+		return memberDAO.deleteEstateOption(estateNo);
+	}
+
+	@Override
+	public int deleteCartList(Map map) {
+		return memberDAO.deleteCartList(map);
 	}
 
 	

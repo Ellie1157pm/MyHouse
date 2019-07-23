@@ -11,7 +11,7 @@ public interface EstateService {
 
 	String selectLocalCodeFromRegion(String localName);
 
-	List<Estate> selectApartmentname(String localCode);
+	List<Estate> selectApartmentname(Map<String, String> map);
 	
 	List<Map<String, String>> selectDetailEstate(int estateNo);
 
@@ -70,4 +70,12 @@ public interface EstateService {
 	List<String> selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee(Map<String, Object> map);
 
 	List<Estate> selectlocalList(String localCode);
+	
+	Map<String, String> selectCompany(Estate e);
+
+	int insertWarningMemberByUser(Map<String, Object> map);
+
+	Map<String, String> selectBusinessMemberInfo(int i);
+
+	int insertEstimation(Map<String, Object> map);
 }

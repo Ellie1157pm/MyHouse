@@ -47,7 +47,7 @@ public class ChatController {
 	ChatService chatService;
 	
 	
-	@GetMapping("/chat/chatMain.do")
+	@GetMapping("/chat/chatRoom.do")
 	public void websocket(Model model,
 						  HttpSession session, 
 						  @SessionAttribute(value="memberLoggedIn", required=false) Agent memberLoggedIn){
@@ -75,6 +75,64 @@ public class ChatController {
 		model.addAttribute("memberId", memberId);
 		model.addAttribute("chatId", chatId);
 	}
+	
+	//chatList : agent
+	@GetMapping("/chat/agentChatList.do")
+	public void agentList(Model model, 
+					  HttpSession session, 
+					  @SessionAttribute(value="memberLoggedIn", required=false) Agent memberLoggedIn){
+		//받는사람(로그인한 아이디)
+		String memberId = Optional.ofNullable(memberLoggedIn).map(Agent::getMemberEmail).orElse(session.getId());
+		System.out.println("loginOn-memberId="+memberId);
+		
+		List<Map<String, String>> recentList = chatService.findRecentList(memberId);
+		logger.info("recentList={}",recentList);
+
+		model.addAttribute("memberId",memberId);
+		model.addAttribute("recentList", recentList);
+	}
+	
+	
+	//chatList : member
+	@GetMapping("/chat/chatRoom2.do")
+	public void agentList(Model model, 
+			HttpSession session, 
+			@RequestParam String receiveId,
+			@SessionAttribute(value="memberLoggedIn", required=false) Member memberLoggedIn){
+		String memberId = Optional.ofNullable(memberLoggedIn).map(Member::getMemberEmail).orElse(session.getId());
+		String chatId = null;
+		
+		System.out.println("agentEmail@controller="+receiveId);
+		System.out.println("memberId@controller="+memberId);
+		//chatId조회
+		//1.memberId로 등록한 chatroom존재여부 검사. 있는 경우 chatId 리턴.
+		chatId = chatService.findChatIdByMemberId2(memberId);
+		
+		//2.로그인을 하지 않았거나, 로그인을 해도 최초접속인 경우 chatId를 발급하고 db에 저장한다.
+		if(chatId == null){
+			chatId = getRandomChatId(15);//chat_randomToken -> jdbcType=char(20byte)
+			
+			List<Chat> list = new ArrayList<>();
+			list.add(new Chat(chatId, memberId, receiveId,0, "Y", null, null));
+			chatService.insertChatRoom(list);
+		}
+		//chatId가 존재하는 경우, 채팅내역 조회
+		else{
+			List<Msg> chatList = chatService.findChatListByChatId(chatId);
+			model.addAttribute("chatList", chatList);
+		}
+		
+		logger.info("memberId=[{}], chatId=[{}]",memberId, chatId);
+		
+		
+		//비회원일 경우, httpSessionId값을 memberId로 사용한다. 
+		//클라이언트에서는 httpOnly-true로 설정된 cookie값은 document.cookie로 가져올 수 없다.
+		model.addAttribute("memberId", memberId);
+		model.addAttribute("chatId", chatId);
+		model.addAttribute("receiveId",receiveId);
+	}
+	
+	
 	private String getRandomChatId(int len){
 		Random rnd = new Random();
 		StringBuffer buf =new StringBuffer();
@@ -119,7 +177,7 @@ public class ChatController {
 	
 	
 	
-	
+	//chat input
 	@MessageMapping("/chat/{chatId}")
 	@SendTo(value={"/chat/{chatId}"})
 	public Msg sendEcho(Msg fromMessage, 
@@ -128,13 +186,18 @@ public class ChatController {
 		logger.info("fromMessage={}",fromMessage);
 		logger.info("chatId={}",chatId);
 		logger.info("sessionId={}",sessionId);
+		System.out.println("Msg sendEcho 작동");
 		
 		chatService.insertChatLog(fromMessage);
 		
+		System.out.println("chatting@controller="+fromMessage);
+		
 		return fromMessage; 
 	}
+	
+	//user 확인
 	@MessageMapping("/lastCheck")
-	@SendTo(value={"/chat/admin"})
+	//@SendTo(value={"/chat/admin"})
 	public Msg lastCheck(@RequestBody Msg fromMessage){
 		logger.info("fromMessage={}",fromMessage);
 		
@@ -143,23 +206,18 @@ public class ChatController {
 		return fromMessage; 
 	}
 	
-	//chatList
-	@GetMapping("/chat/agentChatList.do")
-	public void agentList(Model model, 
-					  HttpSession session, 
-					  @SessionAttribute(value="memberLoggedIn", required=false) Agent memberLoggedIn){
-		//받는사람(로그인한 아이디)
-		String memberId = Optional.ofNullable(memberLoggedIn).map(Agent::getMemberEmail).orElse(session.getId());
-		System.out.println("loginOn-memberId="+memberId);
-		
-		List<Map<String, String>> recentList = chatService.findRecentList();
-		logger.info("recentList={}",recentList);
 
-		model.addAttribute("memberId",memberId);
-		model.addAttribute("recentList", recentList);
+	
+	//chatting 창
+	@GetMapping("/chat/Chatting.do/{chatId}")
+	public String Chat(@PathVariable("chatId") String chatId, Model model){
+		
+		List<Msg> chatList = chatService.findChatListByChatId(chatId);
+		model.addAttribute("chatList", chatList);
+		
+		logger.info("chatList={}",chatList);
+		return "chat/chatRoom";
 	}
-	
-	
 
 	
 	
