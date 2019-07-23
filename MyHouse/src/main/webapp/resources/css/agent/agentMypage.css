@@ -223,7 +223,8 @@ div.estateListEnd-box img{
 /*매물수정버튼*/
 button.modified-btn{
 	position: relative;
-    left: 210px;
+    float: right;
+    right: 2px;
     bottom: 5px;
     font-size: 15px;
 }

@@ -161,7 +161,7 @@ enctype="multipart/form-data">
 			</td>	
 		</tr>
 		
-			<tr id="adressdetail2" style="display:none;">
+		<tr id="adressdetail2" style="display:none;">
 			<th>상세정보</th>
 			<td>
 			<input type="number" name="address4" id="address4" class="addr" required value="0">층

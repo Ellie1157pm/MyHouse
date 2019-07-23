@@ -108,6 +108,7 @@ div.section-div {
 
 div#banner-div {
 	width: 100%;
+	text-align: center;
 	height: 500px;
 	background: lightgray;
 	position: relative;
@@ -115,8 +116,7 @@ div#banner-div {
 }
 
 div#banner-div img {
-	width: 100%;
-	height: 509px;
+	width: 1000px;
 }
 
 div#search-container-div {

@@ -11,7 +11,7 @@
 	<div id="banner-div">
 		<img
 			src=" ${pageContext.request.contextPath}/resources/images/section/background1.png"
-		alt="" />
+		alt=""/>
 </div>
 <div id="search-container-div">
 	<ul>

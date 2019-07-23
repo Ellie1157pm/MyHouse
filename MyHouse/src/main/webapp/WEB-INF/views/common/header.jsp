@@ -291,7 +291,7 @@
 		      <form action="${pageContext.request.contextPath}/agent/insertAgent" id="agent-enrollFrm" method="post">
 		      	  <span id="s-email"></span>
 		      	  <label for="agent-enroll-email">아이디(이메일)</label>
-			      <input type="text" name="memberEmail" id="agent-enroll-email" placeholder="abc@qwe.com"/><br />
+			      <input type="text" name="memberEmail" id="agent-enroll-email" placeholder="ex) abc@qwe.com"/><br />
 			      <label for="agent-enroll-name">이름</label>
 			      <input type="text" name="memberName" id="agent-enroll-name"/><br />
 			      <label for="agent-enroll-password">비밀번호</label>
@@ -299,10 +299,10 @@
 			      <label for="agent-enroll-password_">비밀번호 확인</label>
 			      <input type="password"  id="agent-enroll-password_"/><br />
 			      <label for="agent-enroll-phone">전화번호</label>
-			      <input type="text" name="phone" id="agent-enroll-phone" placeholder="-없이 작성"/><br />
+			      <input type="text" name="phone" id="agent-enroll-phone" placeholder="ex) 01012341234"/><br />
 			      <label for="agent-enroll-companyno">사업자 번호</label>
-			      <input type="text" name="companyRegNo" id="agent-enroll-companyno"/><br />
-			      <input type="hidden" name="status" id="agent-enroll-status" value="B" placeholder="-없이 작성"/><br />
+			      <input type="text" name="companyRegNo" id="agent-enroll-companyno" placeholder="ex) 150-12-12341"/><br />
+			      <input type="hidden" name="status" id="agent-enroll-status" value="B"/><br />
 			  </form>
 	      </div>
 	      <div class="modal-footer">

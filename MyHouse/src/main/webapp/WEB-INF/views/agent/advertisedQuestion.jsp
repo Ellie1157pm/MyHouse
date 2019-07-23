@@ -110,7 +110,7 @@
 				        	  data: param,
 				        	  type: "post",
 				        	  success: function(data){
-				        		  
+				        		  location.href = "${pageContext.request.contextPath}";
 				        	  }
 				           });
 				           
