@@ -169,7 +169,7 @@ enctype="multipart/form-data">
 		<tr id="adressdetail">
 			<th>상세정보</th>																		
 			<td><input type="number" name="address2" id="address2" class="addr ${estate.getEstateType()}"
-				value="<c:if test="${estate.getEstateType() eq 'A'.charAt(0)}">${estate.getAddressDetail().substring(0,estate.getAddressDetail().indexOf('동'))}</c:if>" required><span id="dong">동</span>
+				value="<c:if test="${estate.getEstateType() eq 'A'.charAt(0)}">${estate.getAddressDetail().substring(0,estate.getAddressDetail().indexOf('동'))}</c:if>"><span id="dong">동</span>
 			<c:if test="${estate.getEstateType() eq 'A'.charAt(0)}">
 				<input type="number" name="address3" id="address3" class="addr"
 					value="${estate.getAddressDetail().substring(estate.getAddressDetail().indexOf('동')+1, estate.getAddressDetail().indexOf('층'))}" required>층

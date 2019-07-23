@@ -414,8 +414,8 @@ public class AgentController {
 	public String estateUpdate(
 			@RequestParam int estateNo,
 			@RequestParam String address1,
-			@RequestParam int address2,
-			@RequestParam int address3,
+			@RequestParam String address2,
+			@RequestParam String address3,
 			@RequestParam String phone1,
 			@RequestParam String phone2,
 			@RequestParam String phone3,
