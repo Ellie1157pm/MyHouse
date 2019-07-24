@@ -17,8 +17,8 @@ public class ChatServiceImpl implements ChatService {
 	ChatDAO chatDAO; 
 	
 	@Override
-	public String findChatIdByMemberId(Map map) {
-		return chatDAO.findChatIdByMemberId(map);
+	public String findChatIdByMemberId(String memberId) {
+		return chatDAO.findChatIdByMemberId(memberId);
 	}
 
 	@Override

@@ -18,8 +18,9 @@ public class ChatDAOImpl implements ChatDAO {
 	SqlSessionTemplate sqlSession;
 	
 	@Override
-	public String findChatIdByMemberId(Map<String,String> map) {
-		return sqlSession.selectOne("chat.findChatIdByMemberId",map);
+	public String findChatIdByMemberId(String memberId) {
+		System.out.println("findChatIdByMemberId@@@@@="+memberId);
+		return sqlSession.selectOne("chat.findChatIdByMemberId",memberId);
 	}
 
 	@Override

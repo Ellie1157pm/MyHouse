@@ -47,21 +47,22 @@ $(function() {
 	  id="warningMemoFrm"
 	  method="post">
 	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
+	 <input type="hidden" name="cPage" value="${cPage }" />
 </form>
 <form action="${pageContext.request.contextPath }/member/memberView.do"
 	  id="memberViewFrm"
 	  method="post">
 	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
 </form>
+<form action="${pageContext.request.contextPath}/member/interestList"
+	  id="interestListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
 <form action="${pageContext.request.contextPath}/member/forSaleList"
 	  id="forSaleListFrm"
 	  method="post">
 	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
-</form>
-<form action="${pageContext.request.contextPath }/member/cartList"
-	  id="cartListFrm"
-	  method="post">
-	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
 </form>
 
 <div id="back-container">

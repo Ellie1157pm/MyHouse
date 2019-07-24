@@ -8,7 +8,7 @@ import com.kh.myhouse.chat.model.vo.Msg;
 
 public interface ChatDAO {
 
-	String findChatIdByMemberId(Map<String, String> map);
+	String findChatIdByMemberId(String memberId);
 	List<Msg> findChatListByChatId(String chatId);
 
 	int insertChatRoom(Chat chatRoom);

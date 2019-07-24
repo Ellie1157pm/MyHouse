@@ -29,6 +29,7 @@ $(function() {
 	  id="warningMemoFrm"
 	  method="post">
 	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
+	 <input type="hidden" name="cPage" value="${cPage }" />
 </form>
 <form action="${pageContext.request.contextPath }/member/memberView.do"
 	  id="memberViewFrm"

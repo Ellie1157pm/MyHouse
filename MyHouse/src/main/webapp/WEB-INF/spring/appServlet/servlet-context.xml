@@ -6,7 +6,8 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
-
+	
+	
 
 	
 	<!-- #5.appServlet 관련 설정 : servlet-context에 대한 설정(application당 여러개일 수 있음.) -->

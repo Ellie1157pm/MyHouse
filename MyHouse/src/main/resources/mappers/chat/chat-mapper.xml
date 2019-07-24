@@ -13,16 +13,16 @@
 	 	values(#{chatId}, #{memberId}, #{receiveId})
 	 </insert>
 	  
-	  <insert id="insertChatlog">
-	 	insert into chatlog(chat_no, chat_id, member_id, msg, time)
-	 	values(seq_chatlog.nextval, #{chatId}, #{memberId}, #{msg}, #{time})
+	  <insert id="insertChatLog">
+	 	insert into chatlog(chat_no, chat_id, member_id, receive_id, msg, time)
+	 	values(seq_chatlog.nextval, #{chatId}, #{memberId}, #{receiveId}, #{msg}, #{time})
 	 </insert>
 	 
 	 <update id="updateLastCheck">
 	 	update chat set lastcheck = #{time} 
 	 	where chat_id = #{chatId} and member_id =#{memberId}
 	 </update>
-	<select id="findChatListByChatId" resultType="msg">
+	<select id="findChatListByChatId" resultType="hashmap">
 		select * 
 		from chatlog
 		where chat_id = #{chatId}

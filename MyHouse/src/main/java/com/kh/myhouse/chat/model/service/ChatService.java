@@ -8,7 +8,7 @@ import com.kh.myhouse.chat.model.vo.Msg;
 
 public interface ChatService {
 
-	String findChatIdByMemberId(Map<String, String> map);
+	String findChatIdByMemberId(String memberId);
 
 	int insertChatRoom(List<Chat> list);
 	

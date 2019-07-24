@@ -10,15 +10,20 @@
 <script>
 $(function() {
 	$("#update-member-btn").on("click", function(){
-		$("#memberViewFrm").submit();
+		$("#memberViewFrm").submit();	
 	});
 	$("#cart-list-btn").on("click", function(){
 		$("#cartListFrm").submit();
 	});
-	$("#interest-list-btn").on("click", function(){
-		$("#interestListFrm").submit();
+	
+	$("#interest-list-btn").css("opacity", 0.6);
+	$("#interest-update-btn").on("click", function(){
+		$("#updateInterestFrm").submit();
 	});
-	$("#for-sale-btn").css("opacity", 0.6);
+	
+	$("#for-sale-btn").on("click", function(){
+		$("#forSaleListFrm").submit();
+	});
 	$("#warning_memo").on("click", function(){
 		$("#warningMemoFrm").submit();
 	});
@@ -28,21 +33,23 @@ $(function() {
 	  id="warningMemoFrm"
 	  method="post">
 	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
+	 <input type="hidden" name="cPage" value="${cPage }" />
 </form>
-
-<form action="${pageContext.request.contextPath}/member/memberView.do"
+<form action="${pageContext.request.contextPath }/member/memberView.do"
 	  id="memberViewFrm"
 	  method="post">
-	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
-</form>
-<form action="${pageContext.request.contextPath}/member/cartList"
-	  id="cartListFrm"
-	  method="post">
-	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
 </form>
 <form action="${pageContext.request.contextPath}/member/interestList"
 	  id="interestListFrm"
 	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>
+<form action="${pageContext.request.contextPath}/member/forSaleList"
+	  id="forSaleListFrm"
+	  method="post">
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+</form>">
 	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
 </form>
 

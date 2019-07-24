@@ -34,12 +34,7 @@ import com.kh.myhouse.member.model.vo.Member;
 
 @Controller
 public class ChatController {
-	
-/*	@RequestMapping("/chatMain.do")
-	public String chatTest() {
-		System.out.println("test Good");
-		return "chat/chatRoom";
-	}*/
+
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -55,14 +50,14 @@ public class ChatController {
 		String chatId = null;
 		
 		
-		Map<String, String> map=new HashMap<>();
-		map.put("memberId", memberId);
+		/*Map<String, String> map=new HashMap<>();
+		map.put("memberId", memberId);*/
 		
 		
 		//chatId조회
 		//1.memberId로 등록한 chatroom존재여부 검사. 있는 경우 chatId 리턴.
-		chatId = chatService.findChatIdByMemberId(map);
-		
+		chatId = chatService.findChatIdByMemberId(memberId);
+		System.out.println("채팅아이디 완료");
 		
 		List<Msg> chatList = chatService.findChatListByChatId(chatId);
 		model.addAttribute("chatList", chatList);
