@@ -105,7 +105,10 @@ public class AdminController {
 		return "admin/adminInfo";
 	}
 	
-	
+	@RequestMapping("/chart")
+	public String adminChart() {
+		return "admin/adminChart";
+	}
 	
 	@RequestMapping("/noticeDelete")
 	public String noticeDelete(@RequestParam("noticeNo") int noticeNo, Model model) {
@@ -173,7 +176,7 @@ public class AdminController {
 		request.setCharacterEncoding("EUC-KR");
 		adminService.newsAllData("부동산");
 		
-		return "redirect:/admin/board";
+		return "redirect:/board/board";
 	}
 	
 	@RequestMapping("/noticeForm")

@@ -10,20 +10,7 @@
 $(function() {
 	$("button.adminBtn").css("opacity", 1);
 	
-	if("${param.chk}" == "flagY")
-		$('#flagY').prop('checked', true);
-	else if("${param.chk}" == "flagN")
-		$('#flagN').prop('checked', true);
-	else 
-		$('input#flagAll').prop('checked', true);		
-	
-	if("member" == "${item}") 
-		$("button#memberList").css("opacity", 0.6); 
-	else if("realtor" == "${item}")
-		$("button#realtorList").css("opacity", 0.6);
-	else if("report" == "${item}") {
-		$("button#reportList").css("opacity", 0.6);
-	}
+	$("button#chart").css("opacity", 0.6); 
 		
 	$("#memberList").click(function() {
 		location.href = "${pageContext.request.contextPath}/admin/list?item=member";
@@ -57,22 +44,8 @@ $(function() {
 			<button type="button" class="btn btn-secondary adminBtn" id="chart">통계</button>
 		</div>
 		<div id="list-container">
-			<jsp:include page="/WEB-INF/views/admin/adminList.jsp"/>
+		<h2>Chart Page</h2>
 		</div>
 	</div>
-	<div class="pageBar-container">
-			${pageBar}
-	</div>
-	<c:if test="${item eq 'report'}">
-		<div class="flagChk-container">
-			<label for="flagAll">전체</label>
-			<input type="radio" name="flagChk" id="flagAll" />
-			<label for="flagY">처리</label>
-			<input type="radio" name="flagChk" id="flagY" />
-			<label for="flagN">미처리</label>
-			<input type="radio" name="flagChk" id="flagN" />
-		</div>
-	</c:if>
 </div>
-<jsp:include page="/WEB-INF/views/admin/adminReportModal.jsp"/>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
