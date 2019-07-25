@@ -122,5 +122,10 @@ public class AgentDAOImpl implements AgentDAO {
 		return sqlSession.delete("agent.estatePhotoDelete", estateNo);
 	}
 
+	@Override
+	public int optionUpdate(Map<String, Object> map_) {
+		return sqlSession.update("agent.optionUpdate", map_);
+	}
+
 
 }

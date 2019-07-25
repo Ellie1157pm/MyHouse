@@ -217,7 +217,7 @@ enctype="multipart/form-data">
 		</tr>
 		<tr>
 			<th>관리비</th>
-			<td><input type="number" name="ManageMenetFee" id="ManageMenetFee"  min="0"
+			<td><input type="number" name="ManageMentFee" id="ManageMentFee"  min="0"
 				required />만원</td>
 		</tr>
 	

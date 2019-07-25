@@ -4,13 +4,16 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <jsp:include page="/WEB-INF/views/chat/chatHeader.jsp"/>
+<title>채팅방</title>
+<div class="chat-class-container">
+	<div id="chat-container">
+		<ul class="list-group list-group-flush" id="data">
+			<c:forEach items="${chatList}" var="m">
+				<li class="list-group-item">${m.member_Id }:${m.msg }</li>
+			</c:forEach>
+		</ul>
+	</div>
 
-<div id="chat-container">
-	<ul class="list-group list-group-flush" id="data">
-	<c:forEach items="${chatList}" var="m">
-		<li class="list-group-item">${m.memberId }: ${m.msg }</li>
-	</c:forEach>	
-	</ul>
 </div>
 <script type="text/javascript">
 </script>	

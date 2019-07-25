@@ -17,10 +17,10 @@ $(function() {
 		$("button#noticeList").css("opacity", 0.6);
 	
 	$("#newsList").click(function() {
-		location.href = "${pageContext.request.contextPath}/admin/board?item=news";
+		location.href = "${pageContext.request.contextPath}/board/board?item=news";
 	});
 	$("#noticeList").click(function() {
-		location.href = "${pageContext.request.contextPath}/admin/board?item=notice";
+		location.href = "${pageContext.request.contextPath}/board/board?item=notice";
 	});
 });
 </script>
@@ -38,6 +38,7 @@ $(function() {
 			공지사항
 		</button>
 	</div>
+	<c:if test="${memberLoggedIn.memberNo eq 1}">
 	<div class="btn-group btn-group-lg" role="group" aria-label="..." id="button-container"
 		 style="float: right;">
 		<button type="button" 
@@ -47,6 +48,7 @@ $(function() {
 			공지 작성
 		</button>
 	</div>
+	</c:if>
 	<div id="list-container">
 	<!-- 뉴스 리스트 -->
 	<c:if test="${item eq 'news'}">
@@ -68,7 +70,7 @@ $(function() {
 			    		   data-toggle="modal" data-target="#exampleModalCenter"
 			    		   data-title="${news.NEWS_TITLE}"
 			    		   data-content="${news.NEWS_CONTENT}&#60;/br&#62;&#60;/br&#62;&#60;div style='text-align:center;'&#62;&#60;a class='none-underline' href='${news.NEWS_LINK}' target='_blank'&#62;[원본 링크]&#60;/a&#62;&#60;/div&#62;">
-		    		   	${fn:substring(news.NEWS_TITLE, 0, 40)}...</a>
+		    		   	${fn:substring(news.NEWS_TITLE, 0, 30)}...</a>
 			    	</td>
 			    	<td>${fn:substring(news.NEWS_DATE, 0, 10)}</td>
 				</tr>
@@ -166,7 +168,7 @@ function deleteNotice() {
         <p></p>
       </div>
       <div class="modal-footer">
-        <c:if test="${item eq 'notice'}">
+        <c:if test="${item eq 'notice' && memberLoggedIn.memberNo eq 1}">
 	        <button type="button" class="btn btn-secondary" onclick="updateNotice();">수정</button>
 	        <button type="button" class="btn btn-secondary" onclick="deleteNotice();">삭제</button>
         </c:if>

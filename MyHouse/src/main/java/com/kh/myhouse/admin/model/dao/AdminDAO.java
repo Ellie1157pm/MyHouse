@@ -68,4 +68,24 @@ public interface AdminDAO {
 	int updateReport(Map<String, String> param);
 
 	int insertReportMemo(Map<String, String> param);
+
+	List<Map<String, String>> selectReportFlagNList(RowBounds rb);
+
+	int reportFlagNTotalpage();
+	
+	List<Map<String, String>> selectReportFlagYList(RowBounds rb);
+	
+	int reportFlagYTotalpage();
+
+	List<Map<String, String>> selectCompanyList(RowBounds rb);
+
+	int companyTotalPage();
+
+	int updateCompanyApproveYN(Map<String, Object> param);
+
+	int selectCompanyRegNoCnt(String regNo);
+
+	int selectAgentRegNoCnt(String regNo);
+
+	int updateAgentApproveYN(Map<String, Object> param);
 }

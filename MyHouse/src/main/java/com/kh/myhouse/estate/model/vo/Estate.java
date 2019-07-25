@@ -20,7 +20,17 @@ public class Estate {
 	private Date WrittenDate;
 	private int Deposit;
 	private String AddressDetail;
+	private List<Option> option;
 	private List<EstateAttach> attachList;
+	
+
+	public List<Option> getOption() {
+		return option;
+	}
+
+	public void setOption(List<Option> option) {
+		this.option = option;
+	}
 
 	public List<EstateAttach> getAttachList() {
 		return attachList;
@@ -34,10 +44,10 @@ public class Estate {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	public Estate(int estateNo, String regionCode, int memberNo, int businessMemberNo, String phone, String businessPhone,
 			String address, char estateType, char transActionType, int estatePrice, int manageMentFee, int estateArea,
-			String subwayStation, String estateContent, Date writtenDate, int deposit,String addressDetail) {
+			String subwayStation, String estateContent, Date writtenDate, int deposit,String addressDetail, List<EstateAttach> attachList) {
 		super();
 		EstateNo = estateNo;
 		RegionCode = regionCode;
@@ -56,11 +66,13 @@ public class Estate {
 		WrittenDate = writtenDate;
 		Deposit = deposit;
 		AddressDetail =addressDetail;
+		this.attachList = attachList;
 	}
+	
 	public Estate(int estateNo, String regionCode, int memberNo, int businessMemberNo, String phone,
 			String businessPhone, String address, char estateType, char transActionType, int estatePrice,
 			int manageMentFee, int estateArea, String subwayStation, String estateContent, Date writtenDate,
-			int deposit, String addressDetail, List<EstateAttach> attachList) {
+			int deposit, String addressDetail, List<Option> option, List<EstateAttach> attachList) {
 		super();
 		EstateNo = estateNo;
 		RegionCode = regionCode;
@@ -79,7 +91,32 @@ public class Estate {
 		WrittenDate = writtenDate;
 		Deposit = deposit;
 		AddressDetail = addressDetail;
+		this.option = option;
 		this.attachList = attachList;
+	}
+
+	public Estate(int estateNo, String regionCode, int memberNo, int businessMemberNo, String phone,
+			String businessPhone, String address, char estateType, char transActionType, int estatePrice,
+			int manageMentFee, int estateArea, String subwayStation, String estateContent, Date writtenDate,
+			int deposit, String addressDetail) {
+		super();
+		EstateNo = estateNo;
+		RegionCode = regionCode;
+		MemberNo = memberNo;
+		BusinessMemberNo = businessMemberNo;
+		Phone = phone;
+		BusinessPhone = businessPhone;
+		Address = address;
+		EstateType = estateType;
+		TransActionType = transActionType;
+		EstatePrice = estatePrice;
+		ManageMentFee = manageMentFee;
+		EstateArea = estateArea;
+		SubwayStation = subwayStation;
+		EstateContent = estateContent;
+		WrittenDate = writtenDate;
+		Deposit = deposit;
+		AddressDetail = addressDetail;
 	}
 
 	public int getEstateNo() {

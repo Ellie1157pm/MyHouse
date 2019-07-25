@@ -11,7 +11,7 @@ public interface EstateDAO {
 
 	String selectLocalCodeFromRegion(String localName);
 
-	List<Estate> selectApartmentname(String localCode);
+	List<Estate> selectApartmentname(Map<String, String> map);
 	
 	List<Map<String, String>> selectDetailEstate(int estateNo);
 
@@ -71,5 +71,15 @@ public interface EstateDAO {
 	List<String> selectEstateListSelectStructureSelectOptionSelectFloorOptionMontlyFee(Map<String, Object> map);
 
 	List<Estate> selectlocalList(String localCode);
+	
+	Map<String, String> selectCompany(Estate e);
+
+	int insertWarningMemberByUser(Map<String, Object> map);
+
+	Map<String, String> selectBusinessMemberInfo(int bMemberNo);
+
+	int insertEstimation(Map<String, Object> map);
+
+	List<Integer> selectMemberNoList(Map<String, Object> map_);
 
 }

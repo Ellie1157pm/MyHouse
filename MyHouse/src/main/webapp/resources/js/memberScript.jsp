@@ -23,6 +23,11 @@ $(function() {
 		$("#member-enrollFrm").submit();
 	});
 	
+	/* 비밀번호 재설정 submit */
+	$("button#pwd-reset-end-btn").on("click", function(){
+		$("#resetPwdFrm").submit();
+	});
+	
 	/* 이름에 '관리자'사용금지 */
 	$("input#member-enroll-name").blur(function(){
 		var memberName = $("input#member-enroll-name").val();
@@ -39,6 +44,21 @@ $(function() {
 	
 	/*아이디 유효성검사,중복확인*/
 	$("input#member-enroll-email").blur(function() {
+		var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+		var email = $(this).val();
+	    var bool = regExp.test(email);
+	    
+	    if(!bool){
+			$("span#s-email").text("올바른 형식이 아닙니다.");
+			$("span#s-email").css("color", "red");
+            $("button#member-enroll-end-btn").attr("disabled", true);
+            return;
+		} else {
+			$("span#s-email").text("사용가능한 이메일입니다.");
+			$("span#s-email").css("color", "blue");
+            $("button#member-enroll-end-btn").attr("disabled", false);
+		}
+		
 		var param = {
 			memberEmail : $("input#member-enroll-email").val()
 		}
@@ -130,20 +150,24 @@ $(function() {
 			dataType : "json",
 
 			success : function(data) {
+				console.log(data);
 				var emailLists = data.memberEmail;
 				var emailLength = emailLists.length;
 				var emailfind = emailLists
 						.substring(1,
 								emailLength - 1);
-				alert("찾으시는 이메일은 "
-						+ emailfind + "입니다.")
+				var quitYN = data.quitYN;
+				if(quitYN == 'N')
+				alert("찾으시는 아이디는 "+ emailfind + "입니다.");
+				else
+				alert("없는 아이디거나 정보를 잘못 입력하셨습니다.(탈퇴)");
 			},
 			error : function(jqxhr, textStatus,
 					errorThrown) {
 				console.log("ajax처리실패: "
 						+ jqxhr.status);
 				console.log(errorThrown);
-				alert('정보를 다시 입력해주시길 바랍니다.');
+				alert('없는 아이디거나 정보를 잘못 입력하셨습니다.');
 			}
 		});
 	});
@@ -166,7 +190,9 @@ $(function() {
 				success : function(data) {
 					console.log(data);
 					if (data > 0) {
-						alert("비밀번호 변경가능!");
+						$("#findPwdModal").modal("hide");
+						$("#memberNoForReset").attr('value', data);
+						$("#resetPwdModal").modal('toggle');
 					} else {
 						alert("정보를 다시 입력해주시길 바랍니다.");
 					}
@@ -180,8 +206,43 @@ $(function() {
 				}
 			})
 	});
+	
+	/* 비밀번호 리셋 후 새로 입력하는 비밀번호 유효성 검사 */
+	$("input#resetPwd").blur(function() {
+		var regExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/;
+		var pwd = $(this).val();
+		var bool = regExp.test(pwd);
+
+		if (bool != true) {
+			alert("비밀번호는 문자, 숫자 ,특수문자 1개 이상 포함하고, 8글자 이상 15글자 이하여야 합니다.");
+			$("input#resetPwd").css("color", "red");
+			$("button#pwd-reset-end-btn").attr("disabled", true);
+		} else {
+			$("input#resetPwd").css("color", "blue");
+			$("button#pwd-reset-end-btn").attr("disabled", false);
+		}
+
+	});
+	
+	$("input#resetPwd_").blur(function() {
+		var pwd = $("input#resetPwd").val();
+		var pwd_ = $(this).val();
+		var bool = (pwd == pwd_);
+
+		if (bool != true) {
+			$("input#resetPwd_").css("color", "red");
+			$("button#pwd-reset-end-btn").attr("disabled", true);
+		} else {
+			$("input#resetPwd_").css("color", "blue");
+			$("button#pwd-reset-end-btn").attr("disabled", false);
+		}
+
+	});
+	
 });
 
-
+function memberLogin(){
+	$("#memberViewFrm").submit();
+}
 
 </script>

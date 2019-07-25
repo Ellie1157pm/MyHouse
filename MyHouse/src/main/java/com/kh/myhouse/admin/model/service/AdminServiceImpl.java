@@ -271,4 +271,54 @@ public class AdminServiceImpl implements AdminService {
 	public int reportSearchTotalpage(String searchKeyword) {
 		return adminDAO.reportSearchTotalpage(searchKeyword);
 	}
+	
+	@Override
+	public List<Map<String, String>> selectReportFlagNList(RowBounds rb) {
+		return adminDAO.selectReportFlagNList(rb);
+	}
+	
+	@Override
+	public int reportFlagNTotalpage() {
+		return adminDAO.reportFlagNTotalpage();
+	}
+	
+	@Override
+	public List<Map<String, String>> selectReportFlagYList(RowBounds rb) {
+		return adminDAO.selectReportFlagYList(rb);
+	}
+	
+	@Override
+	public int reportFlagYTotalpage() {
+		return adminDAO.reportFlagYTotalpage();
+	}
+	
+	@Override
+	public List<Map<String, String>> selectCompanyList(RowBounds rb) {
+		return adminDAO.selectCompanyList(rb);
+	}
+	
+	@Override
+	public int companyTotalPage() {
+		return adminDAO.companyTotalPage();
+	}
+	
+	@Override
+	public int updateCompanyApproveYN(Map<String, Object> param) {
+		return adminDAO.updateCompanyApproveYN(param);
+	}
+	
+	@Override
+	public int selectCompanyRegNoCnt(String regNo) {
+		return adminDAO.selectCompanyRegNoCnt(regNo);
+	}
+	
+	@Override
+	public int selectAgentRegNoCnt(String regNo) {
+		return adminDAO.selectAgentRegNoCnt(regNo);
+	}
+	
+	@Override
+	public int updateAgentApproveYN(Map<String, Object> param) {
+		return adminDAO.updateAgentApproveYN(param);
+	}
 }

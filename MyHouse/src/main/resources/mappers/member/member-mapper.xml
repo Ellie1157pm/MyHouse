@@ -30,8 +30,12 @@
 	</select>
 	
 	<select id="findPwd" resultType="_int">
-		SELECT MEMBER_NO FROM  MEMBER WHERE MEMBER_EMAIL = #{memberEmail} AND PHONE = #{phone}
+		SELECT MEMBER_NO FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} AND PHONE = #{phone}
 	</select>
+	
+	<update id="resetPwd">
+		UPDATE MEMBER SET MEMBER_PWD = #{resetPwd} WHERE MEMBER_NO = #{memberNo}
+	</update>
 	
 	<update id="deleteMember">
 		UPDATE MEMBER SET QUIT_DATE = sysdate, QUIT_YN = 'Y' WHERE MEMBER_NO = #{memberNo}
@@ -52,14 +56,15 @@
 	</select>
 	
 	<resultMap type="interest" id="interestMap">
+		<result column="region_code" property="regionCode"/>
 		<result column="estate_type" property="estateType" typeHandler="strArrTypeHandler"/>
 	</resultMap>
 	
 	<update id="updateInterest">
 		UPDATE INTEREST 
-		SET REGION_CODE = SELECT SUBSTR(REGION_CODE,0,5) FROM REGION WHERE LEGAL_DONG LIKE '%'||#{city} || ' ' ||#{state}||'%' AND ROWNUM=1;}
+		SET REGION_CODE = (SELECT SUBSTR(REGION_CODE,0,5) FROM REGION WHERE LEGAL_DONG LIKE '%'||#{state}||' '||#{city}||'%' AND ROWNUM=1),
 		ESTATE_TYPE = #{estateType, typeHandler=strArrTypeHandler}, PET = #{pet}, ELEVATOR = #{elevator},
-		PARKING = #{parking}, SUBWAY = #{subway}, CITY = #{city}, STATE = #{state} 
+		PARKING = #{parking}, SUBWAY = #{subway}, STATE = #{state}, CITY = #{city}, INTEREST_DATE = sysdate
 		WHERE MEMBER_NO = #{memberNo}
 	</update>
 	
@@ -103,6 +108,16 @@
 		WHERE C.MEMBER_NO = #{memberNo}
 	</select>
 	
+	<select id="selectOneEstate" resultType="estate">
+		select * from estate where estate_no = #{estateNo}
+	</select>
+	<select id="selectEstatePhoto" resultType="estateAttach">
+		select * from estate_photo where estate_no = #{estateNo}
+	</select>
+	<select id="selectEstateOption" resultType="map">
+		select * from tbl_option where estate_no = #{estateNo}
+	</select>
+	
 	<update id="cart_check" parameterType="HashMap">
 		UPDATE TBL_CART
 		SET CART_CHECK = CART_CHECK + 1
@@ -114,5 +129,47 @@
 		SET CART_CHECK = 0
 		WHERE MEMBER_NO = #{memberNo} AND ESTATE_NO = #{estateNo}
 	</update>
+	
+	<update id="updateEstate">
+        UPDATE ESTATE SET
+        REGION_CODE = #{RegionCode}, PHONE = #{Phone}, ADDRESS = #{Address}, ESTATE_TYPE = #{EstateType},
+        TRANACTION_TYPE = #{TransActionType}, ESTATE_PRICE = #{EstatePrice}, MANAGEMENT_FEE = #{ManageMentFee},
+        ESTATE_AREA = #{EstateArea}, SUBWAY_STATION = #{SubwayStation}, ESTATE_CONTENT = #{EstateContent},
+        DEPOSIT = #{Deposit}, ADDRESS_DETAIL = #{AddressDetail}
+        WHERE ESTATE_NO = #{EstateNo}
+    </update>
+    
+ <!--    <resultMap type="option" id="optionMap">
+		<result column="option_detail" property="optionDetail" typeHandler="strArrTypeHandler"/>
+	</resultMap> -->
+    
+    <!-- set태그는 내부문자열이 비어있지 않은 경우 구문에 SET을 추가하고, 마지막 쉼표 제거함 -->
+    <update id="updateOption">
+    	UPDATE TBL_OPTION
+    	<set>
+    		<if test="optionDetail != null">
+    			OPTION_DETAIL = #{optionDetail},
+    		</if>
+    		<if test="construction != null">
+    			CONSTRUCTION = #{construction},
+    		</if>
+    		<if test="floorOption != null">
+    			FLOOROPTION = #{floorOption},
+    		</if>
+    	</set>
+    	WHERE ESTATE_NO = #{estateNo}
+    </update>
+    
+    <delete id="deleteEstate">
+    	DELETE FROM ESTATE WHERE ESTATE_NO = #{estateNo}
+    </delete>
+    
+    <delete id="deleteEstateOption">
+    	DELETE FROM TBL_OPTION WHERE ESTATE_NO = #{estateNo}
+    </delete>
+    
+    <delete id="deleteCartList">
+    	DELETE FROM TBL_CART WHERE MEMBER_NO = #{memberNo} AND ESTATE_NO = #{estateNo}
+    </delete>
 
 </mapper>

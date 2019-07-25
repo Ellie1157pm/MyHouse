@@ -1,4 +1,3 @@
-
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="com.kh.myhouse.estate.model.vo.Estate"%>
@@ -22,6 +21,24 @@
     
 %>
 <style>
+.grayStar{
+	background-image: url(${pageContext.request.contextPath}/resources/images/search/star_bg.gif);
+	float:left;
+	height:25px;
+	width:100%;
+	background-repeat: no-repeat;
+}
+.yellowStar{
+	background-image: url(${pageContext.request.contextPath}/resources/images/search/star.gif);
+	float:left;
+	height:25px;
+	background-repeat: no-repeat;
+	bottom: 25px;
+	position:relative;
+}
+div#yellowStarContainer{
+	width:415px;
+}
 </style>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/map/map.css" />
@@ -47,7 +64,7 @@
 	<hr />
 	<div id="search2">
 		<select name="dealType" id="dealType" onchange="changeDeal(this);">
-			<option value="M" ${dealType eq 'M'?'selected':'' } >매매</option>
+			<option value="M" ${dealType eq 'M'?'selected':'' } >매매</option> 
 			<option value="J" ${dealType eq 'J'?'selected':'' }>전세</option>
 			<option value="O" ${dealType eq 'O'?'selected':'' }>월세</option>
 		</select>
@@ -150,7 +167,7 @@
 <%}%>
 var address="";
 $(function(){
-	
+
 	cPage=1;  //추천매물
 	cPage2=1; //일반매물
 	
@@ -185,7 +202,7 @@ function checkOption(obj){
 			$('#estateFrm input[name=optionResult]')[i].value=$('input[name=option]')[i].value;
 			$('#estateFrm input[name=optionResult]')[i].checked=true;
 		}else {
-			$('#estateFrm input[name=optionResult]')[i].value='0';
+			$('#estateFrm input[name=optionResult]')[i].value='';
 		}
 	}
 	$('#estateFrm').submit();
@@ -342,6 +359,8 @@ function searchDetailAddrFromCoords(coords, callback) {
     // 좌표로 법정동 상세 주소 정보를 요청
     geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
 }
+
+var placeBuildingName;
 //지도에 마커-클러스터링 하는 함수
 function displayMarker(place) {
 	var markerPosition  = new kakao.maps.LatLng(place.y, place.x); 
@@ -353,9 +372,15 @@ function displayMarker(place) {
            		 image:markerImage
             });
         });       
+        
+ 		placeBuildingName=place.road_address.building_name;
+        
+        if(placeBuildingName==""){
+        	placeBuildingName=place.address_name;
+        }
        
         //인포 윈도우 객체 생성
-        var iwContent = '<div style="padding:5px;font-size:12px;">' + place.road_address.building_name + '</div>';
+        var iwContent = '<div style="padding:5px;font-size:12px;">' +placeBuildingName + '</div>';
         var infowindow = new kakao.maps.InfoWindow({
 		    content : iwContent,
 		    removable : true
@@ -363,12 +388,14 @@ function displayMarker(place) {
         
         
         kakao.maps.event.addListener(markers[0], 'click', function(mouseEvent) {
+        	unit='';
         	$("#sidebar").unbind();
         	 cPage = 1;
         	 cPage2 = 1;
         	
         	//최초클릭시 10개 가져오게
-        	
+        	console.log('디스플레이 마커');
+        	console.log(place);
 	       	  getRecommendEstate(cPage++,place);
 	           //무한스크롤 사용하기위해 스크롤이 끝에다다르면 함수 호출 
 	           $("#sidebar").scroll(function(){
@@ -419,10 +446,11 @@ function placesSearchCB (data, status, pagination) {
       map.setBounds(bounds);
   }
 }
+var place;
 //주소로 좌표를 검색하고 마커찍기
 function placesSearchCB2 (data, status, pagination) {
     if (status === daum.maps.services.Status.OK) {
-    	
+    	place=data[0];
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
         // LatLngBounds 객체에 좌표를 추가합니다
        // var bounds = new daum.maps.LatLngBounds();
@@ -675,16 +703,34 @@ function monthlyLent(){
 	});//end of 월세
 } 
 
-areaArray = new Array();
+
+//String형으로 바꿔서 아약스 파라미터로 넘겨주기위해
+var option="";
+<%
+	for(int i=0; i<option.size(); i++){
+%>
+		option+='<%=option.get(i)%>';
+<%
+	}
+%>
 
 //추천매물 가져오는함수
 function getRecommendEstate(cPage,place){
-		console.log(cPage);
-		console.log(place);
+	console.log(place);
+	console.log(place.address_name);
 	   var param={
 	           cPage : cPage,
 	           roadAddressName : place.address_name,
-	           addressName : place.address.address_name
+	           addressName : place.address.address_name,
+	           transActionType : $("#dealType option:selected").val(),
+	           structure : "<%=structure%>",
+	           range1:$('#range_1').val(),
+	   		   range2:$('#range_2').val(),
+	   		   range3:$('#range_3').val(),
+	   		   range4:$('#range_4').val(),
+	           option:option,
+	           estateType:"${estateType}"
+	           
 	   }
 	   
 	   $.ajax({
@@ -693,29 +739,32 @@ function getRecommendEstate(cPage,place){
      type:"post",
      dataType:"json",
      success:function(data){
-  	  console.log("데이터는 ="+data[0]);
+  	  console.log("데이터는 ="+data);
   	 
-  	  for(var i=0; i<data.length; i++){
-  		  areaArray[i] = data[i].EstateArea;
-  	  }
 	  var html="";
    	  html+="<div id='estateBar'>";
    	  html+="<p>매물 목록</p><hr/>";
-   	  html+="<button type='button' class='btn btn-outline-dark change' onclick='areaChange();'>단위</button>";
    	  html+="</div>";
    	  if(cPage==1){
       	$("#sidebar").html(html);
 	  }
    	  
-   	  if(data.length!=0){
+   	  var cnt=0;
+   	  for(var i=0; i<data.length; i++){
+   		  if($("#dealType option:selected").val()==data[i].TransActionType){
+   			  cnt++;
+   		  }
+   	  }
+   	  
+   	  if(data.length!=0 && cnt != 0){
 	      	  html="";
 	     	  html+="<p class='estateList'>안심중개사 추천매물</p>";
-	     	 html+="<hr class='line'/>";
 	     	  if(cPage==1){
 	     		 $("#sidebar").append(html);
 	     	  }
-	     	  html="";
+	          
 	          for(var i=0; i<data.length; i++){
+	        	 html="";
 	        	 html+="<div id='estate' onclick=\"getDetailEstate('"+place.road_address.building_name+"','"+place.address_name+"',"+data[i].EstateNo+","+place.x+","+place.y+");\")>"; 	
 	        	 html+="<img src='${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[i].attachList[0].renamedFileName+"'>";
 	        	 html+="<span class='best'>추천 </span>";
@@ -743,23 +792,18 @@ function getRecommendEstate(cPage,place){
 		        	 html+="<span class='price'>전세 "+str+"</span><br>";	 	   			 
 	 	   		 }
 	 	   		 else{
-		        	 html+="<span class='price'>월세 "+str+"</span><br>";	 	   			 	 	   			 
+		        	 html+="<span class='price'>월세 "+data[i].Deposit+"/"+data[i].EstatePrice+"</span><br>";	 	   			 	 	   			 
 	 	   		 }
-	        	 html+="<span class='area'><span class='unitNumSpan'>"+Number(data[i].EstateArea)/Number(unitNum==''?'1':unitNum)+"</span><span class='unitSpan'>"+(unit==''?'m<sup>2</sup>':unit)+"</span></span><br>";	        	 
-	        	 html+="<span class='address'>"+data[i].AddressDetail+"</span>";
+	 	   		html+="<span class='area'>"+data[i].EstateArea+"m<sup>2</sup> / "+Math.round(Number(data[0].EstateArea)/3.3)+"평 </span><br>";	        	 
+	        	 html+="<span class='address'>"+data[i].AddressDetail+"</span><br/>";
+	        	 html+="<span class='option'>"+data[i].option[0].optionDetail+"</span>";
 	        	 html+="</div>";  
-	          }
-	    		$("#sidebar").append(html);
-	    
+		    	 $("#sidebar").append(html);
+	         }
     	}
-        
+       
         //추천매물이 10개 미만이면 이제 일반 매물을 가져오기위해서
         if(data.length < 9){	 
-      	  	html="";
-            html+="<p class='estateList'>일반매물</p>";
-            if(cPage2==1){
-	              $("#sidebar").append(html);
-            }
       	  getNotRecommendEstate(cPage2++,place);
         }
          
@@ -775,12 +819,18 @@ var unitNum = '';
 
 //일반매물 가져오는 함수
 function getNotRecommendEstate(cPage2,place){
-	console.log(cPage2);
-	console.log(place);
    var param={
-           cPage2 : cPage2,
+           cPage2 : 1,
            roadAddressName : place.address_name,
-           addressName : place.address.address_name
+           addressName : place.address.address_name,
+           transActionType : $("#dealType option:selected").val(),
+           structure : "<%=structure%>",
+           range1:$('#range_1').val(),
+   		   range2:$('#range_2').val(),
+   		   range3:$('#range_3').val(),
+   		   range4:$('#range_4').val(),
+           option:option,
+           estateType:"${estateType}"
    }
    $.ajax({
        url: "<%=request.getContextPath()%>/estate/getNotRecommendEstate",
@@ -788,49 +838,54 @@ function getNotRecommendEstate(cPage2,place){
        type:"post",
        dataType:"json",
        success:function(data){
-    	   console.log(data)
-    	   
-    	   for(var i=0; i<data.length; i++){
-    	  		  areaArray[i] = data[i].EstateArea;
-    	  	 }
-    	  var html="";
-          for(var i=0; i<data.length; i++){ 
-        	 html+="<div id='estate' onclick=\"getDetailEstate('"+place.road_address.building_name+"','"+place.address_name+"',"+data[i].EstateNo+","+place.x+","+place.y+");\">";	
-        	 html+="<img src='${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[i].attachList[0].renamedFileName+"'>";
-        	 html+="<span class='apart2'>아파트</span></br>";
-        	 
-        	 var ss = data[i].EstatePrice; // 15000
- 	   		 var dd = String(ss); // number -> String 변환
- 	   	 	 var ww = dd.length; //억단위일경우 length : 5  천만일경우 length : 4이하
- 	   		 var ws = '억';
- 	   		 var sw = '만원';
- 	   		 var lastChar = dd.charAt(dd.length-1); //마지막 문자열찾기
- 	   		 var last =dd.lastIndexOf(lastChar); // 마지막 인데스 찾기
- 	   		 var str = '';
- 	   		 if(ww>4){
- 	   		  	var anum = dd.substring(0,last-3);
- 	   			var	numf= dd.substring(last-3,last+1);
- 	   			str = anum+ws+numf+sw;
- 	   		 }
- 	   		 else{
- 	   			str=dd+sw;
- 	   		 }
- 	   		 
-        	 if(data[i].TransActionType == 'M'){
-	        	 html+="<span class='price'>매매 "+str+"</span><br>";	 	   			 	 	   			 
- 	   		 }
- 	   		 else if(data[i].TransActionType == 'J'){
-	        	 html+="<span class='price'>전세 "+str+"</span><br>";	 	   			 
- 	   		 }
- 	   		 else{
-	        	 html+="<span class='price'>월세 "+str+"</span><br>";	 	   			 	 	   			 
- 	   		 }
-       			console.log(Number(data[i].EstateArea/3));
-        	 html+="<span class='area'><span class='unitNumSpan'>"+Number(data[i].EstateArea)/Number(unitNum==''?'1':unitNum)+"</span><span class='unitSpan'>"+(unit==''?'m<sup>2</sup>':unit)+"</span></span><br>";
-        	 html+="<span class='address'>"+data[i].AddressDetail+"</span>";
-        	 html+="</div>";  
-          }
-          $("#sidebar").append(html);
+    	   console.log(data);
+    	  if(data!=""){
+    		  html="";  	  		
+              html+="<p class='estateList'>일반매물</p>";
+              if(cPage2==1){
+   	              $("#sidebar").append(html);
+              }
+	          for(var i=0; i<data.length; i++){ 
+	    	      var html="";
+	        	  
+	        	 html+="<div id='estate' onclick=\"getDetailEstate('"+place.road_address.building_name+"','"+place.address_name+"',"+data[i].EstateNo+","+place.x+","+place.y+");\">";	
+	        	 html+="<img src='${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[i].attachList[0].renamedFileName+"'>";
+	        	 html+="<span class='apart2'>아파트</span></br>";
+	        	 
+	        	 var ss = data[i].EstatePrice; // 15000
+	 	   		 var dd = String(ss); // number -> String 변환
+	 	   	 	 var ww = dd.length; //억단위일경우 length : 5  천만일경우 length : 4이하
+	 	   		 var ws = '억';
+	 	   		 var sw = '만원';
+	 	   		 var lastChar = dd.charAt(dd.length-1); //마지막 문자열찾기
+	 	   		 var last =dd.lastIndexOf(lastChar); // 마지막 인데스 찾기
+	 	   		 var str = '';
+	 	   		 if(ww>4){
+	 	   		  	var anum = dd.substring(0,last-3);
+	 	   			var	numf= dd.substring(last-3,last+1);
+	 	   			str = anum+ws+numf+sw;
+	 	   		 }
+	 	   		 else{
+	 	   			str=dd+sw;
+	 	   		 }
+	 	   		 
+	        	 if(data[i].TransActionType == 'M'){
+		        	 html+="<span class='price'>매매 "+str+"</span><br>";	 	   			 	 	   			 
+	 	   		 }
+	 	   		 else if(data[i].TransActionType == 'J'){
+		        	 html+="<span class='price'>전세 "+str+"</span><br>";	 	   			 
+	 	   		 }
+	 	   		 else{
+	 	   		 	html+="<span class='price'>월세 "+data[i].Deposit+"/"+data[i].EstatePrice+"</span><br>"; 	   			 	 	   			 
+	 	   		 }
+	        	 html+="<span class='area'>"+data[i].EstateArea+"m<sup>2</sup> / "+Math.round(Number(data[0].EstateArea)/3.3)+"평 </span><br>";	        	 
+	        	 html+="<span class='address'>"+data[i].AddressDetail+"</span><br/>";
+	        	 html+="<span class='option'>"+data[i].option[0].optionDetail+"</span>";
+	        	 html+="</div>";  
+		          
+		         $("#sidebar").append(html);
+	          }
+    	  }
        },
        error:function(jqxhr,text,errorThrown){
            console.log(jqxhr);
@@ -855,12 +910,11 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 		   	contentType:"json",
 		   	type:"get",
 		   	success:function(data){
-		   		console.log('data테이타는@@@@@@@====='+data[0].attachList[0]);
+		   		console.log(data);
 		   		var html="";
 		   		html+="<div id='floating'>";
-		   		html+="<a href='http://www.naver.com'><img src='${pageContext.request.contextPath}/resources/images/search/backarrow.PNG'></a>";
-		   		html+="<span>"+placeName+"</span>";
-		   		html+="<button type='button' class='btn btn-outline-dark change'>단위</button>";
+		   		html+="<img src='${pageContext.request.contextPath}/resources/images/search/backarrow.PNG' onclick='back();' style='cursor:pointer'>";
+		   		html+="<span>"+placeBuildingName+"</span>";
 		   		html+="</div>";
 		   		html+="<div id='imgBox'>";
 		   		html+="<div id='carouselExampleControls' class='carousel slide' data-ride='carousel'>";
@@ -920,20 +974,23 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 		   		html+="<div id=datilinfor>";
 		   		html+="<div id=A>"
 		   		html+="면적(공급/전용)</br>";
-		   		html+="<div id=font>"
-		   		html+=data[0].EstateArea;
+		   		html+="<div id='font' style='width:130px;'>"
+		   		html+=data[0].EstateArea+"m<sup>2</sup> / "+Math.round(Number(data[0].EstateArea)/3.3)+'평';
 		   		html+="</div>";
 		   		html+="</div>";
-		   		html+="<div id=B>"
+		   		
+		   		var dong = data[0].AddressDetail.indexOf('동');
+		   		
+		   		html+="<div id=B>";
 			   		html+="동</br>";
-			   		html+="<div id=font>"
-			   		html+=data[0].AddressDetail;
+			   		html+="<div id=font>";
+			   		html+=data[0].AddressDetail.substring(0,dong+1);
 			   		html+="</div>";
 			   		html+="</div>";
 			   		html+="<div id=C>"
 				   		html+="층(해당층)</br>";
 				   		html+="<div id=font>"
-				   		html+=data[0].AddressDetail;
+				   			html+=data[0].AddressDetail.substring(dong+1);
 				   		html+="</div>";
 				   		html+="</div>";
 		   		html+="</div>";
@@ -943,7 +1000,104 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 		   		html+="</div>";
 		   		html+="<div id='roadview'>";
 		   		html+="</div>";
-		   	
+		   		
+		   		html+="<br/><br/><br/>"
+                html+='중개사무소 : '+data[1].COMPANY_NAME+'</br>';
+                html+='중개인 사진 :'+ data[1].RENAMED_FILENAME+'</br>';
+                html+='연락처 : '+data[1].BUSINESS_PHONE+'</br>';
+                html+='중개인 이름 : '+data[1].MEMBER_NAME+'</br>';
+		   		
+		   		if(data[2].AVG!=null){
+		   		html+='평점 : '+data[2].AVG+'</br>';
+		   		html+='<div class="grayStar"></div>';
+		   		html+='<div id="yellowStarContainer">';
+		   		html+='<span class="yellowStar" style="width:'+data[2].AVG*6+'%"></span>'
+		   		html+='</div>';
+		   		}else {
+		   			html+='<div class="grayStar"></div>';
+		   		}
+		   		//로그인 한 유저만 신고할 수 있다.
+		   		//신고 버튼
+		   		html+='<c:if test="${memberLoggedIn.status eq 'U'.charAt(0) or memberLoggedIn eq null}">';
+		   		
+		   		html+='<button type="button" style="border:none;background:none;color:gray;" class="btn btn-primary" data-toggle="modal" data-target="#warningModal" onclick="checkLogin();" >신고하기</button>';
+		   		
+		   		html+='<div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:99">';
+		   		html+=' <div class="modal-dialog" role="document">';
+		   		html+='<div class="modal-content">';
+		   		html+='<div class="modal-header">';
+		   		html+='<h5 class="modal-title" id="exampleModalLabel">신고하기</h5>';
+		   		html+='<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+		   		html+='<span aria-hidden="true">&times;</span>';
+		   		html+='</button>';
+		   		html+='</div>';
+		   		html+='<div class="modal-body">';
+		   		html+='<div class="form-group">';
+		   		html+='<label for="recipient-name" class="col-form-label">중개사 : '+data[1].MEMBER_NAME+'</label>';
+		   		html+='</div>';
+		   		html+='<div class="form-group">';
+		   		html+='<label for="message-text" class="col-form-label2">신고 사유 : </label>';
+		   		html+='<div class="dropdown">';
+		   		html+='<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+		   		html+='신고사유를 선택해주세요';
+		   		html+='</a>';
+		   		html+='<div id="warningReasonEtc"></div>'
+				//드롭다운 박스
+		   		html+='<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
+		   		html+='<a class="dropdown-item" onclick="insertWarningReason(this,'+data[0].EstateNo+');" >허위 매물</a>';
+		   		html+='<a class="dropdown-item" onclick="addInputText();" >기타(직접 입력)</a>';
+		   		html+='</div>';
+		   		html+='</div>';
+		   		//드롭다운 끝
+		   		html+='</div>';
+		   		html+='</div>';
+		   		html+='<div class="modal-footer">';
+		   		html+='<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>';
+		   		html+='<button type="button" class="btn btn-primary" onclick="warValidate(${memberLoggedIn.memberNo},'+data[0].EstateNo+');">Send </button>';
+		   		html+='</div>';
+		   		html+='</div>';
+		   		html+='</div>';
+		   		html+='</div>';
+		   		//신고 버튼 끝
+		   		//평가버튼
+		   		html+='<button type="button" style="border:none;background:none;color:gray;" class="btn btn-primary" data-toggle="modal" data-target="#estimation" onclick="checkLogin();" >평가하기</button>';
+		   		
+		   		html+='<div class="modal fade" id="estimation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:99">';
+		   		html+=' <div class="modal-dialog" role="document">';
+		   		html+='<div class="modal-content">';
+		   		html+='<div class="modal-header">';
+		   		html+='<h5 class="modal-title" id="exampleModalLabel">평가하기</h5>';
+		   		html+='<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+		   		html+='<span aria-hidden="true">&times;</span>';
+		   		html+='</button>';
+		   		html+='</div>';
+		   		html+='<div class="modal-body">';
+		   		html+='<div class="form-group">';
+		   		html+='<label for="recipient-name" class="col-form-label">중개사 : '+data[1].MEMBER_NAME+'</label>';
+		   		html+='</div>';
+		   		html+='<div class="form-group">';
+		   		html+='<label for="message-text" class="col-form-label2">평점 : </label>';
+		   		html+='<div class="starRev">';
+		   		html+='<span class="starR" onclick="starClick(this);" >1</span>';
+		   		html+='<span class="starR" onclick="starClick(this);" >2</span>';
+	   			html+=' <span class="starR" onclick="starClick(this);" >3</span>';
+   				html+=' <span class="starR" onclick="starClick(this);" >4</span>';
+   				html+=' <span class="starR" onclick="starClick(this);" >5</span>';
+				html+='</div>';
+			   		
+		   		html+='<input tyle="text" class="input-estimation" value=" "; placeholder="간략한 후기를 적어주세요." style="width:370px;" />';
+		   		
+		   		
+		   		html+='</div>';
+		   		html+='</div>';
+		   		html+='<div class="modal-footer">';
+		   		html+='<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>';
+		   		html+='<button type="button" class="btn btn-primary" onclick="estimationValidate(${memberLoggedIn.memberNo},'+data[1].BUSINESS_MEMBER_NO+');">Send </button>';
+		   		html+='</div>';
+		   		html+='</div>';
+		   		html+='</div>';
+		   		html+='</div></c:if>';
+		   		
 		   		$("#sidebar").html(html);
 		   		//기본적으로 크롬을 플래쉬가 차단되있음 그래서 예외처리를 해주어서 플래쉬가 차단되있으면 허용하게할수있는 예외처리를 해줌
 	   		try{
@@ -975,7 +1129,9 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 //리셋
 function filterReset(){
 	//거래 유형(매매,면적 전체,매매가 전체)
-	location.href="${pageContext.request.contextPath}/estate/filterReset?localName="+$('#localName').val()+"&estateType=${estateType}";
+	console.log($('#coords').val());
+	console.log($('#address').val());
+	location.href="${pageContext.request.contextPath}/estate/filterReset?coords="+$('#coords').val()+"&estateType=${estateType}&address="+$('#address').val();
 }
 
 function searchAddress(obj) {
@@ -1017,38 +1173,131 @@ function searchAddress(obj) {
     }
 }
 
-//단위클릭시 면적 바꾸기위해서
-function areaChange(){
-	console.log('unit@areaChange='+unit);
-	console.log('unitNum@areaChange='+unitNum);
-	$.ajax({
-		url: '${pageContext.request.contextPath}/estate/unitChange?unit='+unit+'&unitNum='+unitNum,
-		type: 'get',
-		contentType: 'application/json; charset=utf-8',
-		success: function(data) {
-			console.log("msg: "+data.msg);
 
-			$('span.unitSpan').html(data.unit);
-			
-			for(var i=0; i<areaArray.length; i++){
-				if(data.unitNum == '1') {
-					$('span.unitNumSpan').html(Number(areaArray[i]*3));
-				}
-				else if(data.unitNum == '3') {
-					$('span.unitNumSpan').html(Number(areaArray[i]/3));
-				}
-			}
-			
-			unit=data.unit;
-			unitNum=data.unitNum;
-		},
-		error: function(jqxhr, textStatus, errorThrown) {
-			console.log("ajax 처리 에러: "+jqxhr.status);
-			console.log(textStatus);
-			console.log(errorThrown);
-		}
+
+let estimationCount;
+function starClick(obj){
+	estimationCount=obj.textContent;
+	 $(obj).parent().children('span').removeClass('on');
+	  $(obj).addClass('on').prevAll('span').addClass('on');
+}
+
+function estimationValidate(memberNo,bMemberNo){
+	//평점
+	var count=estimationCount;
+	var comment=$('.input-estimation').val();
+	console.log(comment);
+	var param3={
+			count:count,
+			comment:comment,
+			memberNo:memberNo,
+			bMemberNo:bMemberNo
+	}
+	console.log(param3);
+	
+	$.ajax({
+		 url: "<%=request.getContextPath()%>/estate/estimationBMember",
+		 data:param3,
+	     type:"post",
+	     dataType:"json",
+	     success:function(data){
+	    	alert(data);
+	    	$('#estateFrm').submit();
+	     },
+	     error:function(data){
+	    	 alert('이미 평가하신 중개인입니다.');
+	    	 $('#estateFrm').submit();
+	     }
 	});
 }
+
+var param2={};
+function insertWarningReason(obj,estateNo){
+    if(${memberLoggedIn ne null}==true) param2.memberNo=${memberLoggedIn.memberNo}
+   param2.reason=obj.text;
+   param2.estateNo=estateNo;
+   $('#dropdownMenuLink').text(obj.text);
+   $('.col-form-label2').text('신고 사유 : '+obj.text);
+   console.log(param2);
+}
+function addInputText(){
+   var html2='<input type="text" id="inputReason" placeholder="신고 사유를 입력해주세요" style="margin-top:15px;width:300px;height:45px;" />';
+   $('#inputReason').css("margin-top","10px").css("width","300px").css("height","45px");
+   $('#warningReasonEtc').html(html2);
+   $('#dropdownMenuLink').text('기타');
+   $('.col-form-label2').empty();
+   $('.col-form-label2').text('신고 사유 : ');
+   param2.reason='';
+   console.log(param2);
+}
+
+function warValidate(memberNo,estateNo){
+	console.log('들어온다')
+   var str=$('#inputReason').val();
+   console.log(param2);
+   
+   if(str==''&&$('#dropdownMenuLink').text()=='기타'){
+      console.log('여긴 왜오니');
+      $('#inputReason').focus();
+      alert('사유를 입력해주세요');
+      return;
+   }else if(param2.reason!='허위 매물'&&str!='') {
+      console.log('기타 이유래');
+   $('.col-form-label2').text('신고 사유 : '+str);
+      param2.reason=str;
+      param2.estateNo=estateNo,
+       param2.memberNo=memberNo;
+      $('#dropdownMenuLink').text(param2.reason);
+      
+   }else if($('.col-form-label2').text=='신고 사유 : 허위 매물'){
+      console.log('신고사유가 허위래');
+      param2.reason='허위 매물';
+   }
+   console.log(param2);
+   
+   $.ajax({
+       url: "<%=request.getContextPath()%>/estate/warningBMember",
+       data:param2,
+        type:"post",
+        dataType:"json",
+        success:function(data){
+          alert(data);
+          $('#estateFrm').submit();
+        },
+        error:function(jqxhr, textStatus,errorMessage){
+           if(jqxhr.status==500){
+            alert('이미 신고했던 이력이 있는 매물입니다.');
+            $('#estateFrm').submit();
+         }
+      }
+   });
+}
+function back(){
+	console.log
+	console.log(place);
+	console.log("@@@@@@@@@@@@@@@왔니?@@@@@@@@@");
+	var cPage = 1;
+	getRecommendEstate(cPage,place);
+
+}
+
+
+function checkLogin(){
+
+	console.log('${memberLoggedIn ne null}');
+
+	if(${memberLoggedIn eq null}){
+
+		alert('로그인이 필요한 기능입니다.');
+
+		$('#estateFrm').submit();
+
+		return false;
+
+	}
+
+}
+
 </script>
 
 

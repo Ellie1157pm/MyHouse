@@ -8,10 +8,10 @@
 <% pageContext.setAttribute("newLineChar", "\n"); %>	  
 <script>
 $(document).ready(function() {
-	//location.href = "${pageContext.request.contextPath}/admin/indexBoard";
+	//location.href = "${pageContext.request.contextPath}/board/indexBoard";
 	$(this).stop();
 	$.ajax({
-		url:  "${pageContext.request.contextPath}/admin/indexBoard",
+		url:  "${pageContext.request.contextPath}/board/indexBoard",
 		contentType: "application/json; charset=utf-8;",
 		success: function(data) {
 			for(var i = 0 ; i < data.newsList.length ; i++) {
@@ -93,13 +93,13 @@ $(function() {
 	        <div class="m-news" id="m-news">
 	            <h4>뉴스</h4>
 	            <div class="item_box"></div>
-	            <a href="${pageContext.request.contextPath}/admin/board" class="item_more" title="뉴스 더보기">더보기</a>
+	            <a href="${pageContext.request.contextPath}/board/board" class="item_more" title="뉴스 더보기">더보기</a>
 	        </div>
 	
 	        <div class="m-notice" id="m-notice">
 	            <h4>공지사항</h4>
 	            <div class="item_box"></div>
-	            <a href="${pageContext.request.contextPath}/admin/board?item=notice" class="item_more" title="공지사항 더보기">더보기</a>
+	            <a href="${pageContext.request.contextPath}/board/board?item=notice" class="item_more" title="공지사항 더보기">더보기</a>
 	        </div>
 	    </div>
 	</div>

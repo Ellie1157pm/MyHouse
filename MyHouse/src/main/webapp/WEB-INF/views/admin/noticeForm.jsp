@@ -26,7 +26,7 @@ $(function(){
 });
 
 function goBack() {
-	location.href='${pageContext.request.contextPath}/admin/board?item=notice';
+	location.href='${pageContext.request.contextPath}/board/board?item=notice';
 }
 
 $(document).ready(function(){
@@ -53,7 +53,7 @@ function noticeSubmit() {
 				success: function(data) {
 					alert(data.msg);
 					if(data.result == "1") {
-						location.href = '${pageContext.request.contextPath}/admin/board?item=notice';
+						location.href = '${pageContext.request.contextPath}/board/board?item=notice';
 					}
 					else {
 						$("#noticeForm")[0].reset();
@@ -78,7 +78,7 @@ function noticeSubmit() {
 				success: function(data) {
 					alert(data.msg);
 					if(data.result >0) {
-						location.href = '${pageContext.request.contextPath}/admin/board?item=notice';
+						location.href = '${pageContext.request.contextPath}/board/board?item=notice';
 					}
 					else {
 						$("#noticeForm")[0].reset();

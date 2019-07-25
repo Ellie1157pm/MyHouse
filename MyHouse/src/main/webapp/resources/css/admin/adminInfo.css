@@ -74,3 +74,8 @@ a.none-underline:active {
 	color: lightgray;
 	text-decoration: none;
 }
+
+/* 신고목록 처리여부 */
+.flagChk-container {
+	position: absolute;
+}

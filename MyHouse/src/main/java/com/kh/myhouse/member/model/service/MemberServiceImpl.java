@@ -1,12 +1,14 @@
 package com.kh.myhouse.member.model.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.myhouse.estate.model.vo.Estate;
+import com.kh.myhouse.estate.model.vo.EstateAttach;
+import com.kh.myhouse.estate.model.vo.Option;
 import com.kh.myhouse.interest.model.vo.Interest;
 import com.kh.myhouse.member.model.dao.MemberDAO;
 import com.kh.myhouse.member.model.vo.Member;
@@ -38,14 +40,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public ArrayList<String> findId(Member member) {
-		List<Member> list = memberDAO.findId(member);
-		ArrayList<String> findId = new ArrayList<String>();
-		for(int i=0; i<list.size(); i++) {
-			String email = list.get(i).getMemberEmail();
-			findId.add(email);
-		}
-		return findId;
+	public String findId(Member member) {
+		return memberDAO.findId(member);
 	}
 
 	@Override
@@ -68,10 +64,10 @@ public class MemberServiceImpl implements MemberService {
 		return memberDAO.insertInterest(member);
 	}
 
-	@Override
-	public int updateInterest(Interest interest) {
-		return memberDAO.updateInterest(interest);
-	}
+//	@Override
+//	public int updateInterest(Interest interest) {
+//		return memberDAO.updateInterest(interest);
+//	}
 
 	@Override
 	public Interest selectInterest(int memberNo) {
@@ -88,5 +84,49 @@ public class MemberServiceImpl implements MemberService {
 		return memberDAO.cartList(memberNo);
 	}
 
+	@Override
+	public Estate selectOneEstate(int estateNo) {
+		return memberDAO.selectOneEstate(estateNo);
+	}
+
+	@Override
+	public List<EstateAttach> selectEstatePhoto(int estateNo) {
+		return memberDAO.selectEstatePhoto(estateNo);
+	}
+
+	@Override
+	public Map<String, String> selectEstateOption(int estateNo) {
+		return memberDAO.selectEstateOption(estateNo);
+	}
+
+	@Override
+	public int resetPwd(Map map) {
+		return memberDAO.resetPwd(map);
+	}
+
+	@Override
+	public int deleteEstate(int estateNo) {
+		return memberDAO.deleteEstate(estateNo);
+	}
+
+	@Override
+	public int deleteEstateOption(int estateNo) {
+		return memberDAO.deleteEstateOption(estateNo);
+	}
+
+	@Override
+	public int deleteCartList(Map map) {
+		return memberDAO.deleteCartList(map);
+	}
+
+	@Override
+	public int updateOption(Map map) {
+		return memberDAO.updateOption(map);
+	}
+
+	@Override
+	public int updateInterest(Map<String, Object> map) {
+		return memberDAO.updateInterest(map);
+	}
 	
 }

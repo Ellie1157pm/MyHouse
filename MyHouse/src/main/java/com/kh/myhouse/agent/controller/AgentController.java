@@ -414,8 +414,8 @@ public class AgentController {
 	public String estateUpdate(
 			@RequestParam int estateNo,
 			@RequestParam String address1,
-			@RequestParam int address2,
-			@RequestParam int address3,
+			@RequestParam String address2,
+			@RequestParam String address3,
 			@RequestParam String phone1,
 			@RequestParam String phone2,
 			@RequestParam String phone3,
@@ -436,6 +436,7 @@ public class AgentController {
 		
 		System.out.println("address1 주소명=="+address1);
 		System.out.println("address2 주소상세=="+address2);
+		System.out.println("address2 주소상세=="+address3);
 		String phone = phone1+phone2+phone3;
 		System.out.println("phone 폰번호=="+phone);
 		System.out.println("estateType 빌라,아파트,오피스텔=="+estateType);
@@ -446,6 +447,8 @@ public class AgentController {
 		System.out.println("estateArea 평수=="+estateArea);
 		System.out.println("estatecontent 주변환경=="+estatecontent);
 		System.out.println("etcoption 엘레베이터,애완동물 등=="+Arrays.toString(etcoption));
+		System.out.println("@RequestParam String[] construction="+Arrays.toString(construction));
+		System.out.println("@RequestParam String[] flooropt="+Arrays.toString(flooropt));
 		System.out.println("SubwayStation 전철역=="+SubwayStation);
 		System.out.println("upFile 파일명=="+Arrays.toString(upFile));
 		
@@ -466,12 +469,13 @@ public class AgentController {
 			estateprice = mon[2];
 		}
 		System.out.println("estateNo@controller="+estateNo);
+		if(address2.length() != 0) address2 = address2+"동";
 		Estate estate =new Estate(estateNo, localCode, 0,
 				0, phone, "0",
 				address1, estateType, transactiontype, estateprice, 
 				manageMentFee, estateArea, SubwayStation, 
-				estatecontent, null, deposit, address2+"동"+address3+"층");
-		
+				estatecontent, null, deposit, address2+address3+"층");
+		System.out.println("estate@cont="+estate.toString());
 		Map<String, Object> map = null;
 		int result1 = 0;
 		int result2 = 0;
@@ -520,7 +524,44 @@ public class AgentController {
 		
 		int result3 = agentService.estateUpdate(estate);
 		
-		String msg = (result1>0&&result2>0&&result3>0)?"매물수정성공!":"매물수정실패!";
+		Map<String, Object> map_ = new HashMap();
+		String option_ = "";
+		String construction_ = "";
+		String flooropt_ = "";
+		for(int i=0; i<etcoption.length; i++) {
+			if(etcoption.length != 1) {
+				if(i!=(etcoption.length-1)) option_ += etcoption[i]+",";
+				else if(i==(etcoption.length-1)) option_ += etcoption[i];
+			} else {
+				option_ = etcoption[0];
+			}
+		}
+		for(int i=0; i<construction.length; i++) {
+			if(construction.length != 1) {
+				if(i!=(construction.length-1)) construction_ += construction[i]+",";
+				else if(i==(construction.length-1)) construction_ += construction[i];
+			} else {
+				construction_ = construction[0];
+			}
+		}
+		for(int i=0; i<flooropt.length; i++) {
+			if(flooropt.length != 1) {
+				if(i!=(flooropt.length-1)) flooropt_ += flooropt[i]+",";
+				else if(i==(flooropt.length-1)) flooropt_ += flooropt[i];
+			} else {
+				flooropt_ = flooropt[0];
+			}
+		}
+		
+		map_.put("estateNo", estateNo);
+		map_.put("optionDetail", option_);
+		map_.put("construction", construction_);
+		map_.put("flooropt", flooropt_);
+		
+		System.out.println("map_@cont="+map_);
+		int result4 = agentService.optionUpdate(map_);
+		System.out.println("result4@cont="+result4);
+		String msg = (result1>0&&result2>0&&result3>0&&result4>0)?"매물수정성공!":"매물수정실패!";
 		model.addAttribute("msg", msg);
 		
 		return "common/msg";
