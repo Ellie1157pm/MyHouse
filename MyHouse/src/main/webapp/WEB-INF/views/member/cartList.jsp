@@ -169,7 +169,7 @@ $(function() {
 						<input type="hidden" id="estateNo" value="${e.ESTATE_NO }" />
 					</div>
 					<div class="chat-box">
-						<button type="button" class="btn btn-outline-info chat-for-cartList-btn" onclick="chatForCartList(this);" id="chat-btn" value="${e.BUSINESS_PHONE }">문의채팅</button>
+						<button type="button" class="btn btn-info chat-for-cartList-btn" onclick="openMemberChat('${e.MEMBER_EMAIL}')" id="${e.ESTATE_NO}" value="${e.MEMBER_EMAIL }">문의채팅</button>
 						<br />
 						<br />
 						<br />

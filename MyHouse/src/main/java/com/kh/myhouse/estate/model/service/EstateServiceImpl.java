@@ -243,4 +243,11 @@ public class EstateServiceImpl implements EstateService{
 	public List<Integer> selectMemberNoList(Map<String, Object> map_) {
 		return estateDAO.selectMemberNoList(map_);
 	}
+
+
+	@Override
+	public int expiredPowerLinkEstate() {
+		return estateDAO.expiredPowerLinkEstate();
+		
+	}
 }

@@ -18,8 +18,9 @@ public class ChatDAOImpl implements ChatDAO {
 	SqlSessionTemplate sqlSession;
 	
 	@Override
-	public String findChatIdByMemberId(Map<String,String> map) {
-		return sqlSession.selectOne("chat.findChatIdByMemberId",map);
+	public String findChatIdByMemberId(String memberId) {
+		System.out.println("findChatIdByMemberId@DAO="+memberId);
+		return sqlSession.selectOne("chat.findChatIdByMemberId",memberId);
 	}
 
 	@Override
@@ -44,15 +45,21 @@ public class ChatDAOImpl implements ChatDAO {
 		return sqlSession.selectList("chat.findRecentList",memberId);
 
 	}
-
-	@Override
-	public String findChatIdByMemberId2(String memberId) {
-		return sqlSession.selectOne("chat.findChatIdByMemberId2",memberId);
-	}
-
+	
 	@Override
 	public int insertChatRoom(Chat chatRoom) {
 		return sqlSession.insert("chat.insertChatRoom", chatRoom);
+	}
+
+	@Override
+	public int chatClean(String chatId) {
+		System.out.println("대화내용 삭제@DAO");
+		return sqlSession.delete("chat.deleteChat", chatId);
+	}
+
+	@Override
+	public String findReceiveId(String chatId) {
+		return sqlSession.selectOne("chat.findReceiveId", chatId);
 	}
 
 

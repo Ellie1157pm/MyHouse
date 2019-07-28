@@ -94,6 +94,7 @@ div#estate .apart{
     color: #757575;
     font-size: 70%;
     bottom: 47px;
+    margin:10px;
 }
 
 /* 일반 */
@@ -111,7 +112,7 @@ div#estate .price {
     left: 154px;
     font-weight: bold;
     color: black;
-    font-size: 117%;
+    font-size: 20px;
 }
 
 div#estate .area{

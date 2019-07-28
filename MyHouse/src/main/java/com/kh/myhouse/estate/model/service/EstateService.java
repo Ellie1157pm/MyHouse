@@ -80,4 +80,6 @@ public interface EstateService {
 	int insertEstimation(Map<String, Object> map);
 
 	List<Integer> selectMemberNoList(Map<String, Object> map_);
+
+	int expiredPowerLinkEstate();
 }

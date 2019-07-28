@@ -37,21 +37,21 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/css/member.css" />
 <script>
-//agent chat띄우기
+//chat띄우기
 function openAgentChat(){
 	var url = "${pageContext.request.contextPath}/chat/agentChatList.do";
 	var title = "문의채팅";
-	var specs="width=400px, height=600px, left=300px, top=200px, status=no";
+	var specs="width=400px, height=630px, left=300px, top=200px, status='no'";
 	
 	window.open(url, title,specs);	//팝업의 최상위 윈도우 객체를 리턴함
 	self.resizeTo(20,20);
 	
 }
-//member chat띄우기
+//chat띄우기
 function openMemberChat(Email){
 	var url = "${pageContext.request.contextPath}/chat/chatRoom2.do?receiveId="+Email;
 	var title = "문의채팅";
-	var specs="width=400px, height=600px, left=300px, top=200px, status=no";
+	var specs="width=400px, height=620px, left=300px, top=200px, status=no";
 	
 	window.open(url, title,specs);	//팝업의 최상위 윈도우 객체를 리턴함
 	self.resizeTo(20,20);
@@ -101,7 +101,7 @@ function openMemberChat(Email){
 						</button>
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 							<a class="dropdown-item"
-								href="${pageContext.request.contextPath }/estate/searchKeyword?estateType=B&locate=서울 중구">빌라
+								href="${pageContext.request.contextPath }/estate/searchKeyword?estateType=V&locate=서울 중구">빌라
 								찾기</a> <a class="dropdown-item" href="#">빌라 내놓기</a>
 						</div>
 					</div>

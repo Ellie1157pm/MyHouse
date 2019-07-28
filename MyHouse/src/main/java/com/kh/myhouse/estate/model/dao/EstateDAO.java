@@ -82,4 +82,6 @@ public interface EstateDAO {
 
 	List<Integer> selectMemberNoList(Map<String, Object> map_);
 
+	int expiredPowerLinkEstate();
+
 }

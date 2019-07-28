@@ -234,4 +234,10 @@ public class EstateDAOImpl implements EstateDAO{
 	public List<Integer> selectMemberNoList(Map<String, Object> map_) {
 		return sqlSession.selectList("estate.selectMemberNoList", map_);
 	}
+
+
+	@Override
+	public int expiredPowerLinkEstate() {
+		return sqlSession.delete("estate.expiredPowerLinkEstate");
+	}
 }

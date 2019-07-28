@@ -10,11 +10,12 @@
 function changeDropBtn(e){
 	$("button.btn-info").text(e.text);
 }
-function updateEstate(e){
+function updateEstate(e, event){
+	event.stopPropagation();
 	if(confirm("선택한 매물을 등록하시겠습니까?")){
 		var estateNo = $(e).attr('id');
 		$("input[name=estateNo]").val(estateNo);
-		$("#updateEstateFrm").submit();		
+		$("#updateEstateFrm").submit();
 	} else {
 		return;
 	}
@@ -52,13 +53,37 @@ function estateReqView(e){
 			else if(data.estate.transActionType == 'J') str = "전세";
 			else if(data.estate.transActionType == 'M') str = "매매";
 			info_html += '<div id="estate-info-header">';
-			info_html += "<h3>보증금"+data.estate.deposit+" "+str;
-			info_html += (data.estate.estatePrice).toLocaleString();
+			info_html += "<h4>보증금";
+			if(data.estate.deposit>=10000 && data.estate.deposit<100000){
+				info_html += (data.estate.deposit).toString().substring(0,1)+"억";
+				if((data.estate.deposit).toString().substring(1)>=1) info_html += (data.estate.deposit).toString().substring(1)+"만";
+			} else if(data.estate.deposit>=100000 && data.estate.deposit<1000000){
+				info_html += (data.estate.deposit).toString().substring(0,2)+"억";
+				if((data.estate.deposit).toString().substring(2)>=1) info_html += (data.estate.deposit).toString().substring(2)+"만";
+			} else if(data.estate.deposit>=1000000 && data.estate.deposit<1000000){
+				info_html += (data.estate.deposit).toString().substring(0,3)+"억";
+				if((data.estate.deposit).toString().substring(3)>=1) info_html += (data.estate.deposit).toString().substring(3)+"만";
+			} else {
+				info_html += " "+data.estate.deposit+"만 <br>";
+			}
+			info_html += str +" ";
+			if(data.estate.estatePrice >= 10000 && data.estate.estatePrice<100000){
+				info_html += (data.estate.estatePrice).toString().substring(0,1)+"억";
+				if((data.estate.estatePrice).toString().substring(1)>=1) info_html += (data.estate.estatePrice).toString().substring(1)+"만";
+			} else if(data.estate.estatePrice >= 100000 && data.estate.estatePrice<1000000){
+				info_html += (data.estate.estatePrice).toString().substring(0,2)+"억"
+				if((data.estate.estatePrice).toString().substring(2)>=1) info_html += (data.estate.estatePrice).toString().substring(2)+"만";
+			} else if(data.estate.estatePrice >= 1000000 && data.estate.estatePrice<10000000){
+				info_html += (data.estate.estatePrice).toString().substring(0,3)+"억";
+				if((data.estate.estatePrice).toString().substring(3)>=1) info_html += (data.estate.estatePrice).toString().substring(3)+"만";
+			} else {
+				info_html += data.estate.estatePrice+"만";
+			}
 			if(data.estate.estateType == 'A') str = "아파트";
 			else if(data.estate.estateType == 'V') str = "빌라";
 			else if(data.estate.estateType == 'O') str = "원룸";
 			else if(data.estate.estateType == 'P') str = "오피스텔";
-			info_html += "("+str+")</h3>";
+			info_html += "("+str+")</h4>";
 			var date = new Date(data.estate.writtenDate);
 			var year = date.getFullYear();
 			var month = date.getMonth()+1;
@@ -129,7 +154,7 @@ $(function() {
 					for(var i=0; i<data.length; i++){
 						html = '<div class="estateList-box" data-toggle="modal" data-target="#estateReqModal" onclick="estateReqView(this);">';
 						html += '<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/'+data[i].RENAMED_FILENAME+'"alt="매물사진"/>';
-						html += '<button type="button" class="btn btn-success update-estate-btn" onclick="updateEstate(this);" id="'+data[i].ESTATE_NO+'">등록</button>';
+						html += '<button type="button" class="btn btn-success update-estate-btn" onclick="updateEstate(this, event);" id="'+data[i].ESTATE_NO+'">등록</button>';
 						if(data[i].TRANSACTION_TYPE == 'M') str = "매매";
 						else if(data[i].TRANSACTION_TYPE == 'J') str = "전세";
 						else if(data[i].TRANSACTION_TYPE == 'O') str = "월세";
@@ -202,8 +227,8 @@ $(function() {
 				<c:forEach var="e" items="${list}">
 					<div class="estateList-box" data-toggle="modal" data-target="#estateReqModal" onclick="estateReqView(this);">
 						<img src="${pageContext.request.contextPath }/resources/upload/estateenroll/${e.RENAMED_FILENAME}" alt="매물사진"/>
-						<button type="button" class="btn btn-success update-estate-btn" onclick="updateEstate(this);" id="${e.ESTATE_NO}">등록</button>
-						<p>
+						<button type="button" class="btn btn-success update-estate-btn" onclick="updateEstate(this, event);" id="${e.ESTATE_NO}">등록</button>
+						<p style="width: 90px;">
 							<c:choose>
 								<c:when test="${e.TRANSACTION_TYPE eq 'M'}">
 									매매
@@ -215,7 +240,18 @@ $(function() {
 									월세
 								</c:when>
 							</c:choose>
-							${e.ESTATE_PRICE}
+							<c:if test="${e.ESTATE_PRICE>=10000 and e.ESTATE_PRICE<100000}">
+								${fn:substring(e.ESTATE_PRICE,0,1)}억<c:if test="${fn:substring(e.ESTATE_PRICE,1,10)>=1}">${fn:substring(e.ESTATE_PRICE,1,10)}만</c:if>
+							</c:if>
+							<c:if test="${e.ESTATE_PRICE>=100000 and e.ESTATE_PRICE<1000000}">
+								${fn:substring(e.ESTATE_PRICE,0,2)}억<c:if test="${fn:substring(e.ESTATE_PRICE,2,10)>=1}">${fn:substring(e.ESTATE_PRICE,2,10)}만</c:if>
+							</c:if>
+							<c:if test="${e.ESTATE_PRICE>=1000000 and e.ESTATE_PRICE<10000000}">
+								${fn:substring(e.ESTATE_PRICE,0,3)}억${fn:substring(e.ESTATE_PRICE,3,10)}만<c:if test="${fn:substring(e.ESTATE_PRICE,3,10)>=1}">${fn:substring(e.ESTATE_PRICE,3,10)}만</c:if>
+							</c:if>
+							<c:if test="${e.ESTATE_PRICE<10000}">
+								${e.ESTATE_PRICE}만
+							</c:if>
 						</p>
 						<p>${e.ESTATE_AREA}㎡</p>
 						<p>${e.ADDRESS}</p>

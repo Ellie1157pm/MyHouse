@@ -67,6 +67,10 @@
         	<mapping path="/EnrollTest.do"/>
             <beans:ref bean="AgentLoginInterceptor"/>
         </interceptor>
+         <interceptor>
+           <mapping path="/estate/EnrollTest.do"/>
+            <beans:ref bean="AgentLoginInterceptor"/>
+        </interceptor>
     </interceptors>
 
 </beans:beans>

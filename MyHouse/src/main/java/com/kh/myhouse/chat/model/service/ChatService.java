@@ -8,7 +8,7 @@ import com.kh.myhouse.chat.model.vo.Msg;
 
 public interface ChatService {
 
-	String findChatIdByMemberId(Map<String, String> map);
+	String findChatIdByMemberId(String memberId);
 
 	int insertChatRoom(List<Chat> list);
 	
@@ -25,7 +25,10 @@ public interface ChatService {
 	List<Map<String, String>> findRecentList(String memberId);
 	
 	//memberChat창
-	String findChatIdByMemberId2(String memberId);
+
+	int chatClean(String chatId);
+
+	String findReceiveId(String chatId);
 	
 
 }

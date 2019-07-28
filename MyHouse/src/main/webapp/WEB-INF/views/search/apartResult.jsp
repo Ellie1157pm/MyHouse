@@ -26,18 +26,25 @@
 	float:left;
 	height:25px;
 	width:100%;
+	position:relative;
+	bottom:62px;
 	background-repeat: no-repeat;
 }
 .yellowStar{
-	background-image: url(${pageContext.request.contextPath}/resources/images/search/star.gif);
-	float:left;
-	height:25px;
-	background-repeat: no-repeat;
-	bottom: 25px;
-	position:relative;
+   background-image: url(${pageContext.request.contextPath}/resources/images/search/star.gif);
+   float:left;
+   position:relative;
+   bottom:87px;
+   height:25px;
+   background-repeat: no-repeat;
 }
 div#yellowStarContainer{
 	width:415px;
+}
+div.jungaeInfo{
+	position:relative;
+	left:100px;
+	bottom: 75px;
 }
 </style>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
@@ -373,6 +380,7 @@ function displayMarker(place) {
             });
         });       
         
+        console.log(place)
  		placeBuildingName=place.road_address.building_name;
         
         if(placeBuildingName==""){
@@ -388,8 +396,10 @@ function displayMarker(place) {
         
         
         kakao.maps.event.addListener(markers[0], 'click', function(mouseEvent) {
-        	unit='';
         	$("#sidebar").unbind();
+        	unit='';
+        	nullContents=false;
+        	notNullHtml=null;
         	 cPage = 1;
         	 cPage2 = 1;
         	
@@ -434,12 +444,14 @@ function placesSearchCB (data, status, pagination) {
   			$('#coords').val('('+data[i].x+','+data[i].y+')');
   			//좌표를 지도 중심으로 옮겨줌.
               bounds.extend(new daum.maps.LatLng(data[i].y, data[i].x));
+
   			break;
   		}else{
   			$('#address').val(address.substring(0,8));
   			$('#coords').val('('+data[i].x+','+data[i].y+')');
   			//좌표를 지도 중심으로 옮겨줌.
-              bounds.extend(new daum.maps.LatLng(data[i].y, data[i].x));
+             bounds.extend(new daum.maps.LatLng(data[i].y, data[i].x));
+          
   		}
       }       
    // 검색된 장소 중심 좌표를 기준으로 지도 범위를 재설정
@@ -714,6 +726,9 @@ var option="";
 	}
 %>
 
+var nullContents;
+var notNullHtml;
+
 //추천매물 가져오는함수
 function getRecommendEstate(cPage,place){
 	console.log(place);
@@ -797,9 +812,12 @@ function getRecommendEstate(cPage,place){
 	 	   		html+="<span class='area'>"+data[i].EstateArea+"m<sup>2</sup> / "+Math.round(Number(data[0].EstateArea)/3.3)+"평 </span><br>";	        	 
 	        	 html+="<span class='address'>"+data[i].AddressDetail+"</span><br/>";
 	        	 html+="<span class='option'>"+data[i].option[0].optionDetail+"</span>";
-	        	 html+="</div>";  
+	        	 html+="</div>"; 
+	        	 notNullHtml+=html;
 		    	 $("#sidebar").append(html);
 	         }
+    	}else{
+    		nullContents=true;
     	}
        
         //추천매물이 10개 미만이면 이제 일반 매물을 가져오기위해서
@@ -820,7 +838,7 @@ var unitNum = '';
 //일반매물 가져오는 함수
 function getNotRecommendEstate(cPage2,place){
    var param={
-           cPage2 : 1,
+           cPage2 : cPage2,
            roadAddressName : place.address_name,
            addressName : place.address.address_name,
            transActionType : $("#dealType option:selected").val(),
@@ -882,10 +900,16 @@ function getNotRecommendEstate(cPage2,place){
 	        	 html+="<span class='address'>"+data[i].AddressDetail+"</span><br/>";
 	        	 html+="<span class='option'>"+data[i].option[0].optionDetail+"</span>";
 	        	 html+="</div>";  
-		          
+	        	 notNullHtml+=html;
 		         $("#sidebar").append(html);
 	          }
-    	  }
+    	  }else{
+    		  if(nullContents == true && notNullHtml == null){
+     			 html="해당하는 매물이 없습니다.";
+ 		      	$("#sidebar").append(html); 
+ 		      	$("#sidebar").unbind();
+     		  }
+     	  }
        },
        error:function(jqxhr,text,errorThrown){
            console.log(jqxhr);
@@ -914,7 +938,7 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 		   		var html="";
 		   		html+="<div id='floating'>";
 		   		html+="<img src='${pageContext.request.contextPath}/resources/images/search/backarrow.PNG' onclick='back();' style='cursor:pointer'>";
-		   		html+="<span>"+placeBuildingName+"</span>";
+		   		html+="<span>"+placeAddressName+"</span>";
 		   		html+="</div>";
 		   		html+="<div id='imgBox'>";
 		   		html+="<div id='carouselExampleControls' class='carousel slide' data-ride='carousel'>";
@@ -1002,13 +1026,14 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 		   		html+="</div>";
 		   		
 		   		html+="<br/><br/><br/>"
-                html+='중개사무소 : '+data[1].COMPANY_NAME+'</br>';
-                html+='중개인 사진 :'+ data[1].RENAMED_FILENAME+'</br>';
-                html+='연락처 : '+data[1].BUSINESS_PHONE+'</br>';
+		   		html+='중개사무소 : '+data[1].COMPANY_NAME+'</br>';
+	            html+='<img src="${pageContext.request.contextPath}/resources/upload/agentprofileimg/'+data[1].RENAMED_FILENAME+'" alt="sd" width="80px" height="80px" /><br/>';
+	            html+="<div class='jungaeInfo'>"
+	            html+='연락처 : '+data[1].BUSINESS_PHONE+'</br>';
                 html+='중개인 이름 : '+data[1].MEMBER_NAME+'</br>';
-		   		
+                html+='이메일 : '+data[1].MEMBER_EMAIL+'</br>';
+                html+="</div>"
 		   		if(data[2].AVG!=null){
-		   		html+='평점 : '+data[2].AVG+'</br>';
 		   		html+='<div class="grayStar"></div>';
 		   		html+='<div id="yellowStarContainer">';
 		   		html+='<span class="yellowStar" style="width:'+data[2].AVG*6+'%"></span>'
@@ -1019,7 +1044,6 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 		   		//로그인 한 유저만 신고할 수 있다.
 		   		//신고 버튼
 		   		html+='<c:if test="${memberLoggedIn.status eq 'U'.charAt(0) or memberLoggedIn eq null}">';
-		   		
 		   		html+='<button type="button" style="border:none;background:none;color:gray;" class="btn btn-primary" data-toggle="modal" data-target="#warningModal" onclick="checkLogin();" >신고하기</button>';
 		   		
 		   		html+='<div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:99">';

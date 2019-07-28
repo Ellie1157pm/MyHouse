@@ -34,12 +34,7 @@ import com.kh.myhouse.member.model.vo.Member;
 
 @Controller
 public class ChatController {
-	
-/*	@RequestMapping("/chatMain.do")
-	public String chatTest() {
-		System.out.println("test Good");
-		return "chat/chatRoom";
-	}*/
+
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -47,39 +42,12 @@ public class ChatController {
 	ChatService chatService;
 	
 	
-	@GetMapping("/chat/chatRoom.do")
-	public void websocket(Model model,
-						  HttpSession session, 
-						  @SessionAttribute(value="memberLoggedIn", required=false) Agent memberLoggedIn){
-		String memberId = Optional.ofNullable(memberLoggedIn).map(Agent::getMemberEmail).orElse(session.getId());
-		String chatId = null;
-		
-		
-		Map<String, String> map=new HashMap<>();
-		map.put("memberId", memberId);
-		
-		
-		//chatId조회
-		//1.memberId로 등록한 chatroom존재여부 검사. 있는 경우 chatId 리턴.
-		chatId = chatService.findChatIdByMemberId(map);
-		
-		
-		List<Msg> chatList = chatService.findChatListByChatId(chatId);
-		model.addAttribute("chatList", chatList);
-		
-		logger.info("memberNo=[{}], chatId=[{}]",memberId, chatId);
-		
-		
-		//비회원일 경우, httpSessionId값을 memberId로 사용한다. 
-		//클라이언트에서는 httpOnly-true로 설정된 cookie값은 document.cookie로 가져올 수 없다.
-		model.addAttribute("memberId", memberId);
-		model.addAttribute("chatId", chatId);
-	}
+
 	
 	//chatList : agent
 	@GetMapping("/chat/agentChatList.do")
 	public void agentList(Model model, 
-					  HttpSession session, 
+					  HttpSession session,
 					  @SessionAttribute(value="memberLoggedIn", required=false) Agent memberLoggedIn){
 		//받는사람(로그인한 아이디)
 		String memberId = Optional.ofNullable(memberLoggedIn).map(Agent::getMemberEmail).orElse(session.getId());
@@ -106,7 +74,7 @@ public class ChatController {
 		System.out.println("memberId@controller="+memberId);
 		//chatId조회
 		//1.memberId로 등록한 chatroom존재여부 검사. 있는 경우 chatId 리턴.
-		chatId = chatService.findChatIdByMemberId2(memberId);
+		chatId = chatService.findChatIdByMemberId(memberId);
 		
 		//2.로그인을 하지 않았거나, 로그인을 해도 최초접속인 경우 chatId를 발급하고 db에 저장한다.
 		if(chatId == null){
@@ -176,7 +144,6 @@ public class ChatController {
 	
 	
 	
-	
 	//chat input
 	@MessageMapping("/chat/{chatId}")
 	@SendTo(value={"/chat/{chatId}"})
@@ -208,17 +175,33 @@ public class ChatController {
 	
 
 	
-	//chatting 창
-	@GetMapping("/chat/Chatting.do/{chatId}")
+	//agent chat 창
+	@GetMapping("/chat/chatRoom.do/{chatId}")
 	public String Chat(@PathVariable("chatId") String chatId, Model model){
-		
+		System.out.println("중개회원 채팅방");
 		List<Msg> chatList = chatService.findChatListByChatId(chatId);
 		model.addAttribute("chatList", chatList);
+		String receiveId = chatService.findReceiveId(chatId);
+		
+		model.addAttribute("receiveId", receiveId);
 		
 		logger.info("chatList={}",chatList);
+		
 		return "chat/chatRoom";
 	}
 
-	
+	//chatDel 
+	@GetMapping("/chat/chatDelMember/{chatId}")
+	public String chatDelMember(@PathVariable("chatId") String chatId) {
+		int chatDel = chatService.chatClean(chatId);
+		System.out.println("chatClean@DAO success");
+		return "chat/chatRoom2";
+	}
+	@GetMapping("/chat/chatDelAgent/{chatId}")
+	public String chatDelAgent(@PathVariable("chatId") String chatId) {
+		int chatDel = chatService.chatClean(chatId);
+		System.out.println("chatClean@DAO success");		
+		return "chat/chatRoom";
+	}
 	
 }

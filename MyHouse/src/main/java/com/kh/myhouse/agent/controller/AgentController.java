@@ -384,9 +384,18 @@ public class AgentController {
 		map.put("memberNo", memberNo);
 		map.put("phone", phone);
 		
-		int result = agentService.updateEstate(map);
+		String msg = "";
 		
-		String msg = result>0?"등록성공!":"등록실패!";
+		String strResult = agentService.selectProfileImg(memberNo);
+		
+		if(strResult == null) {
+			msg = "프로필이미지를 등록해주세요.";
+		} else {
+			int result = agentService.updateEstate(map);
+			msg = result>0?"등록성공!":"등록실패!";
+		}
+		
+		
 		
 		model.addAttribute("msg", msg);
 		model.addAttribute("loc", "/agent/estateList");

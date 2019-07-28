@@ -70,7 +70,7 @@ div#agentProfileImg-div{
 div.filebox{
 	position: relative;
     float: right;
-    margin: -83px -88px 0 0px;
+    margin: -83px -58px 0 0px;
 }
 div.filebox .upload-name{
 	width: 135px;
@@ -137,6 +137,14 @@ div.estateList-box p{
 	margin: 0;
 	float: left;
     width: 138px;
+    overflow: hidden;
+    white-space: nowrap;
+	text-overflow: ellipsis;
+}
+div.estateList-box p:nth-child(1){
+	margin: 0;
+	float: left;
+    width: 87px;
     overflow: hidden;
     white-space: nowrap;
 	text-overflow: ellipsis;

@@ -17,8 +17,9 @@ public class ChatServiceImpl implements ChatService {
 	ChatDAO chatDAO; 
 	
 	@Override
-	public String findChatIdByMemberId(Map map) {
-		return chatDAO.findChatIdByMemberId(map);
+	public String findChatIdByMemberId(String memberId) {
+		System.out.println("findChatIdByMemberId service success");
+		return chatDAO.findChatIdByMemberId(memberId);
 	}
 
 	@Override
@@ -54,8 +55,13 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
-	public String findChatIdByMemberId2(String memberId) {
-		return chatDAO.findChatIdByMemberId2(memberId);
+	public int chatClean(String chatId) {
+		return chatDAO.chatClean(chatId);
+	}
+
+	@Override
+	public String findReceiveId(String chatId) {
+		return chatDAO.findReceiveId(chatId);
 	}
 
 
