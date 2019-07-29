@@ -158,7 +158,7 @@ function search() {
   	</c:if>
     <c:if test="${empty list}">
 	    <tr>
-	      <th scope="row" colspan="5">조회된 회원이 없습니다.</th>
+	      <th scope="row" colspan="6">조회된 회원이 없습니다.</th>
 	    </tr>
     </c:if>
   </tbody>

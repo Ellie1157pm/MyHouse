@@ -5,13 +5,13 @@
 	<select id="selectMemberList" resultMap="memberMap">
 	select * 
 	from member
-	where status='U'
+	where status='U' and quit_yn='N'
 	order by member_name
 	</select>
 	<select id="selectRealtorList" resultMap="memberMap">
 	select * 
 	from member
-	where status='B'
+	where status='B' and quit_yn='N'
 	order by member_name
 	</select>
 	<select id="selectReportList" resultType="map">
@@ -72,13 +72,13 @@
 	<select id="memberTotalPage" resultType="_int">
 	select count(*) cnt
 	from member
-	where status='U'
+	where status='U' and quit_yn='N'
 	</select>
 	
 	<select id="realtorTotalPage" resultType="_int">
 	select count(*) cnt
 	from member
-	where status='B'
+	where status='B' and quit_yn='N'
 	</select>
 	
 	<select id="reportTotalPage" resultType="_int">
@@ -128,7 +128,7 @@
 	where (member_name like '%'||#{searchKeyword}||'%'
 		or member_email like '%'||#{searchKeyword}||'%'
 		or phone like '%'||#{searchKeyword}||'%')
-		and status = 'U'
+		and status = 'U' and quit_yn='N'
 	order by member_name
 	</select>
 	
@@ -138,7 +138,7 @@
 	where (member_name like '%'||#{searchKeyword}||'%'
 		or member_email like '%'||#{searchKeyword}||'%'
 		or phone like '%'||#{searchKeyword}||'%')
-		and status = 'U'
+		and status = 'U' and quit_yn='N'
 	</select>
 	
 	<select id="selectRealtorSearchList" resultType="map">
@@ -148,7 +148,7 @@
 		or member_email like '%'||#{searchKeyword}||'%'
 		or phone like '%'||#{searchKeyword}||'%'
 		or COMPANY_REG_NO like '%'||#{searchKeyword}||'%')
-		and status = 'B'
+		and status = 'B' and quit_yn='N'
 	order by member_name
 	</select>
 	
@@ -159,7 +159,7 @@
 		or member_email like '%'||#{searchKeyword}||'%'
 		or phone like '%'||#{searchKeyword}||'%'
 		or COMPANY_REG_NO like '%'||#{searchKeyword}||'%')
-		and status = 'B'
+		and status = 'B' and quit_yn='N'
 	</select>
 	
 	<select id="selectReportSearchList" resultType="map">

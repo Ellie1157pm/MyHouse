@@ -24,6 +24,9 @@ $(function() {
 	else if("report" == "${item}") {
 		$("button#reportList").css("opacity", 0.6);
 	}
+	else if("company" == "${item}") {
+		$("button#companyList").css("opacity", 0.6);
+	}
 		
 	$("#memberList").click(function() {
 		location.href = "${pageContext.request.contextPath}/admin/list?item=member";
@@ -55,7 +58,19 @@ $(function() {
 			<button type="button" class="btn btn-secondary adminBtn" id="reportList">신고목록</button>
 			<button type="button" class="btn btn-secondary adminBtn" id="noticeForm">공지작성</button>
 			<button type="button" class="btn btn-secondary adminBtn" id="chart">통계</button>
+			
+			<c:if test="${item eq 'report'}">
+				<div class="flagChk-container" style="position: absolute; margin: 135px 0 0 319px;">
+					<label for="flagAll">전체</label>
+					<input type="radio" name="flagChk" id="flagAll" />
+					<label for="flagY">처리</label>
+					<input type="radio" name="flagChk" id="flagY" />
+					<label for="flagN">미처리</label>
+					<input type="radio" name="flagChk" id="flagN" />
+				</div>
+			</c:if>
 		</div>
+		
 		<div id="list-container">
 			<jsp:include page="/WEB-INF/views/admin/adminList.jsp"/>
 		</div>
@@ -63,16 +78,6 @@ $(function() {
 	<div class="pageBar-container">
 			${pageBar}
 	</div>
-	<c:if test="${item eq 'report'}">
-		<div class="flagChk-container">
-			<label for="flagAll">전체</label>
-			<input type="radio" name="flagChk" id="flagAll" />
-			<label for="flagY">처리</label>
-			<input type="radio" name="flagChk" id="flagY" />
-			<label for="flagN">미처리</label>
-			<input type="radio" name="flagChk" id="flagN" />
-		</div>
-	</c:if>
 </div>
 <jsp:include page="/WEB-INF/views/admin/adminReportModal.jsp"/>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
