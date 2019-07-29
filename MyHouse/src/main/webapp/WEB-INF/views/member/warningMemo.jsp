@@ -20,14 +20,12 @@ $(function() {
 		$("#cartListFrm").submit();
 	});
 	$("#interest-list-btn").on("click", function(){
-		$("#updateInterestFrm").submit();
+		$("#interestListFrm").submit();
 	});
 	$("#for-sale-btn").on("click", function(){
 		$("#forSaleListFrm").submit();
 	});
-	$("#warning_memo").on("click", function(){
-		$("#warningMemoFrm").submit();
-	});
+	$("#warning_memo").css("opacity", 0.6);
 	
 	$("#allcheck").click(function(){
 		console.log("allcheck");
@@ -101,16 +99,15 @@ function noteDel(){
 
 
 </script>
-<form action="${pageContext.request.contextPath }/member/warningMemo.do"
-	  id="warningMemoFrm"
+<form action="${pageContext.request.contextPath}/member/forSaleList"
+	  id="forSaleListFrm"
 	  method="post">
-	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
-	 <input type="hidden" name="cPage" value="${cPage }" />
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
 </form>
-<form action="${pageContext.request.contextPath }/member/memberView.do"
+<form action="${pageContext.request.contextPath}/member/memberView.do"
 	  id="memberViewFrm"
 	  method="post">
-	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
 </form>
 <form action="${pageContext.request.contextPath}/member/cartList"
 	  id="cartListFrm"
@@ -118,22 +115,10 @@ function noteDel(){
 	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
 </form>
 <form action="${pageContext.request.contextPath}/member/interestList"
-	  id="updateInterestFrm"
+	  id="interestListFrm"
 	  method="post">
 	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
 </form>
-<form action="${pageContext.request.contextPath}/member/forSaleList"
-	  id="forSaleListFrm"
-	  method="post">
-	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
-</form>
-
-<form action="${pageContext.request.contextPath}/member/deleteMember.do"
-	  id="deleteMemberFrm"
-	  method="post">
-	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
-</form>
-
 <div class="modal fade" id="exampleModalCenter" tabindex="-1"
 	role="dialog" aria-labelledby="exampleModalCenterTitle"
 	aria-hidden="true">

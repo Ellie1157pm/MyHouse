@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.myhouse.estate.model.vo.Estate;
 import com.kh.myhouse.estate.model.vo.EstateAttach;
+import com.kh.myhouse.estate.model.vo.Option;
 import com.kh.myhouse.interest.model.vo.Interest;
 import com.kh.myhouse.member.model.vo.Member;
 
@@ -39,8 +40,8 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Member> findId(Member member) {
-		return sqlSession.selectList("member.findId", member);
+	public String findId(Member member) {
+		return sqlSession.selectOne("member.findId", member);
 	}
 	
 	@Override
@@ -68,10 +69,10 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectOne("member.selectInterest", memberNo);
 	}
 
-	@Override
-	public int updateInterest(Interest interest) {
-		return sqlSession.update("member.updateInterest", interest);
-	}
+//	@Override
+//	public int updateInterest(Interest interest) {
+//		return sqlSession.update("member.updateInterest", interest);
+//	}
 
 	@Override
 	public List<Map<String, String>> forSaleList(int memberNo) {
@@ -118,7 +119,26 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.delete("member.deleteCartList", map);
 	}
 
-	
-	
+	@Override
+	public int updateOption(Map map) {
+		return sqlSession.update("member.updateOption", map);
+	}
+
+	@Override
+	public int updateInterest(Map<String, Object> map) {
+		return sqlSession.update("member.updateInterest", map);
+	}
+
+	@Override
+	public int insertCartCheck(Map<String, Object> map) {
+		return sqlSession.update("member.insertCartCheck", map);
+	}
+
+	@Override
+	public int deleteCartCheck(Map<String, Object> map) {
+		return sqlSession.update("member.deleteCartCheck", map);
+		
+	}
+
 
 }

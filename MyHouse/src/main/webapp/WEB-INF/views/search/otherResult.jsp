@@ -1,4 +1,3 @@
-
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="com.kh.myhouse.estate.model.vo.Estate"%>
@@ -29,18 +28,25 @@
 	float:left;
 	height:25px;
 	width:100%;
+	position:relative;
+	bottom:62px;
 	background-repeat: no-repeat;
 }
 .yellowStar{
-	background-image: url(${pageContext.request.contextPath}/resources/images/search/star.gif);
-	float:left;
-	height:25px;
-	background-repeat: no-repeat;
-	bottom: 25px;
-	position:relative;
+   background-image: url(${pageContext.request.contextPath}/resources/images/search/star.gif);
+   float:left;
+   position:relative;
+   bottom:87px;
+   height:25px;
+   background-repeat: no-repeat;
 }
 div#yellowStarContainer{
 	width:415px;
+}
+div.jungaeInfo{
+	position:relative;
+	left:100px;
+	bottom: 75px;
 }
 </style>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
@@ -213,21 +219,21 @@ div#yellowStarContainer{
 					<table id="areaTbl">
 						<tr >
 							<td <%=structure.equals("all")?"style='background:#6c757d;'":"" %> ><button type="button" data-type="전체"<%=structure.equals("all")?"style='background:#6c757d;color:wthie;width:150px;'":"" %> class="btn btn-secondary second" value="all" onclick="changeARea(this);">전체</button></td>
-							<td style="width:175px;" <%=structure.equals("오픈형(방1)")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second"  data-type="오픈형(방 1)" value="오픈형(방1)" <%=structure.equals("오픈형(방1)")?"style='background:#6c757d;color:wthie;width:150px;'":"" %>  onclick="changeARea(this);">오픈형(방 1)</button></td>
+							<td style="width:175px;" <%=structure.equals("오픈형(방1)")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second"  data-type="오픈형(방 1)" value="오픈형(방1)" <%=structure.equals("오픈형(방1)")?"style='background:#6c757d;color:wthie;width:150px;'":"" %>  onclick="changeARea(this);">오픈형(방1)</button></td>
 						</tr>
 						
 						<tr >
-							<td  <%=structure.equals("분리형(방1,거실1)")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형(방 1,거실 1)" value="분리형(방1,거실1)" <%=structure.equals("분리형(방1,거실1)")?"style='background:#6c757d;color:wthie;width:150px;'":"" %> onclick="changeARea(this);">분리형(방 1,거실 1)</button></td>
+							<td  <%=structure.equals("분리형(방1거실1)")?"style='background:#6c757d;'":"" %> ><button type="button" class="btn btn-secondary second" data-type="분리형(방 1거실1)" value="분리형(방1거실1)" <%=structure.equals("분리형(방1거실1)")?"style='background:#6c757d;color:wthie;width:150px;'":"" %> onclick="changeARea(this);">분리형(방1,거실1)</button></td>
 							<td style="width:175px;" <%=structure.equals("복층형")?"style='background:#6c757d;'":"" %>><button type="button" class="btn btn-secondary second" data-type="복층형" value="복층형" <%=structure.equals("복층형")?"style='background:#6c757d;color:wthie;width:150px;'":"" %> onclick="changeARea(this);">복층형</button></td>
 						</tr>
 					</table>
 					<hr />
 					
 					<p class="filterSubTitle" style="margin:0;">층 수 옵션</p>
-					<p class="filterTitle select" style="margin-bottom:4px; ">전체</p>
+					<p class="filterTitle select" style="margin-bottom:4px; ">${topOption eq 'all'?'전체':(topOption eq '반지하옥탑'?'반지하옥탑':'지상층') }</p>
 					<button type="button" class="btn btn-secondary third" ${topOption eq 'all'?'style="background:#6c757d;color:white;width:130px;"':'' } value="all" data-type="전체"  onclick="changeTopOption(this);">전체</button>
 					<button type="button" class="btn btn-secondary third" ${topOption eq '지상층'?'style="background:#6c757d;color:white;width:130px;"':'' } value="지상층" data-type="지상층" onclick="changeTopOption(this);">지상층</button>
-					<button type="button" class="btn btn-secondary third"  ${topOption eq '반지하,옥탑'?'style="background:#6c757d;color:white;width:130px;"':'' } value="반지하,옥탑" data-type="반지하, 옥탑" onclick="changeTopOption(this);">반지하, 옥탑</button>
+					<button type="button" class="btn btn-secondary third"  ${topOption eq '반지하옥탑'?'style="background:#6c757d;color:white;width:130px;"':'' } value="반지하옥탑" data-type="반지하옥탑" onclick="changeTopOption(this);">반지하,옥탑</button>
 					<hr />
 						</c:if><!--end of 원룸일때 옵션  -->
 						<c:if test="${estateType eq 'P' }">
@@ -271,6 +277,7 @@ div#yellowStarContainer{
 		<input type="hidden" name="range_3" id="range_3" value="${range3 eq '0'?'0':range3 }" />
 		<input type="hidden" name="range_4" id="range_4" value="${range4 eq '0'?'300':range4 }" />
 		<input type="hidden" name="address" id="address" value="${localName }" />
+		<input type="hidden" name="topOption" id="topOption" value="${topOption eq 'all'?'all':(topOption eq '반지하옥탑'?'반지하옥탑':'지상층') }" />
 		<input type="hidden" name="coords" id="coords" value="${loc }" />
 		
 		<div>
@@ -287,7 +294,6 @@ div#yellowStarContainer{
 <%}%>
 var address="";
 $(function(){
-	
 	cPage=1;  //추천매물
 	cPage2=1; //일반매물
 	
@@ -329,6 +335,10 @@ function viewFilter(){
 	$('#search3').css('display','block');
 	$('#searchArea').css('height','600px');
 }
+function changeTopOption(obj){
+	$('#estateFrm #topOption').val(obj.value);
+	$('#estateFrm').submit();
+}
 //매매/전세 셀렉트 박스 변경시 필터의 거래유형도 변경.
 function changeDeal(obj){
 	var value=obj.value;
@@ -353,18 +363,6 @@ function changeDeal2(obj){
 	//css 제어
 	var value=obj.value;
 	$('#estateFrm #dealType').val(value);
-/* 	for(var i=0;i<$('div#search3 .first').length;i++){
-		if($('div#search3 .first')[i].value!=obj.value){
-			$('div#search3 .first')[i].style.background="white";
-			$('div#search3 .first')[i].style.color="black";
-		}else{
-		$('#dealType')[0].value=value;
-		
-		$('.select').html($('div#search3 .first')[i].dataset.type);
-		obj.style.background="#6c757d";
-		obj.style.color="white";
-	}
-	} */
 	$('#estateFrm').submit();
 	
 }
@@ -373,26 +371,14 @@ var unit = '';
 var unitNum = '';
 //평수(면적) 선택시 호출되는 함수.
 function changeARea(obj){
+	console.log(obj.value);
  	//전체 초기화
 	 $('#areaTbl td').css('background','white')
 		.css('color','#6c757d'); 
  	
  	$('#estateFrm #structure').val(obj.value);
- 	
-	//  제거
-	for(var i=0;i<$('#search3 .second').length;i++){
- 		$('#search3 .second')[i].style.background="white";
-		$('#search3 .second')[i].style.color="black"; 
-		$('#search3 .second')[i].dataset.value=null;
-		
-	}
-	
-	//보여지는 화면 제어
-	obj.style.background="#6c757d";
-	obj.style.color="white";
-	var parent=obj.parentNode;
-	parent.style.background="#6c757d";
-	$('.button').html(obj.dataset.type);
+ 	console.log($('#estateFrm #structure').val());
+
 	
 	
 	$('#estateFrm').submit();
@@ -434,15 +420,8 @@ geocoder.addressSearch(loc,placesSearchCB2);
 <%}}%>
 
 //controller에서 가져온 검색값 사용하기.
-if('${estateType}'==='V'){
-	var imageSrc = '${pageContext.request.contextPath}/resources/images/search/bilar.png'; // 마커이미지의 주소입니다
-}else if('${estateType}'==='O'){
-	var imageSrc = '${pageContext.request.contextPath}/resources/images/search/oneRoom.png'; // 마커이미지의 주소입니다
-}else{
-	var imageSrc = '${pageContext.request.contextPath}/resources/images/search/office.png'; // 마커이미지의 주소입니다
-}
-
-var imageSize = new kakao.maps.Size(40, 50), // 마커이미지의 크기입니다
+var imageSrc = '${pageContext.request.contextPath}/resources/images/search/oneRoom.png'; // 마커이미지의 주소입니다    
+var  imageSize = new kakao.maps.Size(70, 70); // 마커이미지의 크기입니다
     imageOption = {offset: new kakao.maps.Point(30, 40)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
       
 
@@ -547,10 +526,12 @@ function displayMarker(place) {
 		    removable : true
 		});
         
-        
         kakao.maps.event.addListener(markers[0], 'click', function(mouseEvent) {
         	$("#sidebar").unbind();
         	unit='';
+        	nullContents=false;
+        	notNullHtml=null;
+        	
        	    cPage = 1;
        	    cPage2 = 1;
        	
@@ -873,6 +854,8 @@ var option="";
 	}
 %>
 
+var nullContents;
+var notNullHtml;
 //추천매물 가져오는함수
 function getRecommendEstate(cPage,place){
 	   var param={
@@ -881,6 +864,7 @@ function getRecommendEstate(cPage,place){
 	           addressName : place.address.address_name,
 	           transActionType : $("#dealType option:selected").val(),
 	           structure : "<%=structure%>",
+	           topOption : $("#topOption").val(),
 	           range1:$('#range_1').val(),
 	   		   range2:$('#range_2').val(),
 	   		   range3:$('#range_3').val(),
@@ -889,7 +873,6 @@ function getRecommendEstate(cPage,place){
 	           estateType:"${estateType}"
 	           
 	   }
-	   
 	   $.ajax({
 	       url: "<%=request.getContextPath()%>/estate/getRecommendEstate",
    data: param,
@@ -931,9 +914,13 @@ function getRecommendEstate(cPage,place){
 	        	 else if("${estateType}" == 'V'){
 	        		 html+="<span class='apart'>빌라</span><br>";
 	        	 }
+	        	 else if("${estateType}" == 'O'){
+                    html+="<span class='apart'>원룸/"+data[i].option[0].floorOption.replace(",","")+"</span>";
+                 }
 	        	 else{
 	        		 html+="<span class='apart'>오피스텔</span><br>";
 	        	 }
+	     
 	        	 var ss = data[i].EstatePrice; // 15000
 	 	   		 var dd = String(ss); // number -> String 변환
 	 	   	 	 var ww = dd.length; //억단위일경우 length : 5  천만일경우 length : 4이하
@@ -950,26 +937,32 @@ function getRecommendEstate(cPage,place){
 	 	   		 else{
 	 	   			str=dd+sw;
 	 	   		 }
-	 	   		 if(data[i].TransActionType == 'M'){
+		 	   	 if(data[i].TransActionType == 'M'){
 		        	 html+="<span class='price'>매매 "+str+"</span><br>";	 	   			 	 	   			 
 	 	   		 }
 	 	   		 else if(data[i].TransActionType == 'J'){
 		        	 html+="<span class='price'>전세 "+str+"</span><br>";	 	   			 
 	 	   		 }
 	 	   		 else{
-	 	   			 html+="<span class='price'>월세 "+data[i].Deposit+"/"+data[i].EstatePrice+"</span><br>"; 	   			 	 	   			 
+	 	   			 html+="<span class='price'>월세 "+data[i].Deposit+"/"+data[i].EstatePrice+"</span><br>";	 	   			 	 	   			 
 	 	   		 }
-	 	   		 html+="<span class='area'>"+data[i].EstateArea+"m<sup>2</sup> / "+Math.round(Number(data[0].EstateArea)/3.3)+"평 </span><br>";	        	 
-		 	   	 if("${estateType}" == 'V' && "${estateType}" == 'P'){
-		        	 html+="<span class='address'>"+data[i].AddressDetail+"/"+(data[i].option[0].construction).replace(",","")+"</span><br/>";	        		 
-	        	 }else{
+	        	 html+="<span class='area'>"+data[i].EstateArea+"m<sup>2</sup> / "+Math.round(Number(data[0].EstateArea)/3.3)+"평 </span><br>";	        	 
+	        	 if("${estateType}" == 'V' || "${estateType}" == 'O' || "${estateType}" == 'P'){
+	        		  html+="<span class='address'>"+data[i].AddressDetail+"/"+data[i].option[0].construction.replace(/,/gi, "")+"</span><br/>";                     
+                 }else{
 		        	 html+="<span class='address'>"+data[i].AddressDetail+"</span><br/>";	        		 
 	        	 }
-	        	 html+="<span class='option'>"+data[i].option[0].optionDetail+"</span>";
-	        	 html+="</div>";  
-		    	 $("#sidebar").append(html);
+	       		
+                 html+="<span class='option'>"+data[i].option[0].optionDetail+"</span>";
+                 html+="</div>";
+		          
+	        	 notNullHtml+=html;
+	        	 
+		         $("#sidebar").append(html);
 	         }
-  	}
+  	}else{
+		nullContents=true;
+	}
      
       //추천매물이 10개 미만이면 이제 일반 매물을 가져오기위해서
       if(data.length < 9){	 
@@ -988,14 +981,13 @@ var unitNum = '';
 
 //일반매물 가져오는 함수
 function getNotRecommendEstate(cPage2,place){
-	console.log('클릭이벤트');
-	console.log(place);
  var param={
-         cPage2 : 1,
+         cPage2 : cPage2,
          roadAddressName : place.address_name,
          addressName : place.address.address_name,
          transActionType : $("#dealType option:selected").val(),
          structure : "<%=structure%>",
+         topOption : $("#topOption").val(),
          range1:$('#range_1').val(),
  		 range2:$('#range_2').val(),
  		 range3:$('#range_3').val(),
@@ -1003,7 +995,6 @@ function getNotRecommendEstate(cPage2,place){
          option:option,
          estateType:"${estateType}"
  }
- console.log(param);
  $.ajax({
      url: "<%=request.getContextPath()%>/estate/getNotRecommendEstate",
      data: param,
@@ -1023,13 +1014,16 @@ function getNotRecommendEstate(cPage2,place){
 	    	     html+="<div id='estate' onclick=\"getDetailEstate('"+place.road_address.building_name+"','"+place.address_name+"',"+data[i].EstateNo+","+place.x+","+place.y+");\")>";
 	        	 html+="<img src='${pageContext.request.contextPath}/resources/upload/estateenroll/"+data[i].attachList[0].renamedFileName+"'>";
 	        	 if("${estateType}" == 'A'){
-		        	 html+="<span class='apart2'>아파트</span><br>";        		 
+		        	 html+="<span class='apart'>아파트</span><br>";        		 
 	        	 }
 	        	 else if("${estateType}" == 'V'){
-	        		 html+="<span class='apart2'>빌라</span><br>";
+	        		 html+="<span class='apart'>빌라</span><br>";
 	        	 }
+	        	 else if("${estateType}" == 'O'){
+	        		  html+="<span class='apart'>원룸/"+data[i].option[0].floorOption.replace(",","")+"</span><br>";
+                 }
 	        	 else{
-	        		 html+="<span class='apart2'>오피스텔</span><br>";
+	        		 html+="<span class='apart'>오피스텔</span><br>";
 	        	 }
 	        	 
 	        	 var ss = data[i].EstatePrice; // 15000
@@ -1059,16 +1053,24 @@ function getNotRecommendEstate(cPage2,place){
 	 	   			 html+="<span class='price'>월세 "+data[i].Deposit+"/"+data[i].EstatePrice+"</span><br>";	 	   			 	 	   			 
 	 	   		 }
 	        	 html+="<span class='area'>"+data[i].EstateArea+"m<sup>2</sup> / "+Math.round(Number(data[0].EstateArea)/3.3)+"평 </span><br>";	        	 
-	       		 if("${estateType}" == 'V'){
-		        	 html+="<span class='address'>"+data[i].AddressDetail+"/"+(data[i].option[0].construction).replace(",","")+"</span><br/>";	        		 
-	        	 }else{
+	        	 if("${estateType}" == 'V' || "${estateType}" == 'O' || "${estateType}" == 'P'){
+                     html+="<span class='address'>"+data[i].AddressDetail+"/"+data[i].option[0].construction.replace(/,/gi, "")+"</span><br/>";                     
+                 }else{
 		        	 html+="<span class='address'>"+data[i].AddressDetail+"</span><br/>";	        		 
 	        	 }
 	        	 html+="<span class='option'>"+data[i].option[0].optionDetail+"</span>";
 	        	 html+="</div>";  
 		          
+	        	 notNullHtml+=html;
+	        	 
 		         $("#sidebar").append(html);
 	          }
+  	  }else{
+		  if(nullContents == true &&  notNullHtml==null){
+  			 html="해당하는 매물이 없습니다.";
+		      	$("#sidebar").append(html);  
+		      	$("#sidebar").unbind();
+  		  }
   	  }
      },
      error:function(jqxhr,text,errorThrown){
@@ -1100,7 +1102,7 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 		   		var html="";
 		   		html+="<div id='floating'>";
 		   		html+="<img src='${pageContext.request.contextPath}/resources/images/search/backarrow.PNG' onclick='back();' style='cursor:pointer'>";
-		   		html+="<span>"+placeBuildingName+"</span>";
+		   		html+="<span>"+placeAddressName+"</span>";
 		   		html+="</div>";
 		   		html+="<div id='imgBox'>";
 		   		html+="<div id='carouselExampleControls' class='carousel slide' data-ride='carousel'>";
@@ -1179,18 +1181,22 @@ function getDetailEstate(placeName,placeAddressName,estateNo,x,y){
 		   		html+="</div>";
 		   		
 		   		html+="<br/><br/><br/>"
-			   		html+='중개사무소 : '+data[1].COMPANY_NAME+'</br>';
-			   		html+='연락처 : '+data[1].COMPANY_PHONE+'</br>';
-			   		html+='중개인 이름 : '+data[1].MEMBER_NAME+'</br>';
-			   		if(data[1].AVG!=null){
-			   		html+='평점 : '+data[1].AVG+'</br>';
-			   		html+='<div class="grayStar"></div>';
-			   		html+='<div id="yellowStarContainer">';
-			   		html+='<span class="yellowStar" style="width:'+data[2].AVG*6+'%"></span>'
-			   		html+='</div>';
-			   		}else {
-			   			html+='<div class="grayStar"></div>';
-			   		}
+	   			html+='중개사무소 : '+data[1].COMPANY_NAME+'</br>';
+                html+='<img src="${pageContext.request.contextPath}/resources/upload/agentprofileimg/'+data[1].RENAMED_FILENAME+'" alt="sd" width="80px" height="80px" /><br/>';
+                html+="<div class='jungaeInfo'>"
+                html+='연락처 : '+data[1].BUSINESS_PHONE+'</br>';
+		   		html+='중개인 이름 : '+data[1].MEMBER_NAME+'</br>';
+		   		html+='이메일 : '+data[1].MEMBER_EMAIL+'</br>';
+		   		console.log(data[2])
+		   		if(data[2].AVG!=null){
+		   		html+="</div>"
+		   		html+='<div class="grayStar"></div>';
+		   		html+='<div id="yellowStarContainer">';
+		   		html+='<span class="yellowStar" style="width:'+data[2].AVG*6+'%"></span>'
+		   		html+='</div>';
+		   		}else {
+		   			html+='<div class="grayStar"></div>';
+		   		}
 		   		//로그인 한 유저만 신고할 수 있다.
 		   		//신고 버튼
 		   		html+='<c:if test="${memberLoggedIn.status eq 'U'.charAt(0) or memberLoggedIn eq null}">';

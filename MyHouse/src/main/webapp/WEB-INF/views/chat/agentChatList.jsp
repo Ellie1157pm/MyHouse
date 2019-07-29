@@ -26,20 +26,7 @@
 	opacity: 0.8;
 }
 </style>
-<%-- <section class="chat-list">
-	<div class="chat-class">
-		
-		<c:forEach items="${recentList }" var="m" varStatus="vs">	  
-			<li class="list-group-item d-flex justify-content-between align-items-center">
-				<span id="send-id">
-				<img src="${pageContext.request.contextPath}/resources/images/chat/noun_person_2699458.png" class="person"/>&nbsp;${m.MEMBER_ID }
-				</span>
-				<span id="chatting-contents">${m.MSG }</span>
-				<span class="badge badge-primary badge-pill">14</span>
-			</li>
-			</c:forEach>
-	</div>
-</section> --%>
+
 </head>
 <title>채팅목록</title>
 <body>
@@ -167,37 +154,19 @@ a.none-underline:active {
 </style>
 	<div class="chat_list_wrap">
 		<div class="header">My House</div>
-		<div class="search">
+		<!-- <div class="search">
 			<input type="text" placeholder="이메일/아이피 검색" />
-		</div>
-		<div class="list">
+		</div> -->
+		<div class="list" overflow-y="scroll">
 			<ul>
 				<c:forEach items="${recentList }" var="m" varStatus="vs">
 				<li>
 					<table cellpadding="0" cellspacing="0">
 						<tr>
-							<td class="profile_td">
-								<!--Img--> <img src="${pageContext.request.contextPath}/resources/images/chat/noun_person_2699458.png" />
-							</td>
 							<td class="chat_td">
 								<!--Email & Preview-->
-								<div class="email">${m.MEMBER_ID }&nbsp;<span class="badge badge-primary badge-pill">14</span></div>
-								<div class="chat_preview"><a href="javascript:goChat('${m.CHAT_ID}')" class="none-underline">${m.MSG }</a></div>
-							</td>
-							<td class="time_td">
-								<!--Time & Check-->
-								<jsp:useBean id="now" class="java.util.Date" />
-								<fmt:formatDate value="${now}" pattern="yy/MM/dd" var="nowDate" timeZone="Etc/GMT+6" />
-								<fmt:formatDate value="${m.TIME}" pattern="yy/MM/dd" var="talkDate"/>
-								
-								<div class="time">
-									<c:if test="${nowDate eq talkDate }">
-										<fmt:formatDate value="${m.TIME}" pattern="a h:mm" timeZone="Etc/GMT+6" />
-									</c:if>
-									<c:if test="${nowDate ne talkDate }">
-										<fmt:formatDate value="${m.TIME }" pattern="yy/MM/dd" timeZone="Etc/GMT+6" />
-									</c:if>
-								</div>
+								<div class="email">현재 채팅방:&nbsp;${m.CHAT_ID }&nbsp;
+								<div class="chat_preview"><a href="javascript:goChat('${m.CHAT_ID}')" class="none-underline">최근대화: ${m.MSG }</a></div>
 							</td>
 						</tr>
 					</table>
@@ -233,8 +202,8 @@ a.none-underline:active {
 	});
 	
 	 function goChat(chatId){
-	 	
-		 open("${pageContext.request.contextPath}/chat/chatRoom.do", "문의채팅","width=500px, height=500px", false);
+	 	console.log(chatId);
+		 open("${pageContext.request.contextPath}/chat/chatRoom.do/"+chatId, "문의채팅","width=500px, height=500px", false);
 
 	 }
 </script>

@@ -22,6 +22,7 @@
   			   alias="strArrTypeHandler"/>
 	<typeAlias type="com.kh.myhouse.member.model.vo.Member" alias="member"/>
 	<typeAlias type="com.kh.myhouse.interest.model.vo.Interest" alias="interest"/>
+	<typeAlias type="com.kh.myhouse.cart.model.vo.Cart" alias="cart"/>
 	<typeAlias type="com.kh.myhouse.chat.model.vo.Msg" alias="msg"/>
   </typeAliases>
   

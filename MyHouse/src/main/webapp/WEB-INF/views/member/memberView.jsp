@@ -101,11 +101,11 @@ function deleteMember(memberNo){
 }
 
 </script>
-<form action="${pageContext.request.contextPath }/member/warningMemo.do"
+<form action="${pageContext.request.contextPath}/member/warningMemo.do"
 	  id="warningMemoFrm"
 	  method="post">
-	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
-	 <input type="hidden" name="cPage" value="${cPage }" />
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+	<input type="hidden" name="cPage" value="${cPage }" />
 </form>
 <form action="${pageContext.request.contextPath}/member/cartList"
 	  id="cartListFrm"

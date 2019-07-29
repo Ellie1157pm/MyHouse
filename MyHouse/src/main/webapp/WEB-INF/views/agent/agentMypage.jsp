@@ -36,7 +36,7 @@ $(function() {
 		$("input[type=file]").click();
 	});
 	
-	$("button#agentDeleteImg-btn").on("click", function(){
+	/* $("button#agentDeleteImg-btn").on("click", function(){
 		var param = {
 				memberNo : "${memberLoggedIn.memberNo}",
 				renamedFileNamed : "${renamedFileName}"
@@ -52,7 +52,7 @@ $(function() {
 				}
 			}
 		});
-	});
+	}); */
 	
 	$("input.oldPwd").blur(function(){
 		var param = {
@@ -215,7 +215,7 @@ $(function() {
 			<div class="filebox">
 				<input class="upload-name" value="파일선택" disabled="disabled">
 				<button type="button" class="btn btn-info" id="agentChangeImg-btn">업로드</button>
-				<button type="button" class="btn btn-danger" id="agentDeleteImg-btn">삭제</button>
+				<!-- <button type="button" class="btn btn-danger" id="agentDeleteImg-btn">삭제</button> -->
 			</div>
 			<input type="hidden" name="memberNo" id="memberNo" value="${memberLoggedIn.memberNo}"/>
 			<div id="agentSet-btnGroup">

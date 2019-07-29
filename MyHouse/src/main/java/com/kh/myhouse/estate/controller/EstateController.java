@@ -28,12 +28,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
+import com.kh.myhouse.cart.model.vo.Cart;
 import com.kh.myhouse.estate.model.service.EstateService;
 import com.kh.myhouse.estate.model.vo.Estate;
 import com.kh.myhouse.estate.model.vo.EstateAttach;
 import com.kh.myhouse.estate.model.vo.Option;
 import com.kh.myhouse.member.model.service.MemberService;
-import com.kh.myhouse.member.model.vo.Member;
 
 @Controller
 @RequestMapping("/estate")
@@ -116,11 +116,12 @@ public class EstateController {
 		}else {
 			//나머지 매물들은 동일한 jsp에서 처리한다.
 			mav.addObject("estateType",estateType);
-			
+			mav.addObject("topOption","all");
 			//default값(매매 등등등) 지정
 			if(estateType.equals("V")) {
 				mav.addObject("dealType","M");
 				map.put("dealType", "M");
+				System.out.println("빌라매물 : "+map);
 				List<Estate> list =estateService.selectApartmentname(map);
 				System.out.println("list@@@@===="+list);
 				mav.addObject("list",list);
@@ -179,8 +180,10 @@ public class EstateController {
 	@RequestMapping("/detailEstate")
 	public void detailResult(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int estateNo=Integer.parseInt(request.getParameter("estateNo"));
+		int memberNo=Integer.parseInt(request.getParameter("memberNo"));
 	    
         System.out.println("매물번호 : "+estateNo);
+        System.out.println("로그인한 멤버번호 : "+memberNo);
 		
 		List<Map<String,String>> detailEstate = estateService.selectDetailEstate(estateNo);
         System.out.println("@@@@@@@@@@@@디테일에스테이트 @@@@@@@@@@@@@@@=="+detailEstate);
@@ -196,6 +199,8 @@ public class EstateController {
         Estate e1 = new Estate();
         e1.setEstateNo(estateNo);
         e1.setBusinessMemberNo(BusinessMemberNo);
+        System.out.println("컴퍼니 가져오기");
+        System.out.println(e1);
         Map<String, String> agentInformation=estateService.selectCompany(e1);
         System.out.println("@@@@@agentInformation@@@@ =="+agentInformation);
         
@@ -207,10 +212,14 @@ public class EstateController {
         if(agentInformation!=null) {
         	detailEstate.add(agentInformation);
         }
-        Map<String, String> map=new HashMap<>();
-        map=estateService.selectBusinessMemberInfo(e1.getBusinessMemberNo());
-        System.out.println("평점 가져오기"+map);
-        detailEstate.add(map);
+        
+        Cart cart = new Cart();
+        cart.setEstateNo(estateNo);
+        cart.setMemberNo(memberNo);
+        Map<String, String> cartMap = estateService.selectCart(cart);
+        System.out.println("@@@cartMap@@@==" + cartMap);
+        if(cartMap != null)
+        	detailEstate.add(cartMap);
         
 /*        else {
         	System.out.println("멤버 번호 ㅣ "+e.getBusinessMemberNo());
@@ -274,6 +283,7 @@ public class EstateController {
         String addressName=request.getParameter("addressName");
         String transActionType=request.getParameter("transActionType");
         String structure = request.getParameter("structure");
+        String topOption =request.getParameter("topOption");
         String range1=(String)request.getParameter("range1");
 		String range2=(String)request.getParameter("range2");
 		String range3=(String)request.getParameter("range3");
@@ -284,6 +294,7 @@ public class EstateController {
         System.out.println(roadAddressName);
         System.out.println(addressName);
         System.out.println(structure);
+        System.out.println(topOption);
         System.out.println(range2);
         System.out.println(range3);
         System.out.println(range4);
@@ -328,8 +339,14 @@ public class EstateController {
          else if(structure.equals("오픈형(방1)")) {
            	structrueCal="오픈형(방1)";
           }
-         else if(structure.equals("분리형(방1,거실1)")) {
-           	structrueCal="분리형(방1,거실1)";
+         else if(structure.equals("분리형(방1거실1)")) {
+           	structrueCal="분리형(방1거실1)";
+          }
+         else if(structure.equals("분리형원룸")) {
+         	structrueCal="분리형원룸";
+         }
+         else if(structure.equals("복층형원룸")) {
+          	structrueCal="복층형원룸";
           }
          else {
          	//map에 형식맞게 집어 넣기위해 평수 계산한거 String으로 변환
@@ -343,6 +360,7 @@ public class EstateController {
         System.out.println("옵션:" +option);
         System.out.println("집정보:"+estateType);
         System.out.println("구조"+structure);
+        System.out.println("층수"+topOption);
         System.out.println("2"+range2);
         System.out.println("3"+range3);
         System.out.println("4"+range4);
@@ -351,6 +369,7 @@ public class EstateController {
         param.put("addressName", addressName);
         param.put("transActionType", transActionType);
         param.put("structure",structrueCal);
+        param.put("topOption",topOption);
         param.put("range1",range1);
         param.put("range2",range2);
         param.put("range3",range3);
@@ -360,6 +379,8 @@ public class EstateController {
         System.out.println(param);
         
         List<Map<String,String>> showRecommendEstate = estateService.showRecommendEstate(cPage,numPerPage,param);
+        
+        int result=estateService.expiredPowerLinkEstate();
         
         System.out.println("제발 나와라="+showRecommendEstate);
         
@@ -380,12 +401,15 @@ public class EstateController {
          String addressName=request.getParameter("addressName");
          String transActionType=request.getParameter("transActionType");
          String structure = request.getParameter("structure");
+         String topOption =request.getParameter("topOption");
          String range1=(String)request.getParameter("range1");
  		 String range2=(String)request.getParameter("range2");
  		 String range3=(String)request.getParameter("range3");
  		 String range4=(String)request.getParameter("range4");
          String  option = request.getParameter("option");
          String estateType = request.getParameter("estateType");
+         
+         System.out.println(structure+"dsafdsafdsafasd");
          
          if(transActionType.equals("all")){
          	range4="100000000";        	
@@ -398,51 +422,58 @@ public class EstateController {
          String structrueCal;
          
          if(structure.equals("all")){
-         	structrueCal="all";        	     	
-         }
-         else if(structure.equals("투룸")) {
-         	structrueCal="투룸";
-         }
-         else if(structure.equals("쓰리룸")) {
-         	structrueCal="쓰리룸";
-         }
-         else if(structure.equals("포룸+")) {
-         	structrueCal="포룸+";
-         }
-         else if(structure.equals("오픈형원룸")) {
-          	structrueCal="오픈형원룸";
-         }
-         else if(structure.equals("분리형")) {
-          	structrueCal="분리형";
-         }
-         else if(structure.equals("복층형")) {
-           	structrueCal="복층형";
-         }
-         else if(structure.equals("쓰리룸+")) {
-          	structrueCal="쓰리룸+";
-         }
-         else if(structure.equals("오픈형(방1)")) {
-           	structrueCal="오픈형(방1)";
+          	structrueCal="all";        	     	
           }
-         else if(structure.equals("분리형(방1,거실1)")) {
-           	structrueCal="분리형(방1,거실1)";
+          else if(structure.equals("투룸")) {
+          	structrueCal="투룸";
           }
-         else {
-         	//map에 형식맞게 집어 넣기위해 평수 계산한거 String으로 변환
-         	structrueCal=Integer.toString((int)(Integer.parseInt(structure)*3.3));   
-         }
+          else if(structure.equals("쓰리룸")) {
+          	structrueCal="쓰리룸";
+          }
+          else if(structure.equals("포룸+")) {
+          	structrueCal="포룸+";
+          }
+          else if(structure.equals("오픈형원룸")) {
+           	structrueCal="오픈형원룸";
+          }
+          else if(structure.equals("분리형")) {
+           	structrueCal="분리형";
+          }
+          else if(structure.equals("복층형")) {
+            	structrueCal="복층형";
+          }
+          else if(structure.equals("쓰리룸+")) {
+           	structrueCal="쓰리룸+";
+          }
+          else if(structure.equals("오픈형(방1)")) {
+            	structrueCal="오픈형(방1)";
+           }
+          else if(structure.equals("분리형(방1거실1)")) {
+            	structrueCal="분리형(방1거실1)";
+           }
+          else if(structure.equals("분리형원룸")) {
+          	structrueCal="분리형원룸";
+          }
+          else if(structure.equals("복층형원룸")) {
+           	structrueCal="복층형원룸";
+           }
+          else {
+          	//map에 형식맞게 집어 넣기위해 평수 계산한거 String으로 변환
+          	structrueCal=Integer.toString((int)(Integer.parseInt(structure)*3.3));   
+          }
          System.out.println(structrueCal+"계산");
          System.out.println("도로명 : "+roadAddressName);
          System.out.println("번지명 : "+addressName);
          System.out.println("타입 : "+transActionType);
          System.out.println("옵션:" +option);
-         
+         System.out.println("층수:"+topOption);
          
          Map<String, String> param=new HashMap<>();
          param.put("roadAddressName", roadAddressName);
          param.put("addressName", addressName);
          param.put("transActionType", transActionType);
          param.put("structure",structrueCal);
+         param.put("topOption",topOption);
          param.put("range1",range1);
          param.put("range2",range2);
          param.put("range3",range3);
@@ -462,177 +493,228 @@ public class EstateController {
 
 
 
-	@RequestMapping("/EnrollTest.do")
-	public String EnrollTest() {
-
-		return "enroll/EnrollTest";
-	}
-
-	@PostMapping("/EnrollTestEnd.do")
-	public String EnrollTestEnd(@RequestParam String address1,
-			@RequestParam String address2,
-			@RequestParam String address3,
-			@RequestParam String address4,
-			@RequestParam String phone1,
-			@RequestParam String phone2,
-			@RequestParam String phone3,
-			@RequestParam char estateType,
-			@RequestParam char transactiontype,
-			@RequestParam int deposit,
-			@RequestParam int[] mon,
-			@RequestParam int ManageMentFee,
-			@RequestParam int estateArea,
-			@RequestParam String estatecontent,
-			@RequestParam String[] etcoption,
-			@RequestParam int MemberNo,
-			@RequestParam int BusinessMemberNo,
-			@RequestParam String agentphone,
-			@RequestParam String SubwayStation,
-			@RequestParam String[] construction,
+    @RequestMapping("/EnrollTest.do")
+    public String EnrollTest() {
+        return "enroll/EnrollTest";
+    }
+    @PostMapping("/EnrollTestEnd.do")
+    public String EnrollTestEnd(@RequestParam String address1,
+            @RequestParam String address2,
+            @RequestParam String address3,
+            @RequestParam String address4,
+            @RequestParam String phone1,
+            @RequestParam String phone2,
+            @RequestParam String phone3,
+            @RequestParam char estateType,
+            @RequestParam char transactiontype,
+            @RequestParam int deposit,
+            @RequestParam int[] mon,
+            @RequestParam int ManageMenetFee,
+            @RequestParam int estateArea,
+            @RequestParam String estatecontent,
+            @RequestParam String[] etcoption,
+            @RequestParam int MemberNo,
+            @RequestParam int BusinessMemberNo,
+            @RequestParam String agentphone,
+            @RequestParam String SubwayStation,
+            @RequestParam String[] construction,
             @RequestParam String[] flooropt,
             @RequestParam String jibunAddress,
-			MultipartFile[] upFile,
-			HttpServletRequest request,
-			Model model
-
-			) {
-
-
-		System.out.println("address1 주소명=="+address1);
-		System.out.println("address2 주소상세=="+address2);
-		System.out.println("address3 주소상세=="+address3);
-		System.out.println("address4 주소상세=="+address4);
-		System.out.println("지번 주소상세=="+jibunAddress);
-		String addressdetail = "";
-		if(address4.equals("0")) {
-		addressdetail = address2+"동"+address3+"층";
-			
-		}else {
-			addressdetail = address4+"층";
-		}
-		
-		String phone = phone1+phone2+phone3;
-		System.out.println("phone 폰번호=="+phone);
-		System.out.println("estateType 빌라,아파트,오피스텔=="+estateType);
-		System.out.println("transactiontype 전세,매매,월세 라디오버튼값=="+transactiontype);
-		System.out.println("deposit 보증금=="+deposit);
-		System.out.println("mon 전세,매매,월세 가격입력값=="+Arrays.toString(mon));//mon[0]:월세 /mon[1]:전세 /mon[2]:매물가 
-		System.out.println("ManageMentFee 관리비=="+ManageMentFee);
-		System.out.println("estateArea 평수=="+estateArea);
-		System.out.println("estatecontent 주변환경=="+estatecontent);
-		System.out.println("etcoption 엘레베이터,애완동물 등=="+Arrays.toString(etcoption));
-		System.out.println("SubwayStation 전철역=="+SubwayStation);
-		System.out.println("upFile 파일명=="+Arrays.toString(upFile));
-
-		//지역코드 얻어오기
-		String address= (jibunAddress.substring(0,8));	
-		String localCode=estateService.selectLocalCodeFromRegion(address); 
-		System.out.println("localCode 지역코드의 값 =="+localCode);
-
-		//전세 매매 월세 코드에 맞는 ,전세 ,월세 ,매매값 넣기
-		int estateprice= 0;
-		if(transactiontype=='J') {
-			estateprice = mon[1];
-		}
-		else if(transactiontype=='M') {
-			estateprice = mon[2];
-		}
-		else {
-			estateprice = mon[0];
-		}
-
-
-		System.out.println("ss의 값은 ====="+estateprice);
-		System.out.println("transactiontype의 값은 ====="+transactiontype);
+            MultipartFile[] upFile,
+            HttpServletRequest request,
+            Model model
+            ) {
+        System.out.println("address1 주소명=="+address1);
+        System.out.println("address2 주소상세=="+address2);
+        System.out.println("address3 주소상세=="+address3);
+        System.out.println("address4 주소상세=="+address4);
+        System.out.println("지번 주소상세=="+jibunAddress);
+        String addressdetail = "";
+        if(address4.equals("0")) {
+        addressdetail = address2+"동"+address3+"층";
+            
+        }else {
+            addressdetail = address4+"층";
+        }
+        
+        String phone = phone1+phone2+phone3;
+        System.out.println("phone 폰번호=="+phone);
+        System.out.println("estateType 빌라,아파트,오피스텔=="+estateType);
+        System.out.println("transactiontype 전세,매매,월세 라디오버튼값=="+transactiontype);
+        System.out.println("deposit 보증금=="+deposit);
+        System.out.println("mon 전세,매매,월세 가격입력값=="+Arrays.toString(mon));//mon[0]:월세 /mon[1]:전세 /mon[2]:매물가 
+        System.out.println("ManageMenetFee 관리비=="+ManageMenetFee);
+        System.out.println("estateArea 평수=="+estateArea);
+        System.out.println("estatecontent 주변환경=="+estatecontent);
+        System.out.println("etcoption 엘레베이터,애완동물 등=="+Arrays.toString(etcoption));
+        System.out.println("SubwayStation 전철역=="+SubwayStation);
+        System.out.println("upFile 파일명=="+Arrays.toString(upFile));
+        
+        //지역코드 얻어오기
+                String address= (jibunAddress.substring(0,8));  
+                String localCode=estateService.selectLocalCodeFromRegion(address); 
+                System.out.println("localCode 지역코드의 값 =="+localCode);
+                
+        //전세 매매 월세 코드에 맞는 ,전세 ,월세 ,매매값 넣기
+        int estateprice= 0;
+        if(transactiontype=='J') {
+            estateprice = mon[1];
+        }
+        else if(transactiontype=='M') {
+            estateprice = mon[2];
+        }
+        else {
+            estateprice = mon[0];
+        }
+        
+        System.out.println("ss의 값은 ====="+estateprice);
+        System.out.println("transactiontype의 값은 ====="+transactiontype);
      
-		if(!agentphone.equals("0")) {
-			phone = agentphone;
-		}
-		
-		
-		//매물 테이블에 insert 
-	Estate estate =new Estate(0, localCode, MemberNo,
-			BusinessMemberNo, phone, agentphone,
-				address1, estateType, transactiontype, estateprice, 
-				ManageMentFee, estateArea, SubwayStation, 
-				estatecontent, null, deposit,addressdetail);
-
-		String msg ="에러입니다.";
-		System.out.println("ESTATE E의 값은@@@@@@@"+estate);
-		int result =estateService.EstateInsert(estate);
-		System.out.println("result@@@@=="+result);
-		
-
-		// tbl_option에 etcoption 엘레베이터,애완동물 등 insert
-		Option option = new Option(0, etcoption, construction,flooropt);
-
-		int result2 = estateService.estateoptionlist(option);
-		System.out.println("result22222222@@@@=="+result2);
-
-
-		// 사진 테이블에  이름 넣기
-		int result3 =0;
-		try {
-			//1. 파일 업로드
-			String saveDirectory = request.getSession()
-					.getServletContext()
-					.getRealPath("/resources/upload/estateenroll");
-
-
-			List<EstateAttach> attachList = new ArrayList<>();
-			for(MultipartFile f : upFile) {
-				if(!f.isEmpty()) {
-
-					String originalFileName = f.getOriginalFilename();
-					String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
-					SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
-					int rndNum = (int)(Math.random()*1000);
-
-					String renamedFileName 
-					= sdf.format(new Date())+"_"+rndNum+"."+ext;
-
-					System.out.println("saveDirectory@@@@@@@@@==="+saveDirectory);
-					System.out.println("renamedFileName@@@@@@@@@==="+renamedFileName);
-					//서버 지정위치에 파일 보관
-					try {
-						f.transferTo(new File(saveDirectory+"/"+renamedFileName));
-
-					} catch (IllegalStateException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}	
-
-					EstateAttach attach =new EstateAttach();
-					attach.setOriginalFileName(originalFileName);
-					attach.setRenamedFileName(renamedFileName);
-
-					//list에 vo담기
-					attachList.add(attach);
-					System.out.println("attachList @@@@@"+attachList);
-					//2.업무로직 : db에 게시물 등록
-
-				}	
-			}
-			result3 = estateService.insertattach(attachList);
-			System.out.println("result3 ===="+result3);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-
-
-		if(result>0 && result2>0 && result3>0) {
-			msg="수정성공!!!";
-		}
-
-
-		model.addAttribute("msg",msg);
-		
-		return "common/msg";
-	}
-	
-	
-	//아파트 필터링
+        if(!agentphone.equals("0")) {
+            phone = agentphone;
+        }
+        
+        
+        //매물 테이블에 insert 
+    Estate estate =new Estate(0, localCode, MemberNo,
+            BusinessMemberNo, phone, agentphone,
+                address1, estateType, transactiontype, estateprice, 
+                ManageMenetFee, estateArea, SubwayStation, 
+                estatecontent, null, deposit,addressdetail);
+    
+        String msg ="에러입니다.";
+        System.out.println("ESTATE E의 값은@@@@@@@"+estate);
+        int result =estateService.EstateInsert(estate);
+        System.out.println("result@@@@=="+result);
+        
+        // tbl_option에 etcoption 엘레베이터,애완동물 등 insert
+        Option option = new Option(0, etcoption, construction,flooropt);
+        
+        int result2 = estateService.estateoptionlist(option);
+        System.out.println("result22222222@@@@=="+result2);
+        
+        // 사진 테이블에  이름 넣기
+        int result3 =0;
+        try {
+            //1. 파일 업로드
+            String saveDirectory = request.getSession()
+                    .getServletContext()
+                    .getRealPath("/resources/upload/estateenroll");
+            
+            List<EstateAttach> attachList = new ArrayList<>();
+            for(MultipartFile f : upFile) {
+                if(!f.isEmpty()) {
+                    
+                    String originalFileName = f.getOriginalFilename();
+                    String ext = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+                    SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+                    int rndNum = (int)(Math.random()*1000);
+                    
+                    String renamedFileName 
+                    = sdf.format(new Date())+"_"+rndNum+"."+ext;
+                    
+                    System.out.println("saveDirectory@@@@@@@@@==="+saveDirectory);
+                    System.out.println("renamedFileName@@@@@@@@@==="+renamedFileName);
+                    //서버 지정위치에 파일 보관
+                    try {
+                        f.transferTo(new File(saveDirectory+"/"+renamedFileName));
+                        
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }   
+                    
+                    EstateAttach attach =new EstateAttach();
+                    attach.setOriginalFileName(originalFileName);
+                    attach.setRenamedFileName(renamedFileName);
+                    
+                    //list에 vo담기
+                    attachList.add(attach);
+                    System.out.println("attachList @@@@@"+attachList);
+                    //2.업무로직 : db에 게시물 등록
+                    
+                }   
+            }
+            result3 = estateService.insertattach(attachList);
+            System.out.println("result3 ===="+result3);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        //자동쪽지(이형무)
+        if(result>0 && result2>0 && result3>0) {
+            msg="수정성공!!!";
+                
+            Map<String, Object> map_ = new HashMap();
+//            map_.put("address", address1); //주소명
+            String state = null;
+            String city = null;
+            String[] addr = address1.split(" ");
+            String memoContents = "관심매물이 올라왔습니다."+address1;
+            
+            System.out.println("매물등록후 자동 쪽지 전송주소=>>"+address1);
+            System.out.println("addr[0]==>"+addr[0]);
+            
+            if(addr[0].equals("서울")) {
+                System.out.println("시/군/구=>"+addr[0]+" "+addr[1]);
+                state = addr[0];
+                city = addr[1];
+                map_.put("state", state);
+                map_.put("city", city);
+                
+            }
+            else { //서울 이외도시
+            	System.out.println("도=>"+addr[0]);
+            	System.out.println("시/군/구=>"+addr[1]);
+            	state = addr[0];
+            	city = addr[1]+" "+addr[2];
+            	map_.put("state", state);
+            	map_.put("city", city);
+            	map_.put("memoContents", memoContents);
+            }
+            
+            
+            map_.put("estateType", estateType); //빌라 오피스텔...
+            String optionStr = Arrays.toString(etcoption); //애완견 등
+            optionStr = optionStr.substring(1, optionStr.length()-1);
+            map_.put("optionDetail", optionStr);
+//            List<Integer> memberNoList = estateService.selectMemberNoList(map_);
+            System.out.println("저장된값=>"+map_);
+            
+            List<Integer> memberNoList = estateService.selectMemberNoList(map_);
+            System.out.println("쪽지전송된 회원리스트=>"+memberNoList);
+            
+            Map<String, Object> insertMemoMap = null;
+           
+          
+            
+            //쪽지전송
+            if(memberNoList != null) {
+            	for(int i=0; i<memberNoList.size(); i++) {
+            		insertMemoMap = new HashMap<>();
+            		insertMemoMap.put("memberNo", memberNoList.get(i));
+            		insertMemoMap.put("memoContents", memoContents);
+            		System.out.println("전달할 회원번호: "+ memberNoList.get(i));
+            		System.out.println("전달할 메세지: "+ insertMemoMap.get(memoContents));
+            		
+            		
+            		int sendMemo = estateService.insertMemoSend(insertMemoMap);
+            		System.out.println("해당회원에게 쪽지를 전송했습니다.");
+            	}
+            }else {
+            	System.out.println("해당하는 회원이 없습니다.");
+            }
+            
+        }
+        
+        model.addAttribute("msg",msg);
+        
+        return "common/msg";
+    }
+    
+    
+    //아파트 필터링
 	@RequestMapping("/findApartTerms")
 	public ModelAndView findApartTerms(HttpServletRequest req,ModelAndView mav) {
 		Map<String, Object> map=new HashMap<>();
@@ -832,23 +914,15 @@ public class EstateController {
 		map.put("structure", structure);
 		map.put("localCode", localCode);
 		map.put("transActionType", dealType);
+		map.put("dealType", dealType);
+		map.put("topOption", topOption);
+
 		
-		System.out.println("매물유형 : "+estateType);
-		System.out.println("좌표 : "+coords);
-		System.out.println("거래유 : "+dealType);
-		System.out.println("주소 : " +address);
-		System.out.println("로컬코드 : " +localCode);
-		System.out.println("구조  : "+structure);
-		System.out.println("범위1 : "+range1);
-		System.out.println("범위2 : "+range2);
-		System.out.println("범위3 : "+range3);
-		System.out.println("범위4 : "+range4);
 		
-		System.out.println(map);
+		System.out.println("예림-컨트롤러 : "+map);
 		
 		//아파트가 아닌 경우
 		if(!(estateType.equals("A"))) {
-			System.out.println("아파트 아님 ");
 			//빌라 매매/전세인 경우
 			if(dealType.equals("M")||dealType.equals("J")) {
 				//구조가 all이고 옵션이 없을때
@@ -858,38 +932,35 @@ public class EstateController {
 				}else if(structure.equals("all")&&option!=null) {
 					list=estateService.selectEstateListForAllSelectOption(map);
 				}else if(!structure.equals("all")&&option==null) {
+					System.out.println("구조가 전체가 아니고 옵션이 없을때");
 					list=estateService.selectEstateListSelectStructureNotOption(map);
 					System.out.println(list+"ㅁㄴㄹㅇㅁㄴㅇㄹㅇ");
 				}else {
-					//구조가 전체가 아니고 옵션이 있을때
 					list=estateService.selectEstateListSelectStructureNotOptoin(map);}
 			}
 			//월세 혹은 전체인 경우 =>range3,4 추가해야되므로 나눠줌
 			else {
+				//매매,전세가 아닌 경우
 				//구조가 전체일 때-option의 null여부와 topOption이 all인지 아닌지로 비교
 				if(structure.equals("all")&&option==null&&topOption.equals("all")) {
 					list=estateService.selectEstateListForAllNotOptionForMontlyFee(map);
 				}else if(structure.equals("all")&&option==null&&!topOption.equals("all")) {
-					map.put("topOption", topOption);
 					list=estateService.selectEstateListForAllNotOptionSelectFloorOptionForMontlyFee(map);
 				}
 				
-				else if(structure.equals("all")&&option!=null&&topOption.equals("all")) {
-					map.put("option", option);
+				else if(structure.equals("all")&&option!=null) {
+					
 					list=estateService.selectEstateListForAllSelectOptionNotFloorOpionForMontlyFee(map);
-				}else if(structure.equals("all")&&option!=null&&!topOption.equals("all")) {
-					map.put("option", option);
-					map.put("topOption", topOption);
+				}else if(structure.equals("all")&&option!=null) {
 					list=estateService.selectEstateListForAllSelectOptionSelectFloorOptionMontlyFee(map);
 				}
 				
 				//구조가 전체가 아닐 때-option의 null여부와 topOption이 all인지 아닌지로 비교
-				else if(!structure.equals("all")&&option==null&&topOption.equals("all")) {
-					
+				else if(!structure.equals("all")&&option==null) {
 					list=estateService.selectEstateListSelectStructureNotOpionNotFloorOptionMontlyFee(map);
-				}else if(!structure.equals("all")&&option==null&&!topOption.equals("all")) {
+				}else if(!structure.equals("all")&&option==null) {
 					
-					map.put("topOption", topOption);
+					
 					list=estateService.selectEstateListSelectStructureNotOpionSelectFloorOptionMontlyFee(map);
 				}
 				
@@ -907,19 +978,7 @@ public class EstateController {
 		//원룸인 경우=>옵션 다수
 		System.out.println(list);
 
-		mav.addObject("dealType",dealType);
-		mav.addObject("loc",coords);
-		mav.addObject("estateType",estateType);
-		mav.addObject("range1",range1);
-		mav.addObject("range2",range2);
-		mav.addObject("range3",range3);
-		mav.addObject("range4",range4);
-		mav.addObject("topOption",topOption);
-		mav.addObject("structure",structure);
-		mav.addObject("option",option);
-		mav.addObject("list",list);
-		mav.addObject("localName",address);
-		mav.addObject("msg","viewFilter();");
+
 		
 		mav.setViewName("search/otherResult");
 		}
@@ -974,26 +1033,30 @@ public class EstateController {
 					list=estateService.selectApartListForAllNotOptionAndMontlyFee(map);
 				}
 			}
-			System.out.println("리스트");
-			System.out.println(list+"리스트야");
-			 
-			//view단 처리
-			mav.addObject("dealType",dealType);
-			mav.addObject("loc",coords);
-			mav.addObject("estateType",estateType);
-			mav.addObject("range1",range1);
-			mav.addObject("range2",range2);
-			mav.addObject("range3",range3);
-			mav.addObject("range4",range4);
-			mav.addObject("structure",structure);
-			mav.addObject("list",list);
-			mav.addObject("localName",address);
-			mav.addObject("msg","viewFilter();");
-			
-			mav.setViewName("search/apartResult");
 		}
 		
 		System.out.println("리스트 "+list);
+		 
+		//view단 처리
+		mav.addObject("dealType",dealType);
+		mav.addObject("loc",coords);
+		mav.addObject("estateType",estateType);
+		mav.addObject("range1",range1);
+		mav.addObject("range2",range2);
+		mav.addObject("range3",range3);
+		mav.addObject("range4",range4);
+		mav.addObject("structure",structure);
+		mav.addObject("list",list);
+		mav.addObject("localName",address);
+		mav.addObject("msg","viewFilter();");
+		mav.addObject("topOption",topOption);
+		mav.addObject("option",option);
+		mav.addObject("msg","viewFilter();");
+		if(estateType.equals("A")) {
+			mav.setViewName("search/apartResult");
+		}else {
+			mav.setViewName("search/otherResult");
+		}
 		return mav;
 	}
 	
@@ -1060,5 +1123,12 @@ public class EstateController {
 		}
 		new Gson().toJson(msg,respones.getWriter());
 		
+		
 	}
+
+	
+	
+	
+	
+	
 }

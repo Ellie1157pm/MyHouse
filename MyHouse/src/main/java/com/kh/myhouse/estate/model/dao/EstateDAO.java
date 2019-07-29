@@ -3,6 +3,7 @@ package com.kh.myhouse.estate.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.myhouse.cart.model.vo.Cart;
 import com.kh.myhouse.estate.model.vo.Estate;
 import com.kh.myhouse.estate.model.vo.EstateAttach;
 import com.kh.myhouse.estate.model.vo.Option; 
@@ -79,5 +80,13 @@ public interface EstateDAO {
 	Map<String, String> selectBusinessMemberInfo(int bMemberNo);
 
 	int insertEstimation(Map<String, Object> map);
+
+	List<Integer> selectMemberNoList(Map<String, Object> map_);
+
+	int expiredPowerLinkEstate();
+
+	int insertMemoSend(Map<String,Object> mapList);
+
+	Map<String, String> selectCart(Cart cart);
 
 }

@@ -48,11 +48,11 @@ $(function() {
 	}
 				
 </script>
-<form action="${pageContext.request.contextPath }/member/warningMemo.do"
+<form action="${pageContext.request.contextPath}/member/warningMemo.do"
 	  id="warningMemoFrm"
 	  method="post">
-	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
-	 <input type="hidden" name="cPage" value="${cPage }" />
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+	<input type="hidden" name="cPage" value="${cPage }" />
 </form>
 <form action="${pageContext.request.contextPath }/member/memberView.do"
 	  id="memberViewFrm"
@@ -86,8 +86,9 @@ $(function() {
 		</div>
 		<div id="interestList-container">
 		<p>저장한 조건에 맞는 매물이 있으면 알려드립니다.</p>
-			<form name="updateInterestFrm" action="${pageContext.request.contextPath}/member/updateInterestList" method="post">
+			<form id="updateInterestFrm" action="${pageContext.request.contextPath}/member/updateInterestList" method="post">
 			<input type="hidden" name="memberNo" value="${interest.memberNo }"/>
+			<input type="hidden" name="regionCode" value="${interest.regionCode }" />
 			<!-- interest테이블의 region에 담길 관심지역 설정 -->
 		<table>
 			<!-- <div class="input-group mb-3"> -->
@@ -97,12 +98,12 @@ $(function() {
   						<div class="input-group-prepend">
   						</div>
 		  				<select name="state" id="" onchange="selectRegion(this);">
-		  					<option value="" selected disabled >${interest.city }</option>
+		  					<option value="${interest.state }" selected disabled >${interest.state }</option>
 		  					<option value="서울" >서울</option>
-		  					<option value="경기도">경기도</option>
+		  					<option value="경기">경기도</option>
 		  				</select>
-		  				<select name="city" id="Seoul" style="display: none" >
-		  				<option value="">${interest.state }</option>
+		  				<select name="city" id="Seoul" style="display: none">
+		  				<option value="${interest.city }" selected disabled>${interest.city }</option>
 		  				<option value="강남구">강남구</option>			
 		  				<option value="강동구">강동구</option>			
 		  				<option value="강북구">강북구</option>			
@@ -129,8 +130,8 @@ $(function() {
 		  				<option value="중구">중구</option>
 		  				<option value="중랑구">중랑구</option>			
 		  				</select>
-		  				<select name="city" id="Gyeonggi" style="display: none"  >
-		  				<option value="">선택해주세요</option>
+		  				<select name="city" id="Gyeonggi" style="display: none">
+		  				<option value="${interest.city }" selected disabled>${interest.city }</option>
 		  				<option value="수원시 장안구">수원시 장안구</option>
 		  				<option value="수원시 권선구">수원시 권선구</option>
 		  				<option value="수원시 팔달구">수원시 팔달구</option>			
@@ -174,13 +175,10 @@ $(function() {
 		  				<option value="가평군">가평군</option>			
 		  				<option value="양평군">양평군</option>			
 		  				</select>
-  				
-			<!-- </div> -->
 				</td>
 			</tr>
 
 		<!-- 주거형태 체크박스 -->
-		
 			<tr>
 				<th>분류</th>
 				<td>
@@ -189,17 +187,17 @@ $(function() {
 							/* List.contains메소드를 사용하기 위해 String[] => List로 형변환함.  */
 							List<String> EstateTypeList = null;
 							String[] estateType = ((Interest)request.getAttribute("interest")).getEstateType();
-							System.out.println("estateType@jsp="+estateType);
+							System.out.println("estateType@jsp="+Arrays.toString(estateType));
 							if(estateType != null)//이 조건이 없다면, 체크박스에 하나도 체크하지 않았다면, Array.asList(null)=>NullPointerException 
 								EstateTypeList = Arrays.asList(estateType); 
 						%>
-						<input type="checkbox" class="form-check-input" name="interest" id="interest0" value="아파트" <%=EstateTypeList!=null && EstateTypeList.contains("아파트")?"checked":""%>>
+						<input type="checkbox" class="form-check-input" name="estateType" id="estateType0" value="A" <%=EstateTypeList!=null && EstateTypeList.contains("A")?"checked":""%>>
 						<label for="interest0" class="form-check-label" >아파트</label>&nbsp;&nbsp;
-						<input type="checkbox" class="form-check-input" name="interest" id="interest1" value="빌라" <%=EstateTypeList!=null && EstateTypeList.contains("빌라")?"checked":""%>>
+						<input type="checkbox" class="form-check-input" name="estateType" id="estateType1" value="V" <%=EstateTypeList!=null && EstateTypeList.contains("V")?"checked":""%>>
 						<label for="interest1" class="form-check-label" >빌라</label>&nbsp;&nbsp;
-						<input type="checkbox" class="form-check-input" name="interest" id="interest2" value="원룸" <%=EstateTypeList!=null && EstateTypeList.contains("원룸")?"checked":""%>>
+						<input type="checkbox" class="form-check-input" name="estateType" id="estateType2" value="O" <%=EstateTypeList!=null && EstateTypeList.contains("O")?"checked":""%>>
 						<label for="interest2" class="form-check-label" >원룸</label>&nbsp;&nbsp;
-						<input type="checkbox" class="form-check-input" name="interest" id="interest3" value="오피스텔" <%=EstateTypeList!=null && EstateTypeList.contains("오피스텔")?"checked":""%>>
+						<input type="checkbox" class="form-check-input" name="estateType" id="estateType3" value="P" <%=EstateTypeList!=null && EstateTypeList.contains("P")?"checked":""%>>
 						<label for="interest3" class="form-check-label" >오피스텔</label>&nbsp;&nbsp;
 					</div>
 				</td>
@@ -251,9 +249,6 @@ $(function() {
 			<input type="submit" class="btn btn-outline-success" id="interest-update-btn" value="수정" />&nbsp;
 			<input type="reset" class="btn btn-outline-success" id="interest-cancel-btn" value="초기화" />
 		</div>
-			</tr>
-		
-		
 		</form>
 		</div>
 	</div>

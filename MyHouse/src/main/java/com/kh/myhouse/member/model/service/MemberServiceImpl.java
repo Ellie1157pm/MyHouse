@@ -1,6 +1,5 @@
 package com.kh.myhouse.member.model.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.myhouse.estate.model.vo.Estate;
 import com.kh.myhouse.estate.model.vo.EstateAttach;
+import com.kh.myhouse.estate.model.vo.Option;
 import com.kh.myhouse.interest.model.vo.Interest;
 import com.kh.myhouse.member.model.dao.MemberDAO;
 import com.kh.myhouse.member.model.vo.Member;
@@ -40,14 +40,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public ArrayList<String> findId(Member member) {
-		List<Member> list = memberDAO.findId(member);
-		ArrayList<String> findId = new ArrayList<String>();
-		for(int i=0; i<list.size(); i++) {
-			String email = list.get(i).getMemberEmail();
-			findId.add(email);
-		}
-		return findId;
+	public String findId(Member member) {
+		return memberDAO.findId(member);
 	}
 
 	@Override
@@ -70,10 +64,10 @@ public class MemberServiceImpl implements MemberService {
 		return memberDAO.insertInterest(member);
 	}
 
-	@Override
-	public int updateInterest(Interest interest) {
-		return memberDAO.updateInterest(interest);
-	}
+//	@Override
+//	public int updateInterest(Interest interest) {
+//		return memberDAO.updateInterest(interest);
+//	}
 
 	@Override
 	public Interest selectInterest(int memberNo) {
@@ -125,5 +119,24 @@ public class MemberServiceImpl implements MemberService {
 		return memberDAO.deleteCartList(map);
 	}
 
+	@Override
+	public int updateOption(Map map) {
+		return memberDAO.updateOption(map);
+	}
+
+	@Override
+	public int updateInterest(Map<String, Object> map) {
+		return memberDAO.updateInterest(map);
+	}
+
+	@Override
+	public int insertCartCheck(Map<String, Object> map) {
+		return memberDAO.insertCartCheck(map);
+	}
+	
+	@Override
+	public int deleteCartCheck(Map<String, Object> map) {
+		return memberDAO.deleteCartCheck(map);
+	}
 	
 }

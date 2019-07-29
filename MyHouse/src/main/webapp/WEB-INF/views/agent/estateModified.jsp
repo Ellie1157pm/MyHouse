@@ -254,9 +254,9 @@ enctype="multipart/form-data">
 			<tr id="villa" style="display:none;">
 			<th>구조옵션</th>
 			<td>
-				<input type="radio" name="construction" id="con1" value="투룸" <c:if test="${(option.CONSTRUCTION).contains('투룸')}">checked</c:if>/>
+				<input type="radio" name="construction" id="con1" value="빌라투룸" <c:if test="${(option.CONSTRUCTION).contains('빌라투룸')}">checked</c:if>/>
 			<label for="con1" >투룸</label> 
-			<input type="radio" name="construction" id="con2"  value="쓰리룸" <c:if test="${(option.CONSTRUCTION).contains('쓰리룸')}">checked</c:if>/>
+			<input type="radio" name="construction" id="con2"  value="빌라쓰리룸" <c:if test="${(option.CONSTRUCTION).contains('빌라쓰리룸')}">checked</c:if>/>
 			<label for="con2"  >쓰리룸</label>
 			
 			</td>
@@ -267,9 +267,9 @@ enctype="multipart/form-data">
 			<td>
 			<input type="radio" name="construction" id="one1" value="오픈형(방1)" <c:if test="${(option.CONSTRUCTION).contains('오픈형(방1)')}">checked</c:if>/>
 			<label for="one1">오픈형(방1)</label>
-			<input type="radio" name="construction" id="one2"  value="분리형(방1,거실1)" <c:if test="${(option.CONSTRUCTION).contains('분리형(방1,거실1)')}">checked</c:if>/>
-			<label for="one2">분리형(1방,거실1)</label>
-			<input type="radio" name="construction" id="one3"  value="복층형" <c:if test="${(option.CONSTRUCTION).contains('복층형')}">checked</c:if>/>
+			<input type="radio" name="construction" id="one2"  value="원룸분리형" <c:if test="${(option.CONSTRUCTION).contains('원룸분리형')}">checked</c:if>/>
+			<label for="one2">분리형(방1,거실1)</label>
+			<input type="radio" name="construction" id="one3"  value="원룸복층형" <c:if test="${(option.CONSTRUCTION).contains('원룸복층형')}">checked</c:if>/>
 			<label for="one3">복층형</label>
 			<input type="hidden" name="construction" id="consnull"  value="" checked/>
 			</td>
@@ -290,12 +290,16 @@ enctype="multipart/form-data">
 			<tr id="officetel" style="display:none;">
 			<th>구조옵션</th>
 			<td>
-				<input type="radio" name="construction" id="off1" value="오픈형 원룸" <c:if test="${(option.CONSTRUCTION).contains('오픈형 원룸')}">checked</c:if>/>
+			<input type="radio" name="construction" id="off1" value="오픈형 원룸" <c:if test="${(option.CONSTRUCTION).contains('오픈형 원룸')}">checked</c:if>/>
 			<label for="off1" >오픈형 원룸</label> 
-			<input type="radio" name="construction" id="off2"  value="분리형" <c:if test="${(option.CONSTRUCTION).contains('분리형')}">checked</c:if>/>
+			<input type="radio" name="construction" id="off2"  value="오피스텔분리형" <c:if test="${(option.CONSTRUCTION).contains('오피스텔분리형')}">checked</c:if>/>
 			<label for="off2"  >분리형 </label>
-				<input type="radio" name="construction" id="off3"  value="복층형" <c:if test="${(option.CONSTRUCTION).contains('복층형')}">checked</c:if>/>
+			<input type="radio" name="construction" id="off3"  value="오피스텔복층형" <c:if test="${(option.CONSTRUCTION).contains('오피스텔복층형')}">checked</c:if>/>
 			<label for="off3">복층형</label>
+			<input type="radio" name="construction" id="off4"  value="오피스텔투룸" <c:if test="${(option.CONSTRUCTION).contains('오피스텔투룸')}">checked</c:if>/>
+			<label for="off4">투룸</label>
+			<input type="radio" name="construction" id="off5"  value="오피스텔쓰리룸" <c:if test="${(option.CONSTRUCTION).contains('오피스텔쓰리룸')}">checked</c:if>/>
+			<label for="off5">쓰리룸</label>
 			</td>
 		</tr>
 		

@@ -40,8 +40,32 @@ function selectOneEstate(e){
 			else if(data.estate.transActionType == 'J') str = "전세";
 			else if(data.estate.transActionType == 'M') str = "매매";
 			info_html += '<div id="estate-info-header">';
-			info_html += "<h3>보증금"+data.estate.deposit+"만원"+"<br/>"+str;
-			info_html += (data.estate.estatePrice).toLocaleString()+"만원";
+			info_html += "<h4>보증금";
+			if(data.estate.deposit>=10000 && data.estate.deposit<100000){
+				info_html += (data.estate.deposit).toString().substring(0,1)+"억";
+				if((data.estate.deposit).toString().substring(1)>=1) info_html += (data.estate.deposit).toString().substring(1)+"만";
+			} else if(data.estate.deposit>=100000 && data.estate.deposit<1000000){
+				info_html += (data.estate.deposit).toString().substring(0,2)+"억";
+				if((data.estate.deposit).toString().substring(2)>=1) info_html += (data.estate.deposit).toString().substring(2)+"만";
+			} else if(data.estate.deposit>=1000000 && data.estate.deposit<1000000){
+				info_html += (data.estate.deposit).toString().substring(0,3)+"억";
+				if((data.estate.deposit).toString().substring(3)>=1) info_html += (data.estate.deposit).toString().substring(3)+"만";
+			} else {
+				info_html += " "+data.estate.deposit+"만 <br>";
+			}
+			info_html += str +" ";
+			if(data.estate.estatePrice >= 10000 && data.estate.estatePrice<100000){
+				info_html += (data.estate.estatePrice).toString().substring(0,1)+"억";
+				if((data.estate.estatePrice).toString().substring(1)>=1) info_html += (data.estate.estatePrice).toString().substring(1)+"만";
+			} else if(data.estate.estatePrice >= 100000 && data.estate.estatePrice<1000000){
+				info_html += (data.estate.estatePrice).toString().substring(0,2)+"억"
+				if((data.estate.estatePrice).toString().substring(2)>=1) info_html += (data.estate.estatePrice).toString().substring(2)+"만";
+			} else if(data.estate.estatePrice >= 1000000 && data.estate.estatePrice<10000000){
+				info_html += (data.estate.estatePrice).toString().substring(0,3)+"억";
+				if((data.estate.estatePrice).toString().substring(3)>=1) info_html += (data.estate.estatePrice).toString().substring(3)+"만";
+			} else {
+				info_html += data.estate.estatePrice+"만";
+			}
 			if(data.estate.estateType == 'A') str = "아파트";
 			else if(data.estate.estateType == 'B') str = "빌라";
 			else if(data.estate.estateType == 'O') str = "원룸";
@@ -99,11 +123,11 @@ $(function() {
 	});
 });
 </script>
-<form action="${pageContext.request.contextPath }/member/warningMemo.do"
+<form action="${pageContext.request.contextPath}/member/warningMemo.do"
 	  id="warningMemoFrm"
 	  method="post">
-	 <input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo }" />
-	 <input type="hidden" name="cPage" value="${cPage }" />
+	<input type="hidden" name="memberNo" value="${memberLoggedIn.memberNo}" />
+	<input type="hidden" name="cPage" value="${cPage }" />
 </form>
 <form action="${pageContext.request.contextPath }/member/memberView.do"
 	  id="memberViewFrm"
@@ -155,7 +179,18 @@ $(function() {
 									월세
 								</c:when>
 							</c:choose>
-							${e.ESTATE_PRICE}만원
+							<c:if test="${e.ESTATE_PRICE>=10000 and e.ESTATE_PRICE<100000}">
+								${fn:substring(e.ESTATE_PRICE,0,1)}억<c:if test="${fn:substring(e.ESTATE_PRICE,1,10)>=1}">${fn:substring(e.ESTATE_PRICE,1,10)}만</c:if>
+							</c:if>
+							<c:if test="${e.ESTATE_PRICE>=100000 and e.ESTATE_PRICE<1000000}">
+								${fn:substring(e.ESTATE_PRICE,0,2)}억<c:if test="${fn:substring(e.ESTATE_PRICE,2,10)>=1}">${fn:substring(e.ESTATE_PRICE,2,10)}만</c:if>
+							</c:if>
+							<c:if test="${e.ESTATE_PRICE>=1000000 and e.ESTATE_PRICE<10000000}">
+								${fn:substring(e.ESTATE_PRICE,0,3)}억${fn:substring(e.ESTATE_PRICE,3,10)}만<c:if test="${fn:substring(e.ESTATE_PRICE,3,10)>=1}">${fn:substring(e.ESTATE_PRICE,3,10)}만</c:if>
+							</c:if>
+							<c:if test="${e.ESTATE_PRICE<10000}">
+								${e.ESTATE_PRICE}만
+							</c:if>
 							<br />
 						</p>
 						<c:if test="${e.ADDRESS_DETAIL ne null }">
@@ -169,8 +204,7 @@ $(function() {
 						<input type="hidden" id="estateNo" value="${e.ESTATE_NO }" />
 					</div>
 					<div class="chat-box">
-<%-- 						<button type="button" class="btn btn-outline-info chat-for-cartList-btn" onclick="chatForCartList(this);" id="chat-btn" value="${e.BUSINESS_PHONE }">문의채팅</button> --%>
-<button type="button" class="btn btn-info chat-for-cartList-btn" onclick="openMemberChat('${e.MEMBER_EMAIL}')" id="${e.ESTATE_NO}" value="${e.MEMBER_EMAIL }">문의채팅</button>
+						<button type="button" class="btn btn-info chat-for-cartList-btn" onclick="openMemberChat('${e.MEMBER_EMAIL}')" id="${e.ESTATE_NO}" value="${e.MEMBER_EMAIL }">문의채팅</button>
 						<br />
 						<br />
 						<br />

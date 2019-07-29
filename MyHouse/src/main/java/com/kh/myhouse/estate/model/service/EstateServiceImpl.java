@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.myhouse.cart.model.vo.Cart;
 import com.kh.myhouse.estate.model.dao.EstateDAO;
 import com.kh.myhouse.estate.model.vo.Estate;
 import com.kh.myhouse.estate.model.vo.EstateAttach;
@@ -237,4 +238,30 @@ public class EstateServiceImpl implements EstateService{
 	public int insertEstimation(Map<String, Object> map) {
 		return estateDAO.insertEstimation(map);
 	}
+
+
+	@Override
+	public List<Integer> selectMemberNoList(Map<String, Object> map_) {
+		return estateDAO.selectMemberNoList(map_);
+	}
+
+
+	@Override
+	public int expiredPowerLinkEstate() {
+		return estateDAO.expiredPowerLinkEstate();
+		
+	}
+
+
+	@Override
+	public int insertMemoSend(Map<String,Object> mapList) {
+		return estateDAO.insertMemoSend(mapList);
+	}
+
+
+	@Override
+	public Map<String, String> selectCart(Cart cart) {
+		return estateDAO.selectCart(cart);
+	}
+
 }

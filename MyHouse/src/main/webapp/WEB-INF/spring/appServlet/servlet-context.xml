@@ -53,6 +53,7 @@
 	<beans:bean id="AgentLoginInterceptor" class="com.kh.myhouse.common.interceptor.AgentLoginInterceptor"></beans:bean>
 	<beans:bean id="AdminInfoInterceptor" class="com.kh.myhouse.common.interceptor.AdminInfoInterceptor"></beans:bean>
 	<beans:bean id="LoginInterceptor" class="com.kh.myhouse.common.interceptor.LoginInterceptor"></beans:bean>
+	<beans:bean id="MemberLoginInterceptor" class="com.kh.myhouse.common.interceptor.MemberLoginInterceptor"></beans:bean>
     
     <interceptors>
         <interceptor>
@@ -66,6 +67,18 @@
         <interceptor>
         	<mapping path="/EnrollTest.do"/>
             <beans:ref bean="AgentLoginInterceptor"/>
+        </interceptor>
+        <interceptor>
+        	<mapping path="/EnrollTest.do"/>
+            <beans:ref bean="MemberLoginInterceptor"/>
+        </interceptor>
+         <interceptor>
+           <mapping path="/estate/EnrollTest.do"/>
+            <beans:ref bean="AgentLoginInterceptor"/>
+        </interceptor>
+        <interceptor>
+           <mapping path="/member/*"/>
+            <beans:ref bean="MemberLoginInterceptor"/>
         </interceptor>
     </interceptors>
 

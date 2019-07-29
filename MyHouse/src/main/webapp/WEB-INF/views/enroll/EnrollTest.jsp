@@ -4,16 +4,16 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-
+​
+​
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="" name="pageTitle" />
 </jsp:include>
-
+​
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
  function validate(){
 	
-	 
 	  var estateType = $(':input[name=estateType]:radio:checked').val();
 	  var transactiontype = $(':input[name=transactiontype]:radio:checked').val();
    var etcoption = $(':input[name=etcoption]:checkbox:checked').val(); 
@@ -40,6 +40,11 @@ oncomplete: function(data) {
     var jibun=data.jibunAddress;
     $('#taddress1').val(address1);
     $('#address1').val(address1);
+    $('#jibunAddress').val(data.jibunAddress);
+    if($('#jibunAddress').val()==''){
+    $('#jibunAddress').val(data.autoJibunAddress);
+    }
+    console.log( $('#jibunAddress').val());
     //지번주소 표기는 폐기처리.$('#address2').val('(지번주소)'+jibun+' ');
 }
 }).open();
@@ -54,6 +59,8 @@ $(document).ready(function() {
 		 $("#officetel").hide();
 		  $("#adressdetail").show();
 		  $("#adressdetail2").hide();
+		  $("#For-Sale").attr('style', "display:inline;");
+		  $("#dd").attr('style', "display:inline;");
 	 });
 	
  $("input:radio[id='raidovilla']").on('click',function(){
@@ -63,6 +70,8 @@ $(document).ready(function() {
 	 $("#officetel").hide();
 	 $("#adressdetail").hide();
 	  $("#adressdetail2").show();
+	  $("#For-Sale").attr('style', "display:inline;");
+	  $("#dd").attr('style', "display:inline;");
 	 
  });
  
@@ -73,6 +82,8 @@ $(document).ready(function() {
 	 $("#officetel").hide();
 	 $("#adressdetail").hide();
 	  $("#adressdetail2").show();
+	  $("#For-Sale").attr('style', "display:none;");
+	  $("#dd").attr('style', "display:none;");
  });
  
  $("input:radio[id='radioopi']").on('click',function(){
@@ -82,6 +93,8 @@ $(document).ready(function() {
 	 $("#officetel").show();
 	 $("#adressdetail").hide();
 	  $("#adressdetail2").show();
+	  $("#For-Sale").attr('style', "display:none;");
+	  $("#dd").attr('style', "display:none;");
  });
  
 	
@@ -110,9 +123,16 @@ $(document).ready(function() {
 }); 
 //2019년07월09일(화) 수정한 부분
 </script>
+<c:if test="${memberLoggedIn.memberName eq null}">
+<script>
+alert("로그인 후 이용가능합니다");
+location.href = "${pageContext.request.contextPath}";
+</script>
+</c:if>
 
-<c:if test="${memberLoggedIn !=null }">
-
+<c:if test="${memberLoggedIn.status eq 'U'.charAt(0) || 
+(memberLoggedIn.status eq 'B'.charAt(0) && memberLoggedIn.approveYN eq 'Y'.charAt(0))   }">
+​
 <form action="${pageContext.request.contextPath}/estate/EnrollTestEnd.do" method="post" onsubmit="return validate();"
 enctype="multipart/form-data">
 	<table>
@@ -124,7 +144,7 @@ enctype="multipart/form-data">
 			<th>중개인회원번호</th>
 		<td><input type="text" name="BusinessMemberNo" id="BusinessMemberNo" value="${memberLoggedIn.status eq'B'.charAt(0)?memberLoggedIn.memberNo:'0'}" /></td>
 		</tr>
-
+​
 	<tr>
 			<th>매물정보</th>
 			<td><input type="radio" name="estateType" id="apt" value="A" />
@@ -138,18 +158,17 @@ enctype="multipart/form-data">
 				
 				<input type="radio" name="estateType" id="radioopi" value="P"/>
 				<label for="opi">오피스텔</label>
-
+​
 			</td>
 		</tr>
-
-
+​
 		<tr>
 			<th>주소</th>
 			<td><input type="text" name="taddress1" id="taddress1" class="addr"
 				disabled="disabled" style="width: 250px">
 				<button type="button" onclick='searchAddr();'>주소검색</button>
 				</td>
-
+​
 		</tr>
 		<tr>
 			<td><input type="hidden" name="address1" id="address1" class="addr"></td>
@@ -161,7 +180,7 @@ enctype="multipart/form-data">
 			</td>	
 		</tr>
 		
-		<tr id="adressdetail2" style="display:none;">
+			<tr id="adressdetail2" style="display:none;">
 			<th>상세정보</th>
 			<td>
 			<input type="number" name="address4" id="address4" class="addr" required value="0">층
@@ -172,9 +191,9 @@ enctype="multipart/form-data">
 		
 		 <tr>
           <th>핸드폰 번호</th>
-           <td><input type="text"name="phone1" pattern="01(0|1)" required> -
-               <input type="text" name="phone2" pattern="\d{4}" required> -
-               <input type="text" name="phone3"  pattern="\d{4}"required>
+           <td><input type="text"name="phone1" pattern="01(0|1)" value="${memberLoggedIn.status eq'U'.charAt(0)?memberLoggedIn.phone.substring(0,3):memberLoggedIn.phone.substring(0,3)}"> -
+               <input type="text" name="phone2" pattern="\d{4}" value="${memberLoggedIn.status eq'U'.charAt(0)?memberLoggedIn.phone.substring(3,7):memberLoggedIn.phone.substring(3,7)}"> -
+               <input type="text" name="phone3"  pattern="\d{4}" value="${memberLoggedIn.status eq'U'.charAt(0)?memberLoggedIn.phone.substring(7,11):memberLoggedIn.phone.substring(7,11)}">
            </td>
           </tr>
           	 <tr style="display:none;">
@@ -193,8 +212,8 @@ enctype="multipart/form-data">
 			<label for="charter" >전세</label> 
 			<input type="radio" name="transactiontype" id="monthly"  value="O" />
 			<label for="monthly"  >월세</label>
-			<input type="radio" name="transactiontype" id="For-Sale" value="M" />
-			<label for="For-Sale">매물</label>
+			<input type="radio" name="transactiontype" id="For-Sale" value="M" style="display:inline;" />
+			<label for="For-Sale" style="display:inline;" id="dd">매물</label>
 				
 	</td>
 		<tr id="deposit" style="display:none;">
@@ -217,7 +236,7 @@ enctype="multipart/form-data">
 		</tr>
 		<tr>
 			<th>관리비</th>
-			<td><input type="number" name="ManageMentFee" id="ManageMentFee"  min="0"
+			<td><input type="number" name="ManageMenetFee" id="ManageMenetFee"  min="0"
 				required />만원</td>
 		</tr>
 	
@@ -237,23 +256,22 @@ enctype="multipart/form-data">
 		<tr >
 			<th>아파트옵션</th>
 			<td>
-				<input type="checkbox" name="etcoption" id="opt1" value="엘레베이터" />
+				<input type="checkbox" name="etcoption" id="opt1" value="엘레베이터" checked/>
 			<label for="opt1" >엘레베이터</label> 
 			<input type="checkbox" name="etcoption" id="opt2"  value="애완동물" />
 			<label for="opt2"  >애완동물</label>
 			<input type="checkbox" name="etcoption" id="opt3" value="지하주차장" />
 			<label for="opt3">지하주차장</label>
-			<input type="checkbox" name="etcoption" id="opt3" value="복합문화공간" />
-			<label for="opt3">복합문화공간</label>
+		
 			</td>
 		</tr>
 		
 			<tr id="villa" style="display:none;">
 			<th>구조옵션</th>
 			<td>
-				<input type="radio" name="construction" id="con1" value="투룸" />
+				<input type="radio" name="construction" id="con1" value="빌라투룸" />
 			<label for="con1" >투룸</label> 
-			<input type="radio" name="construction" id="con2"  value="쓰리룸" />
+			<input type="radio" name="construction" id="con2"  value="빌라쓰리룸" />
 			<label for="con2"  >쓰리룸</label>
 			
 			</td>
@@ -264,9 +282,9 @@ enctype="multipart/form-data">
 			<td>
 				<input type="radio" name="construction" id="one1" value="오픈형(방1)" />
 			<label for="one1" >오픈형(방1)</label> 
-			<input type="radio" name="construction" id="one2"  value="분리형(방1,거실1)" />
+			<input type="radio" name="construction" id="one2"  value="원룸분리형" />
 			<label for="one2"  >분리형(1방,거실1)</label>
-				<input type="radio" name="construction" id="one3"  value="복층형" />
+				<input type="radio" name="construction" id="one3"  value="원룸복층형" />
 			<label for="one3">복층형</label>
 			<input type="hidden" name="construction" id="consnull"  value="" checked/>
 			</td>
@@ -277,7 +295,7 @@ enctype="multipart/form-data">
 			<td>
 				<input type="radio" name="flooropt" id="flop1" value="지상층" />
 			<label for="flop1">지상층</label> 
-			<input type="radio" name="flooropt" id="flop2"  value="반지하,옥탑" />
+			<input type="radio" name="flooropt" id="flop2"  value="반지하옥탑" />
 			<label for="flop2"  >반지하,옥탑</label>
 			<input type="hidden" name="flooropt" id="flopnull"  value="" checked/>
 			
@@ -287,27 +305,32 @@ enctype="multipart/form-data">
 			<tr id="officetel" style="display:none;">
 			<th>구조옵션</th>
 			<td>
-				<input type="radio" name="construction" id="off1" value="오픈형 원룸" />
-			<label for="off1" >오픈형 원룸</label> 
-			<input type="radio" name="construction" id="off2"  value="분리형" />
-			<label for="off2"  >분리형 </label>
-				<input type="radio" name="construction" id="off3"  value="복층형" />
-			<label for="off3">복층형</label>
+				<input type="radio" name="construction" id="off1" value="오픈형원룸" />
+			<label for="off1" >오픈형원룸</label> 
+			<input type="radio" name="construction" id="off2"  value="오피스텔분리형" />
+			<label for="off2"  >분리형원룸 </label>
+				<input type="radio" name="construction" id="off3"  value="오피스텔복층형" />
+			<label for="off3">복층형원룸</label>
+					<input type="radio" name="construction" id="off4"  value="빌라투룸" />
+			<label for="off4">투룸</label>
+					<input type="radio" name="construction" id="off5"  value="빌라쓰리룸" />
+			<label for="off5">쓰리룸</label>
+		
 			</td>
 		</tr>
 		
 		
+			<input type="hidden" name="jibunAddress" id="jibunAddress"  />
 		
 		
-		
-
+​
 		<tr>
 			<th>인근전철역</th>
 			<td><input type='text' name='SubwayStation' placeholder="수유역" value="" ></td>
 			
 			
 		</tr>
-
+​
 		<tr>
 			<th>매물사진</th>
 			<td>
@@ -321,20 +344,12 @@ enctype="multipart/form-data">
 	<input type="submit" value="등록신청" />
 </form>
     <input type="button" value="취소" onclick="location.href='${pageContext.request.contextPath}'" />
-
-
+​
+​
 </c:if>
 
 
+
+​
 <br />
-
-
-
-
-
-
-
-
-
-
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />

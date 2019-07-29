@@ -56,14 +56,15 @@
 	</select>
 	
 	<resultMap type="interest" id="interestMap">
+		<result column="region_code" property="regionCode"/>
 		<result column="estate_type" property="estateType" typeHandler="strArrTypeHandler"/>
 	</resultMap>
 	
 	<update id="updateInterest">
 		UPDATE INTEREST 
-		SET REGION_CODE = SELECT SUBSTR(REGION_CODE,0,5) FROM REGION WHERE LEGAL_DONG LIKE '%'||#{city} || ' ' ||#{state}||'%' AND ROWNUM=1;}
+		SET REGION_CODE = (SELECT SUBSTR(REGION_CODE,0,5) FROM REGION WHERE LEGAL_DONG LIKE '%'||#{state}||' '||#{city}||'%' AND ROWNUM=1),
 		ESTATE_TYPE = #{estateType, typeHandler=strArrTypeHandler}, PET = #{pet}, ELEVATOR = #{elevator},
-		PARKING = #{parking}, SUBWAY = #{subway}, CITY = #{city}, STATE = #{state} 
+		PARKING = #{parking}, SUBWAY = #{subway}, STATE = #{state}, CITY = #{city}, INTEREST_DATE = sysdate
 		WHERE MEMBER_NO = #{memberNo}
 	</update>
 	
@@ -97,13 +98,14 @@
 	</resultMap>
 	
 	<select id="cartList" resultMap="estate">
-		SELECT E.ESTATE_NO, E.BUSINESS_MEMBER_NO, NVL(E.BUSINESS_PHONE, 'NULL'), E.TRANSACTION_TYPE, E.ESTATE_PRICE, E.ESTATE_AREA, E.ADDRESS, 
+		SELECT M.MEMBER_EMAIL, E.ESTATE_NO, E.BUSINESS_MEMBER_NO, NVL(E.BUSINESS_PHONE, 'NULL'), E.TRANSACTION_TYPE, E.ESTATE_PRICE, E.ESTATE_AREA, E.ADDRESS, 
 		E.ESTATE_CONTENT, P.RENAMED_FILENAME
 		FROM ESTATE E LEFT JOIN (SELECT ESTATE_NO, RENAMED_FILENAME FROM ESTATE_PHOTO
 								 WHERE ROWID IN (SELECT MIN(ROWID) FROM ESTATE_PHOTO
 								 GROUP BY ESTATE_NO)) P
 								 ON E.ESTATE_NO = P.ESTATE_NO
 		LEFT JOIN TBL_CART C ON E.ESTATE_NO = C.ESTATE_NO
+        LEFT JOIN MEMBER M ON E.BUSINESS_MEMBER_NO = M.MEMBER_NO
 		WHERE C.MEMBER_NO = #{memberNo}
 	</select>
 	
@@ -117,11 +119,11 @@
 		select * from tbl_option where estate_no = #{estateNo}
 	</select>
 	
-	<update id="cart_check" parameterType="HashMap">
+	<!-- <update id="cart_check" parameterType="HashMap">
 		UPDATE TBL_CART
 		SET CART_CHECK = CART_CHECK + 1
 		WHERE MEMBER_NO = #{memberNo} AND ESTATE_NO = #{estateNo}
-	</update>
+	</update> -->
 	
 	<update id="cart_check_cancel" parameterType="HashMap">
 		UPDATE TBL_CART
@@ -138,6 +140,27 @@
         WHERE ESTATE_NO = #{EstateNo}
     </update>
     
+ <!--    <resultMap type="option" id="optionMap">
+		<result column="option_detail" property="optionDetail" typeHandler="strArrTypeHandler"/>
+	</resultMap> -->
+    
+    <!-- set태그는 내부문자열이 비어있지 않은 경우 구문에 SET을 추가하고, 마지막 쉼표 제거함 -->
+    <update id="updateOption">
+    	UPDATE TBL_OPTION
+    	<set>
+    		<if test="optionDetail != null">
+    			OPTION_DETAIL = #{optionDetail},
+    		</if>
+    		<if test="construction != null">
+    			CONSTRUCTION = #{construction},
+    		</if>
+    		<if test="floorOption != null">
+    			FLOOROPTION = #{floorOption},
+    		</if>
+    	</set>
+    	WHERE ESTATE_NO = #{estateNo}
+    </update>
+    
     <delete id="deleteEstate">
     	DELETE FROM ESTATE WHERE ESTATE_NO = #{estateNo}
     </delete>
@@ -149,5 +172,17 @@
     <delete id="deleteCartList">
     	DELETE FROM TBL_CART WHERE MEMBER_NO = #{memberNo} AND ESTATE_NO = #{estateNo}
     </delete>
+    
+    <update id="insertCartCheck">
+		UPDATE TBL_CART
+		SET CART_CHECK = CART_CHECK + 1
+		WHERE MEMBER_NO = #{memberNo} AND ESTATE_NO = #{estateNo}
+	</update>
+	
+	<update id="deleteCartCheck">
+		UPDATE TBL_CART
+		SET CART_CHECK = CART_CHECK - 1
+		WHERE MEMBER_NO = #{memberNo} AND ESTATE_NO = #{estateNo}
+	</update>
 
 </mapper>

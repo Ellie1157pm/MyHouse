@@ -150,20 +150,24 @@ $(function() {
 			dataType : "json",
 
 			success : function(data) {
+				console.log(data);
 				var emailLists = data.memberEmail;
 				var emailLength = emailLists.length;
 				var emailfind = emailLists
 						.substring(1,
 								emailLength - 1);
-				alert("찾으시는 아이디는 "
-						+ emailfind + "입니다.")
+				var quitYN = data.quitYN;
+				if(quitYN == 'N')
+				alert("찾으시는 아이디는 "+ emailfind + "입니다.");
+				else
+				alert("없는 아이디거나 정보를 잘못 입력하셨습니다.(탈퇴)");
 			},
 			error : function(jqxhr, textStatus,
 					errorThrown) {
 				console.log("ajax처리실패: "
 						+ jqxhr.status);
 				console.log(errorThrown);
-				alert('정보를 다시 입력해주시길 바랍니다.');
+				alert('없는 아이디거나 정보를 잘못 입력하셨습니다.');
 			}
 		});
 	});

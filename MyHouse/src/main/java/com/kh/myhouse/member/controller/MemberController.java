@@ -2,7 +2,6 @@ package com.kh.myhouse.member.controller;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -191,12 +190,14 @@ public class MemberController {
 	@RequestMapping(value = "/findId.do" , method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public String findId(@ModelAttribute Member member) throws Exception {
-		
-		ArrayList <String> emailList = memberService.findId(member);
-
-		String findEmail = "{\"memberEmail\":\""+emailList+"\"}";
-
-		return findEmail;
+		System.out.println(member);
+		String findId = memberService.findId(member);
+		Member member_ = memberService.selectOneMember(findId);
+//		if(member_)
+//		String findEmail = "{\"memberEmail\":\""+findId+"\"}";
+//
+//		return findEmail;
+		return findId;
 	}
 	
 	/* 비밀번호 찾기 */
@@ -244,35 +245,79 @@ public class MemberController {
 	/* 관심매물 리스트 */
 	@RequestMapping("/interestList")
 	public ModelAndView interestList(@RequestParam int memberNo) {
-		logger.debug("관심매물 요청!");
 		ModelAndView mav = new ModelAndView();
-		System.out.println("interest@cont=" + memberService.selectInterest(memberNo));
-		logger.debug("interest", memberService.selectInterest(memberNo));
-		mav.addObject("interest", memberService.selectInterest(memberNo));
+		Interest interest = memberService.selectInterest(memberNo);
+		System.out.println("interest@updatecont=" + interest);
+		mav.addObject("interest", interest);
 		mav.setViewName("member/interestList");
 	
 		return mav;
 	}
 	
+//	/* 관심매물 설정(수정) */
+//	@RequestMapping("/updateInterestList")
+//	public ModelAndView updateInterestList(int memberNo) {
+//		ModelAndView mav = new ModelAndView();
+//		Interest interest = memberService.selectInterest(memberNo);
+//		System.out.println("interest@updatecont=" + interest);
+//		int result = memberService.updateInterest(interest);
+//
+//		String loc = "/member/interestList";
+//		String msg = "";
+//		if (result > 0) {
+//			msg = "관심매물수정성공!";
+//			mav.addObject("interest", interest);
+//			mav.addObject("memberNo", memberNo);
+//		} else
+//			msg = "관심매물수정실패!";
+//
+//		mav.addObject("msg", msg);
+//		mav.addObject("loc", loc);
+//		mav.setViewName("common/msg");
+//		
+//		return mav;
+//	}
+	
+	
 	/* 관심매물 설정(수정) */
 	@RequestMapping("/updateInterestList")
-	public void updateInterestList(int memberNo) {
-		ModelAndView mav = new ModelAndView();
-		Interest interest = memberService.selectInterest(memberNo);
+	public String updateInterestList(@RequestParam int memberNo,
+										   @RequestParam String[] estateType,
+										   @RequestParam char elevator,
+										   @RequestParam char pet,
+										   @RequestParam char parking,
+										   @RequestParam char subway,
+										   @RequestParam String state,
+										   @RequestParam String city,
+										   Model model) {
 		
-		int result = memberService.updateInterest(interest);
+		System.out.println("memberNo" + memberNo);
+		System.out.println("estateType" + Arrays.toString(estateType));
+		System.out.println("elevator" + elevator);
+		System.out.println("pet" + pet);
+		System.out.println("parking" + parking);
+		System.out.println("subway" + subway);
+		System.out.println("state=" + state);
+		System.out.println("city=" + city);
+				
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("memberNo", memberNo);
+		map.put("estateType", estateType);
+		map.put("elevator", elevator);
+		map.put("pet", pet);
+		map.put("parking", parking);
+		map.put("subway", subway);
+		map.put("state", state);
+		map.put("city", city);
+		
+		int result = memberService.updateInterest(map);
+		System.out.println("result@updatecont=" + result);
+		
+		String msg = result > 0?"관심매물 수정 성공!":"관심 매물 수정 실패!";
+		model.addAttribute("msg", msg);
 
-		String loc = "/member/interestList?memberNo="+memberNo;
-		String msg = "";
-		if (result > 0) {
-			msg = "관심매물수정성공!";
-			mav.addObject("interest", interest);
-		} else
-			msg = "관심매물수정실패!";
-
-		mav.addObject("msg", msg);
-		mav.addObject("loc", loc);
-		mav.setViewName("common/msg");
+		return "common/msg";
 	}
 	
 	@RequestMapping("/deleteMember.do")
@@ -363,7 +408,7 @@ public class MemberController {
 		model.addAttribute("estate", estate);
 		model.addAttribute("option", option);	
 		}
-
+	
 	@PostMapping("/updateEstateEnd.do")
 	public String estateUpdate(@RequestParam int memberNo,
 			@RequestParam int estateNo,
@@ -388,20 +433,11 @@ public class MemberController {
 			HttpServletRequest request,
 			Model model) {
 		
-		System.out.println("address1 주소명=="+address1);
-		System.out.println("address2 주소상세=="+address2);
 		String phone = phone1+phone2+phone3;
-		System.out.println("phone 폰번호=="+phone);
-		System.out.println("estateType 빌라,아파트,오피스텔=="+estateType);
-		System.out.println("transactiontype 전세,매매,월세 라디오버튼값=="+transactiontype);
-		System.out.println("deposit 보증금=="+deposit);
-		System.out.println("mon 전세,매매,월세 가격입력값=="+Arrays.toString(mon));//mon[0]:월세 /mon[1]:전세 /mon[2]:매물가 
-		System.out.println("ManageMenetFee 관리비=="+manageMentFee);
-		System.out.println("estateArea 평수=="+estateArea);
-		System.out.println("estatecontent 주변환경=="+estatecontent);
+
 		System.out.println("etcoption 엘레베이터,애완동물 등=="+Arrays.toString(etcoption));
-		System.out.println("SubwayStation 전철역=="+SubwayStation);
-		System.out.println("upFile 파일명=="+Arrays.toString(upFile));
+		System.out.println("construction 구조옵션=="+Arrays.toString(construction));
+		System.out.println("flooropt 층수=="+Arrays.toString(flooropt));
 		
 		//지역코드 얻어오기
 		String address= (address1.substring(0,6));
@@ -419,24 +455,20 @@ public class MemberController {
 		else {
 			estateprice = mon[2];
 		}
-		System.out.println("estateNo@controller="+estateNo);
 		List<EstateAttach> list = agentService.selectEstateAttach(estateNo);
-		Estate estate = new Estate(estateNo, localCode, memberNo,
-				0, phone, "0",
-				address1, estateType, transactiontype, estateprice, 
-				manageMentFee, estateArea, SubwayStation, 
-				estatecontent, new Date(), deposit, address2+"동"+address3+"층", list);
+		Estate estate = new Estate(estateNo, localCode, memberNo, 0, phone, "0", address1, estateType, 
+				                   transactiontype, estateprice, manageMentFee, estateArea, SubwayStation, 
+				                   estatecontent, new Date(), deposit, address2+"동"+address3+"층", list);
 		
 		Map<String, Object> map = null;
 		int result1 = 0;
 		int result2 = 0;
+		int result3 = 0;
 		try {
 			map = new HashMap();
 			//1. 파일업로드
 			String saveDirectory = request.getSession().getServletContext()
 										  .getRealPath("/resources/upload/estateenroll");
-			
-//			List<EstateAttach> ea = agentService.selectEstateAttach(estateNo);
 			
 			//원래 저장된 이미지파일 삭제
 			for(int i=0; i<list.size(); i++) {
@@ -470,13 +502,42 @@ public class MemberController {
 				}
 			}
 			
+			//옵션 업데이트
+			//String[] -> String
+			if(etcoption != null) {
+				String optionStr;
+				optionStr = Arrays.toString(etcoption);
+				optionStr = optionStr.substring(1, optionStr.length()-1);
+				map.put("optionDetail", optionStr);
+			}
+			else map.put("optionDetail", "");
+			
+			if(construction != null) {
+				String constructionStr;
+				constructionStr = Arrays.toString(construction);
+				constructionStr = constructionStr.substring(1, constructionStr.length()-1);
+				map.put("construction", constructionStr);
+			}
+			else map.put("construction", "");
+			
+			if(flooropt != null) {
+				String floorOptionStr;
+				floorOptionStr = Arrays.toString(flooropt);
+				floorOptionStr = floorOptionStr.substring(1, floorOptionStr.length()-1);
+				map.put("floorOption", floorOptionStr);
+			}
+			else map.put("floorOption", "");
+			
+			result3 = memberService.updateOption(map);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		int result3 = agentService.estateUpdate(estate);
-		
-		String msg = (result1>0&&result2>0&&result3>0)?"매물 수정 성공!":"매물 수정 실패!";
+		int result4 = agentService.estateUpdate(estate);
+
+		System.out.println("result3@cont="+result3);
+		String msg = (result1>0&&result2>0&&result3>0&&result4>0)?"매물 수정 성공!":"매물 수정 실패!";
 		model.addAttribute("msg", msg);
 		
 		return "common/msg";
@@ -509,5 +570,39 @@ public class MemberController {
 		model.addAttribute("msg", msg);
 		
 		return "common/msg";
+	}
+	
+	@RequestMapping("/insertCartCheck")
+	@ResponseBody
+	public String insertCartList(@RequestParam int estateNo,
+								 @RequestParam int memberNo) {
+		Map<String,Object> map = new HashMap<>();
+		map.put("estateNo", estateNo);
+		map.put("memberNo", memberNo);
+		
+		/*int result_ = memberService.selectCartList(map);*/
+			
+		int result = memberService.insertCartCheck(map);
+		System.out.println("result@contUpdateCartList=" + result);
+ 
+		if(result>0) return "success";
+		else return "failed";
+		
+	}
+	
+	@RequestMapping("/deleteCartCheck")
+	@ResponseBody
+	public String deleteCartList(@RequestParam int estateNo,
+								 @RequestParam int memberNo) {
+		Map<String,Object> map = new HashMap<>();
+		map.put("estateNo", estateNo);
+		map.put("memberNo", memberNo);
+		
+		int result = memberService.deleteCartCheck(map);
+		System.out.println("result@contDeleteCartList=" + result);
+ 
+		if(result>0) return "success";
+		else return "failed";
+		
 	}
 }

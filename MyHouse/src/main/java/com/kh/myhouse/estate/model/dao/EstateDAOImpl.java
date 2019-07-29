@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.myhouse.cart.model.vo.Cart;
 import com.kh.myhouse.estate.model.vo.Estate;
 import com.kh.myhouse.estate.model.vo.EstateAttach;
 import com.kh.myhouse.estate.model.vo.Option;
@@ -227,5 +228,30 @@ public class EstateDAOImpl implements EstateDAO{
 	@Override
 	public int insertEstimation(Map<String, Object> map) {
 		return sqlSession.insert("estate.estimation",map);
+	}
+
+
+	@Override
+	public List<Integer> selectMemberNoList(Map<String, Object> map_) {
+		return sqlSession.selectList("estate.selectMemberNoList", map_);
+	}
+
+
+	@Override
+	public int expiredPowerLinkEstate() {
+		return sqlSession.delete("estate.expiredPowerLinkEstate");
+	}
+
+
+	@Override
+	public int insertMemoSend(Map<String,Object> mapList) {
+		System.out.println(mapList);
+		return sqlSession.insert("estate.insertMemoSend",mapList);
+	}
+
+
+	@Override
+	public Map<String, String> selectCart(Cart cart) {
+		return sqlSession.selectOne("estate.selectCart", cart);
 	}
 }
