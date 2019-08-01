@@ -66,7 +66,7 @@
 				$("input[name=estateNo]").attr("id", $(this).attr("id"));
 			});
 			
-			/*신청하기*/
+			/*광고신청하기*/
 			$("#advertised-req-btn").on("click", function(){
 				if($("input[name=estateNo]").attr("id") == ""){
 					alert("매물을 선택해주세요.");
@@ -78,9 +78,12 @@
 					return;
 				}
 				
+				/*가격*/
 				var cash = $("input[name=period]:checked").val();
+				/*구매자아이디*/
 				var buyer_id = "${memberLoggedIn.memberEmail}";
 				
+				/*결제 IAMPORT API*/
 				IMP.init("imp94093510");// "imp00000000" 대신 발급받은 "가맹점 식별코드"를 사용합니다.	
 				IMP.request_pay({
 				       pg : 'inicis', // version 1.1.0부터 지원.
